@@ -22,4 +22,5 @@
 hs_err_pid*
 /aula1/nbproject/private/
 /aula1/build/
+/aula1/*.so
 # /aula1/dist/

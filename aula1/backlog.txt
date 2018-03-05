@@ -1,4 +1,4 @@
-(A) configurar ambiente no meu notebook
+x (A) 2018-03-04 configurar ambiente no meu notebook
 (A) estruturar arquivos/pastas/pacotes da aplicação
 (A) desenhar a interface grafica da aplicacao
 (A) encontrar um jeito de mover a criatura
