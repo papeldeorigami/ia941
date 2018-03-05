@@ -1,3 +1,6 @@
 [submodule "ws3d"]
 	path = ws3d
 	url = https://github.com/CST-Group/ws3d.git
+[submodule "WS3DProxy"]
+	path = WS3DProxy
+	url = https://github.com/CST-Group/WS3DProxy
