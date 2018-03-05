@@ -1,0 +1,19 @@
+*Disciplina*: IA941A
+*Periodo*: 1o Semestre 2018
+*Aluno*: Ricardo Keigo de Sales Andrade
+
+# Atividade 1: Contato com o website da Disciplina
+
+A página apresenta os objetivos da aula e os detalhes para a sua execução. Segue uma cópia dos objetivos:
+* Contato com o Web-site da disciplina
+* Download do Código do Ambiente Virtual que iremos utilizar em nossos trabalhos e sua compilação no Netbeans
+* Geração de um Controlador Manual para o Ambiente Virtual
+
+ia941 git:(master) git clone https://github.com/CST-Group/ws3d.git
+Cloning into 'ws3d'...
+remote: Counting objects: 557, done.
+remote: Total 557 (delta 0), reused 0 (delta 0), pack-reused 557
+Receiving objects: 100% (557/557), 17.58 MiB | 1.77 MiB/s, done.
+Resolving deltas: 100% (255/255), done.
+Checking connectivity... done.
+
