@@ -1,0 +1,9 @@
+(A) configurar ambiente no meu notebook
+(A) estruturar arquivos/pastas/pacotes da aplicação
+(A) desenhar a interface grafica da aplicacao
+(A) encontrar um jeito de mover a criatura
+(A) run.sh testado com aplicação
+(B) botao para mostrar o conteudo da bag
+(B) exibir quantidade de joias/dinheiro
+(B) mostrar nivel de fome
+x 2018-03-04 decidir framework
