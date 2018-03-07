@@ -7,17 +7,18 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane id="AnchorPane" prefHeight="92.0" prefWidth="580.0" style="-fx-background-color: yellow;" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.MainScreenController">
+<AnchorPane id="AnchorPane" prefHeight="119.0" prefWidth="580.0" style="-fx-background-color: yellow;" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.MainScreenController">
     <stylesheets>
         <URL value="@mainscreen.css" />
     </stylesheets>
    <children>
-      <Button layoutX="46.0" layoutY="14.0" mnemonicParsing="false" text="/\" />
-      <Button layoutX="46.0" layoutY="44.0" mnemonicParsing="false" text="\\/" />
-      <Button layoutX="76.0" layoutY="29.0" mnemonicParsing="false" text="&gt;" />
-      <Button layoutX="14.0" layoutY="29.0" mnemonicParsing="false" text="&lt;" />
-      <Button fx:id="buttonBag" layoutX="148.0" layoutY="28.0" mnemonicParsing="false" text="bag [b]" />
-      <Label layoutX="286.0" layoutY="19.0" text="Fuel:" />
-      <Label layoutX="334.0" layoutY="19.0" text="?" />
+      <Button layoutX="61.0" layoutY="14.0" mnemonicParsing="false" text="/\" />
+      <Button layoutX="61.0" layoutY="44.0" mnemonicParsing="false" text="\\/" />
+      <Button layoutX="91.0" layoutY="29.0" mnemonicParsing="false" text="&gt;" />
+      <Button layoutX="29.0" layoutY="29.0" mnemonicParsing="false" text="&lt;" />
+      <Button fx:id="buttonBag" layoutX="149.0" layoutY="28.0" mnemonicParsing="false" text="bag [b]" />
+      <Label layoutX="287.0" layoutY="19.0" text="Fuel:" />
+      <Label layoutX="335.0" layoutY="19.0" text="?" />
+      <Button fx:id="buttonCreateCreature" layoutX="14.0" layoutY="82.0" mnemonicParsing="false" text="Create creature" />
    </children>
 </AnchorPane>

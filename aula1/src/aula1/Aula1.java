@@ -26,7 +26,7 @@ public class Aula1 extends Application {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/main/mainScreen.fxml"));
             AnchorPane root = loader.load();
             
-            Scene scene = new Scene(root, 640, 92);
+            Scene scene = new Scene(root, 640, 119);
             
             primaryStage.setTitle("Virtual creature controller");
             primaryStage.setScene(scene);
