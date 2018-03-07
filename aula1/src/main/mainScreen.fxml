@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.net.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane id="AnchorPane" prefHeight="92.0" prefWidth="580.0" style="-fx-background-color: yellow;" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.MainScreenController">
+    <stylesheets>
+        <URL value="@mainscreen.css" />
+    </stylesheets>
+   <children>
+      <Button layoutX="46.0" layoutY="14.0" mnemonicParsing="false" text="/\" />
+      <Button layoutX="46.0" layoutY="44.0" mnemonicParsing="false" text="\\/" />
+      <Button layoutX="76.0" layoutY="29.0" mnemonicParsing="false" text="&gt;" />
+      <Button layoutX="14.0" layoutY="29.0" mnemonicParsing="false" text="&lt;" />
+      <Button fx:id="buttonBag" layoutX="148.0" layoutY="28.0" mnemonicParsing="false" text="bag [b]" />
+      <Label layoutX="286.0" layoutY="19.0" text="Fuel:" />
+      <Label layoutX="334.0" layoutY="19.0" text="?" />
+   </children>
+</AnchorPane>
