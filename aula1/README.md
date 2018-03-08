@@ -172,9 +172,15 @@ Quando o botão "Create creature" for pressionado, os demais controles serão ha
 
 _Etapa 5: Implementação do world facade_
 
-Criamos um Model especial para iteração com o ws3d, chamado WorldFacade. Este Model cria uma instancia do WS3DProxy para iteração com o World Server e guarda alguns dos estados necessários da aplicação, simplificando a utilização da biblioteca.
+Criamos um Model especial para iteração com o ws3d, chamado WorldFacade. Este Model cria uma instancia do WS3DProxy para iteração com o World Server e guarda o estado dos objetos criados, simplificando a utilização da biblioteca.
 
 Para essa classe, criamos um teste unitário que serviu para validar a interação com o WorldServer durante o desenvolvimento.
+
+_Etapa 6: Movimentação da criatura_
+
+O model Creature apresenta um método chamado _move_, que requer os vetores vr e vl, representando a velocidade linear das rodas direita e esquerda, respectivamente.
+Utilizando o teste unitário, avaliou-se o comportamento da criatura a esse comando.
+
 
 ### Criando um script de execucao
 

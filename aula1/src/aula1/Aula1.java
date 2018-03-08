@@ -23,7 +23,7 @@ public class Aula1 extends Application {
     @Override
     public void start(Stage primaryStage) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/main/mainScreen.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/mainscreen/mainScreen.fxml"));
             AnchorPane root = loader.load();
             
             Scene scene = new Scene(root, 640, 119);
