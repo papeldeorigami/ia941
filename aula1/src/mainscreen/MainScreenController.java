@@ -42,8 +42,29 @@ public class MainScreenController {
     public Button buttonCreateCreature;
     
     @FXML
-    public Label fuelLabel;
-    
+    public Label fuelLabel;    
+
+    @FXML
+    public Label speedLabel;
+
+    @FXML
+    public Label pitchLabel;
+
+    @FXML
+    public Label serotonineLabel;
+
+    @FXML
+    public Label endorphineLabel;
+
+    @FXML
+    public Label scoreLabel;
+
+    @FXML
+    public Label positionLabel;
+
+    @FXML
+    public Label leafletCountLabel;
+
     private WorldFacade worldFacade;
 
     /**
