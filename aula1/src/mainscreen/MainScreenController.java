@@ -3,12 +3,15 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package main;
+package mainscreen;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import model.WorldFacade;
+import ws3dproxy.CommandExecException;
 
 /**
  * mainScreen Controller class
@@ -17,7 +20,19 @@ import model.WorldFacade;
 public class MainScreenController {
 
     @FXML
-    public Button buttonBag;
+    public Button buttonLeft;
+
+    @FXML
+    public Button buttonRight;
+
+    @FXML
+    public Button buttonUp;
+    
+    @FXML
+    public Button buttonDown;
+    
+    @FXML
+    public Button buttonMind;
     
     @FXML
     public Button buttonCreateCreature;
@@ -29,8 +44,21 @@ public class MainScreenController {
      */
     public void initialize() {
         WorldFacade w = getWorldFacade();
-        buttonBag.setOnAction(e -> w.showMindWindow());
+        buttonMind.setOnAction(e -> {
+            try {
+                w.showMindWindow();
+            } catch (CommandExecException ex) {
+                Logger.getLogger(MainScreenController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        });
         buttonCreateCreature.setOnAction(e -> createCreature());
+        buttonLeft.setOnAction(e -> {
+            try {
+                w.moveCreatureLeft();
+            } catch (CommandExecException ex) {
+                Logger.getLogger(MainScreenController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        });
     }
     
     public void createCreature() {
@@ -48,6 +76,11 @@ public class MainScreenController {
             @Override
             public void succeeded() {
                 buttonCreateCreature.setText("Creature Created");
+                buttonLeft.setDisable(false);
+                buttonRight.setDisable(false);
+                buttonUp.setDisable(false);
+                buttonDown.setDisable(false);
+                buttonMind.setDisable(false);
             }
             
         };

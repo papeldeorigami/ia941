@@ -16,7 +16,8 @@
  */
 package model;
 
-import service.WorldProxy;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import ws3dproxy.CommandExecException;
 import ws3dproxy.WS3DProxy;
 import ws3dproxy.model.Creature;
@@ -36,8 +37,8 @@ public class WorldFacade {
         try {
             ws3dproxy.model.World w = ws3dproxy.model.World.getInstance();
             w.reset();
-        } catch (CommandExecException e) {
-            System.out.println("Erro capturado");
+        } catch (CommandExecException ex) {
+            Logger.getLogger(WorldFacade.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     private WS3DProxy getProxy() {
@@ -46,14 +47,18 @@ public class WorldFacade {
         return proxy;
     }
 
-    public Creature getCreature() {
+    public Creature getCreature() throws CommandExecException {
         if (creature == null)
-            creature = WorldProxy.createCreature(100, 100, 90);
+            creature = getProxy().createCreature(100, 100, 90);
         return creature;
     }
 
-    public void showMindWindow() {
+    public void showMindWindow() throws CommandExecException {
         getCreature().addMindWindow();
+    }
+
+    public void moveCreatureLeft() throws CommandExecException {
+        getCreature().move(.1, .1, .1);
     }
     
 }

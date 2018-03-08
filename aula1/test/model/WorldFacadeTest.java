@@ -14,43 +14,40 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package service;
+package model;
 
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import ws3dproxy.CommandExecException;
 import ws3dproxy.model.Creature;
 
 /**
  *
  * @author Ricardo Andrade <papeldeorigami@googlemail.com>
  */
-public class WorldProxyTest {
+public class WorldFacadeTest {
     
-    /**
-     * Test of getInstance method, of class WorldProxy.
-     */
     @Test
-    public void testGetInstance() {
-        System.out.println("getInstance");
-        WorldProxy result = WorldProxy.getInstance();
-        assertNotNull(result);
+    public void testGetCreature() {
+        System.out.println("getCreature");
+        Creature result;
+        try {
+            (new WorldFacade()).getCreature();
+        } catch (CommandExecException ex) {
+            fail();
+        }
     }
     
-    /**
-     * Test of createCreature method, of class WorldProxy.
-     */
     @Test
-    public void testCreateCreature() {
-        System.out.println("createCreature");
-        double x = 0.0;
-        double y = 0.0;
-        double pitch = 0.0;
-        Creature result = WorldProxy.createCreature(x, y, pitch);
-        assertNotNull(result);
+    public void testMoveCreatureLeft() {
+        System.out.println("moveCreatureLeft");
+        try {
+            (new WorldFacade()).moveCreatureLeft();
+        } catch (CommandExecException ex) {
+            fail();
+        }
     }
 
 }

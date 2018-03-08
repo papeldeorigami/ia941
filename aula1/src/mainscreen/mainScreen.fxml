@@ -12,11 +12,11 @@
         <URL value="@mainscreen.css" />
     </stylesheets>
    <children>
-      <Button layoutX="61.0" layoutY="14.0" mnemonicParsing="false" text="/\" />
-      <Button layoutX="61.0" layoutY="44.0" mnemonicParsing="false" text="\\/" />
-      <Button layoutX="91.0" layoutY="29.0" mnemonicParsing="false" text="&gt;" />
-      <Button layoutX="29.0" layoutY="29.0" mnemonicParsing="false" text="&lt;" />
-      <Button fx:id="buttonBag" layoutX="149.0" layoutY="28.0" mnemonicParsing="false" text="bag [b]" />
+      <Button fx:id="buttonUp" disable="true" layoutX="61.0" layoutY="14.0" mnemonicParsing="false" text="/\" />
+      <Button fx:id="buttonDown" disable="true" layoutX="61.0" layoutY="44.0" mnemonicParsing="false" text="\\/" />
+      <Button fx:id="buttonRight" disable="true" layoutX="91.0" layoutY="29.0" mnemonicParsing="false" text="&gt;" />
+      <Button fx:id="buttonLeft" disable="true" layoutX="29.0" layoutY="29.0" mnemonicParsing="false" text="&lt;" />
+      <Button fx:id="buttonMind" disable="true" layoutX="149.0" layoutY="28.0" mnemonicParsing="false" text="mind" />
       <Label layoutX="287.0" layoutY="19.0" text="Fuel:" />
       <Label layoutX="335.0" layoutY="19.0" text="?" />
       <Button fx:id="buttonCreateCreature" layoutX="14.0" layoutY="82.0" mnemonicParsing="false" text="Create creature" />
