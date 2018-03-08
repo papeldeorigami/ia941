@@ -21,7 +21,6 @@ import java.util.logging.Logger;
 import ws3dproxy.CommandExecException;
 import ws3dproxy.WS3DProxy;
 import ws3dproxy.model.Creature;
-import ws3dproxy.model.SelfAttributes;
 
 /**
  *
@@ -51,7 +50,6 @@ public class WorldFacade {
     public Creature getCreature() throws CommandExecException {
         if (creature == null) {
             creature = getProxy().createCreature(100, 100, 0);
-            creatureAttributes = creature.getAttributes();
             creature.start();
         }
         return creature;
@@ -62,14 +60,18 @@ public class WorldFacade {
     }
 
     public void moveCreatureLeft() throws CommandExecException {
-        Creature creature = getCreature();
-        SelfAttributes a = creature.getAttributes();
-        creature.update(a.getIndex(), a.getColor(), a.getSpeed(), a.getWheel(), a.getPitch(), a.getFuel(), a.getStamina(), a.getEndorphine(), a.getScore(), creature.getPosition(), a.getX1(), a.getY1, a.getX2, a.getY2, creature.getLeaflets());
-        creature.move(1, 1, creatureAttributes.getPitch());
+        getCreature().rotate(-1);
     }
 
-    void moveCreatureRight() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void moveCreatureRight() throws CommandExecException {
+        getCreature().rotate(1);
     }
     
+    public void moveCreatureForward() throws CommandExecException {
+        getCreature().move(1, 1, 0);
+    }
+
+    public void moveCreatureBackwards() throws CommandExecException {
+        getCreature().move(-1, -1, 0);
+    }
 }

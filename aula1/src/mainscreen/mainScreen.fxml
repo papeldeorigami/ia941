@@ -18,7 +18,7 @@
       <Button fx:id="buttonLeft" disable="true" layoutX="29.0" layoutY="29.0" mnemonicParsing="false" text="&lt;" />
       <Button fx:id="buttonMind" disable="true" layoutX="149.0" layoutY="28.0" mnemonicParsing="false" text="mind" />
       <Label layoutX="287.0" layoutY="19.0" text="Fuel:" />
-      <Label layoutX="335.0" layoutY="19.0" text="?" />
+      <Label fx:id="fuelLabel" layoutX="335.0" layoutY="19.0" text="?" />
       <Button fx:id="buttonCreateCreature" layoutX="14.0" layoutY="82.0" mnemonicParsing="false" text="Create creature" />
    </children>
 </AnchorPane>

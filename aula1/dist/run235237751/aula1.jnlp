@@ -8,7 +8,7 @@
   </information>
   <resources>
     <j2se version="1.6+" href="http://java.sun.com/products/autodl/j2se"/>
-    <jar href="aula1.jar" size="9693" download="eager" />
+    <jar href="aula1.jar" size="9674" download="eager" />
     <jar href="lib/WS3DProxy.jar" size="166340" download="eager" />
     <jar href="lib/json.jar" size="61532" download="eager" />
   </resources>

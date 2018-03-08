@@ -5,13 +5,17 @@
  */
 package mainscreen;
 
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import model.WorldFacade;
 import ws3dproxy.CommandExecException;
+import ws3dproxy.model.SelfAttributes;
 
 /**
  * mainScreen Controller class
@@ -37,6 +41,9 @@ public class MainScreenController {
     @FXML
     public Button buttonCreateCreature;
     
+    @FXML
+    public Label fuelLabel;
+    
     private WorldFacade worldFacade;
 
     /**
@@ -55,6 +62,27 @@ public class MainScreenController {
         buttonLeft.setOnAction(e -> {
             try {
                 w.moveCreatureLeft();
+            } catch (CommandExecException ex) {
+                Logger.getLogger(MainScreenController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        });
+        buttonRight.setOnAction(e -> {
+            try {
+                w.moveCreatureRight();
+            } catch (CommandExecException ex) {
+                Logger.getLogger(MainScreenController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        });
+        buttonUp.setOnAction(e -> {
+            try {
+                w.moveCreatureForward();
+            } catch (CommandExecException ex) {
+                Logger.getLogger(MainScreenController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        });
+        buttonDown.setOnAction(e -> {
+            try {
+                w.moveCreatureBackwards();
             } catch (CommandExecException ex) {
                 Logger.getLogger(MainScreenController.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -81,6 +109,7 @@ public class MainScreenController {
                 buttonUp.setDisable(false);
                 buttonDown.setDisable(false);
                 buttonMind.setDisable(false);
+                startUpdateAttributesTimer();
             }
             
         };
@@ -91,6 +120,50 @@ public class MainScreenController {
         if (worldFacade == null)
             worldFacade = new WorldFacade();
         return worldFacade;
+    }
+
+    private void startUpdateAttributesTimer() {
+
+        class UpdateTimer {
+            Timer timer;
+            
+            static final int SECONDS = 1;
+
+            public UpdateTimer() {
+                timer = new Timer();
+                timer.schedule(new IntervalTask(), SECONDS * 1000);
+            }
+
+            class IntervalTask extends TimerTask {
+                
+                @Override
+                public void run() {
+                    timer.cancel(); //Terminate the timer thread
+                    Task<Void> updateAttributesTask = new Task<Void>() {
+                        SelfAttributes attributes;
+
+                        @Override
+                        public Void call() throws Exception {
+                            attributes = getWorldFacade().getCreature().getAttributes();
+                            return null;
+                        }
+
+                        @Override
+                        public void succeeded() {
+                            fuelLabel.setText(String.format("%.1f", attributes.getFuel()));
+                        }
+
+                    };
+                    new Thread(updateAttributesTask).start();
+                    timer = new Timer();
+                    timer.schedule(new IntervalTask(), SECONDS * 1000);
+                }
+            }
+                
+        }
+        
+        UpdateTimer updateTimer = new UpdateTimer();
+        System.out.println("Update timer started");
     }
     
 }
