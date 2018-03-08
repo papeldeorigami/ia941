@@ -15,6 +15,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import model.WorldFacade;
 import ws3dproxy.CommandExecException;
+import ws3dproxy.model.Creature;
 import ws3dproxy.model.SelfAttributes;
 
 /**
@@ -161,17 +162,26 @@ public class MainScreenController {
                 public void run() {
                     timer.cancel(); //Terminate the timer thread
                     Task<Void> updateAttributesTask = new Task<Void>() {
+                        Creature creature;
                         SelfAttributes attributes;
 
                         @Override
                         public Void call() throws Exception {
-                            attributes = getWorldFacade().getCreature().getAttributes();
+                            creature = getWorldFacade().getCreature();
+                            attributes = creature.getAttributes();
                             return null;
                         }
 
                         @Override
                         public void succeeded() {
                             fuelLabel.setText(String.format("%.1f", attributes.getFuel()));
+                            speedLabel.setText(String.format("%.1f", attributes.getSpeed()));
+                            pitchLabel.setText(String.format("%.1f", attributes.getPitch()));
+                            serotonineLabel.setText(String.format("%.1f", attributes.getSerotonin()));
+                            endorphineLabel.setText(String.format("%.1f", attributes.getEndorphine()));
+                            scoreLabel.setText(String.format("%.1f", attributes.getScore()));
+                            positionLabel.setText(String.format("%.1f, %.1f", creature.getPosition().getX(), creature.getPosition().getY()));
+                            leafletCountLabel.setText(String.format("%d", creature.getLeaflets().size()));
                         }
 
                     };

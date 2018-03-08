@@ -17,21 +17,21 @@
       <Button fx:id="buttonRight" disable="true" layoutX="91.0" layoutY="29.0" mnemonicParsing="false" text="&gt;" />
       <Button fx:id="buttonLeft" disable="true" layoutX="29.0" layoutY="29.0" mnemonicParsing="false" text="&lt;" />
       <Button fx:id="buttonMind" disable="true" layoutX="149.0" layoutY="28.0" mnemonicParsing="false" text="mind" />
-      <Label layoutX="287.0" layoutY="9.0" text="Fuel:" />
-      <Label fx:id="fuelLabel" layoutX="353.0" layoutY="9.0" text="?" />
+      <Label layoutX="261.0" layoutY="10.0" text="Fuel:" />
+      <Label fx:id="fuelLabel" layoutX="327.0" layoutY="10.0" text="?" />
       <Button fx:id="buttonCreateCreature" layoutX="14.0" layoutY="82.0" mnemonicParsing="false" text="Create creature" />
-      <Label fx:id="positionLabel" layoutX="354.0" layoutY="39.0" text="?" />
-      <Label layoutX="287.0" layoutY="39.0" text="Position" />
-      <Label fx:id="speedLabel" layoutX="353.0" layoutY="65.0" text="?" />
-      <Label layoutX="286.0" layoutY="65.0" text="Speed:" />
+      <Label fx:id="positionLabel" layoutX="328.0" layoutY="40.0" text="?" />
+      <Label layoutX="261.0" layoutY="40.0" text="Position" />
+      <Label fx:id="speedLabel" layoutX="327.0" layoutY="66.0" text="?" />
+      <Label layoutX="260.0" layoutY="66.0" text="Speed:" />
       <Label fx:id="pitchLabel" layoutX="518.0" layoutY="38.0" text="?" />
       <Label layoutX="432.0" layoutY="38.0" text="Pitch" />
       <Label fx:id="serotonineLabel" layoutX="518.0" layoutY="8.0" text="?" />
       <Label layoutX="432.0" layoutY="8.0" text="Serotonin:" />
       <Label layoutX="432.0" layoutY="64.0" text="Endorphine" />
       <Label fx:id="endorphineLabel" layoutX="518.0" layoutY="64.0" text="?" />
-      <Label layoutX="286.0" layoutY="93.0" text="Score" />
-      <Label fx:id="scoreLabel" layoutX="353.0" layoutY="93.0" text="?" />
+      <Label layoutX="260.0" layoutY="94.0" text="Score" />
+      <Label fx:id="scoreLabel" layoutX="327.0" layoutY="94.0" text="?" />
       <Label fx:id="leafletCountLabel" layoutX="518.0" layoutY="90.0" text="?" />
       <Label layoutX="432.0" layoutY="90.0" text="Leaflets:" />
    </children>
