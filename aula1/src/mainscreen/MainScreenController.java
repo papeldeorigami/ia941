@@ -168,6 +168,7 @@ public class MainScreenController {
                         @Override
                         public Void call() throws Exception {
                             creature = getWorldFacade().getCreature();
+                            creature.updateState();
                             attributes = creature.getAttributes();
                             return null;
                         }

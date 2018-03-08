@@ -21,6 +21,7 @@ import java.util.logging.Logger;
 import ws3dproxy.CommandExecException;
 import ws3dproxy.WS3DProxy;
 import ws3dproxy.model.Creature;
+import ws3dproxy.model.World;
 
 /**
  *
@@ -31,7 +32,7 @@ public class WorldFacade {
     protected WS3DProxy proxy;
     
     private Creature creature;
-    
+
     public WorldFacade() {
         getProxy();
         try {
@@ -49,7 +50,12 @@ public class WorldFacade {
 
     public Creature getCreature() throws CommandExecException {
         if (creature == null) {
-            creature = getProxy().createCreature(100, 100, 0);
+            creature = getProxy().createCreature(300, 300, 0);
+            World.createBrick(5, 80, 80, 120, 120);
+            World.createFood(0, 100, 90);
+            World.createJewel(4, 500, 450);
+            World.createCage(390, 380);
+            World.createDeliverySpot(170, 230);
             creature.start();
         }
         return creature;
