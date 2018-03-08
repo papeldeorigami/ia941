@@ -6,15 +6,20 @@
 
 # Relatório da Aula 1
 
-## RESUMO
+## Instruções de uso
 
 Para rodar o código desta aula, basta abrir a pasta *aula1* no terminal e executar: `./run.sh`
 
 A tela do World Server irá aparecer e, 3 segundos depois, a tela da interface de controle da criatura virtual.
 
-Para iniciar, é necessário clicar no botão "Create creature", que irá inicializar uma criatura próxima ao canto superior esquerdo do mundo virtual e habilitar os demais controles. A criatura pode ser então movimentada clicando nos botões com as setas direcionais e a tela da mente pode ser aberta clicando-se no botão "mind".
+Para iniciar, é necessário clicar no botão "Create creature", que irá inicializar uma criatura e alguns itens no mundo virtual, além de
+habilitar os demais controles. A criatura pode ser então movimentada clicando nos botões com as setas direcionais e a tela da mente pode ser aberta clicando-se no botão "mind".
 
-## Introdução
+Screenshot:
+
+![Screenshot](screenshot.png)
+
+## Relatório - Introdução
 
 Este é o relatório referente à atividade proposta na primeira aula do curso.
 
