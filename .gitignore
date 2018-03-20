@@ -1,3 +1,6 @@
+# VisualSonar tmp files
+*.*~
+
 # Compiled class file
 *.class
 

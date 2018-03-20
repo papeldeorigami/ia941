@@ -1,0 +1,99 @@
+sp {water-jug*apply*operator*record*last-operator*empty
+   (state <s> ^name water-jug
+              ^operator <o>)
+   (<o> ^name empty
+        ^empty-jug <j>)
+-->
+   (<s> ^last-operator <last-op>)
+   (<last-op> ^name empty
+              ^empty-jug <j>)}
+
+sp {water-jug*apply*operator*remove*last-operator*empty
+   (state <s> ^name water-jug
+              ^operator <o>
+              ^last-operator <last-op>)
+   (<o> ^name empty
+        ^empty-jug <j>)
+  -(<last-op> ^name empty
+              ^empty-jug <j>)
+-->
+   (<s> ^last-operator <last-op> -)}
+
+sp {water-jug*select*operator*avoid*inverse*empty
+   (state <s> ^name water-jug
+              ^operator <o> +
+              ^last-operator <lo>)
+   (<o> ^name empty ^empty-jug <i>)
+   (<lo> ^name fill ^fill-jug <i>)
+-->
+   (<s> ^operator <o> <)}
+
+
+
+
+sp {water-jug*apply*operator*record*last-operator*fill
+   (state <s> ^name water-jug
+              ^operator <o>)
+   (<o> ^name fill
+        ^fill-jug <j>)
+-->
+   (<s> ^last-operator <last-op>)
+   (<last-op> ^name fill
+              ^fill-jug <j>)}
+
+sp {water-jug*apply*operator*remove*last-operator*fill
+   (state <s> ^name water-jug
+              ^operator <o>
+              ^last-operator <last-op>)
+   (<o> ^name fill
+        ^fill-jug <j>)
+  -(<last-op> ^name fill
+              ^fill-jug <j>)
+-->
+   (<s> ^last-operator <last-op> -)}
+
+
+sp {water-jug*select*operator*avoid*inverse*fill
+   (state <s> ^name water-jug
+              ^operator <o> +
+              ^last-operator <lo>)
+   (<o> ^name fill ^fill-jug <i>)
+   (<lo> ^name empty ^empty-jug <i>)
+-->
+   (<s> ^operator <o> <)}
+
+
+
+sp {water-jug*apply*operator*record*last-operator*pour
+   (state <s> ^name water-jug
+              ^operator <o>)
+   (<o> ^name pour
+        ^fill-jug <fj>
+        ^empty-jug <ej>)
+-->
+   (<s> ^last-operator <last-op>)
+   (<last-op> ^name pour
+              ^fill-jug <fj>
+              ^empty-jug <ej>)}
+
+sp {water-jug*apply*operator*remove*last-operator*pour
+   (state <s> ^name water-jug
+              ^operator <o>
+              ^last-operator <last-op>)
+   (<o> ^name pour
+        ^fill-jug <fj>
+        ^empty-jug <ej>)
+  -(<last-op> ^name pour
+              ^fill-jug <fj>
+              ^empty-jug <ej>)
+-->
+   (<s> ^last-operator <last-op> -)}
+
+sp {water-jug*select*avoid*inverse*pour
+   (state <s> ^name water-jug
+              ^operator <o> +
+              ^last-operator <lo>)
+   (<o> ^name pour ^fill-jug <j>)
+   (<lo> ^name pour ^empty-jug <j>)
+-->
+   (<s> ^operator <o> <)}

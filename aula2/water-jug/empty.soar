@@ -3,7 +3,7 @@ sp {water-jug*propose*empty
               ^jug <j>)
    (<j> ^contents > 0)
 -->
-   (<s> ^operator <o> +=)
+   (<s> ^operator <o> + =)
    (<o> ^name empty
         ^empty-jug <j>)
 }
@@ -13,7 +13,7 @@ sp {water-jug*apply*empty
         ^operator <o>
         ^jug <j>)
    (<o> ^name empty
-              empty-jug <j>)
+        ^empty-jug <j>)
    (<j> ^volume <volume>
         ^contents <contents>)
 -->
