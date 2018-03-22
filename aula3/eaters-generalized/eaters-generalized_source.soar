@@ -1,0 +1,14 @@
+source _firstload.soar
+pushd all
+source all_source.soar
+popd
+pushd elaborations
+source elaborations_source.soar
+popd
+source apply-move-jump.soar
+source jump.soar
+source move.soar
+source initialize-eaters-generalized.soar
+source no-backward.soar
+source preferences.soar
+source remove-move-jump.soar

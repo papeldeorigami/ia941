@@ -1,0 +1,35 @@
+sp {propose*move-to-normal-food
+   (state <s> ^io.input-link.my-location.<direction>.content normalfood)
+-->
+   (<s> ^operator <o> + =)
+   (<o> ^name move-to-normal-food
+        ^direction <direction>)
+}
+
+
+sp {apply*move-to-normal-food
+   (state <s> ^operator <o>
+              ^io.output-link <ol>)
+   (<o> ^name move-to-normal-food
+        ^direction <direction>)
+-->
+   (<ol> ^move.direction <direction>)
+}
+
+sp {monitor*move-to-normal-food
+   (state <s> ^operator <o>)
+   (<o> ^name move-to-normal-food
+        ^direction <direction>)
+-->
+   (write |Direction: | <direction>)
+}
+
+sp {apply*move-to-normal-food*remove-move
+   (state <s> ^operator.name move-to-normal-food
+              ^io.output-link <ol>)
+	(<ol> ^move <move>)
+	(<move> ^status complete)
+-->
+   (<ol> ^move <move> -)
+}
+

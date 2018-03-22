@@ -1,0 +1,8 @@
+sp {apply*remove-move-jump
+   (state <s> ^operator.name { <name> << move jump >> }
+              ^io.output-link <out>)
+   (<out> ^<name> rection>)
+   (<direction> ^status complete)
+-->
+   (<out> ^<name> <direction> -)
+}

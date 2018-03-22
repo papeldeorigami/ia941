@@ -1,0 +1,10 @@
+sp {apply*move-jump
+   (state <s> ^operator <op>
+              ^io.output-link <out>)
+   (<op> ^name { <name> << move jump >> }
+         ^direction <direction>)
+-->
+   (write (crlf) |Apply move to direction | <direction>)
+   (<out> ^<name>.direction <direction>)
+}
+
