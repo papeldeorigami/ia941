@@ -1,0 +1,15 @@
+sp {propose*initialize-first-tank
+   (state <s> ^superstate nil
+             -^name)
+-->
+   (<s> ^operator <o> +)
+   (<o> ^name initialize-first-tank)
+}
+
+sp {apply*initialize-first-tank
+   (state <s> ^operator <op>)
+   (<op> ^name initialize-first-tank)
+-->
+   (<s> ^name first-tank)
+}
+

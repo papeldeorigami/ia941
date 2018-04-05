@@ -1,0 +1,9 @@
+## Propose Turn Operator Backward
+## If the state is named chase and the sound is coming from backward, turn left.
+sp {chase*propose*backward
+   (state <s> ^name chase
+              ^sound-direction backward)
+-->
+   (<s> ^operator <o> +)
+   (<o> ^name turn
+        ^actions.rotate.direction left)}

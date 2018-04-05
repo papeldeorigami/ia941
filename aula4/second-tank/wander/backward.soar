@@ -1,0 +1,10 @@
+sp {wander*propose*turn*backward
+   (state <s> ^name wander
+              ^io.input-link.blocked <b>)
+   (<b> ^forward yes
+        ^left yes
+        ^right yes)
+-->
+   (<s> ^operator <o> +)
+   (<o> ^name turn
+        ^actions.rotate.direction left)}

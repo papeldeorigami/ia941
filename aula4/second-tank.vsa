@@ -1,0 +1,32 @@
+VERSION 4
+/second-tank/second-tank.dm
+0	ROOT second-tank second-tank 1
+1	0	FOPERATOR _firstload _firstload.soar 2
+2	0	FOLDER all all 3
+3	2	FOPERATOR create-action-command create-action-command.soar 4
+4	2	FOPERATOR output output.soar 5
+5	2	FOPERATOR remove-command remove-command.soar 6
+6	0	FOLDER elaborations elaborations 7
+7	6	FOPERATOR _all _all.soar 8
+8	6	FOPERATOR classifications classifications.soar 9
+9	6	FOPERATOR state-io state-io.soar 10
+10	6	FOPERATOR top-state top-state.soar 11
+11	0	HLOPERATOR atack atack.soar atack 78 23
+12	11	FOPERATOR elaborations elaborations.soar 24
+13	11	OPERATOR fire-missile fire-missile.soar 25
+14	11	OPERATOR move-forward move-forward.soar 27
+15	11	OPERATOR slide slide.soar 26
+16	11	OPERATOR turn turn.soar 28
+17	0	HLOPERATOR chase chase.soar chase 67 12
+18	17	FOPERATOR elaborations elaborations.soar 13
+19	17	OPERATOR backward backward.soar 14
+20	17	OPERATOR move move.soar 15
+21	17	OPERATOR turn turn.soar 16
+22	0	OPERATOR initialize-tanksoar-default initialize-tanksoar-default.soar 17
+23	0	OPERATOR retreat retreat.soar 29
+24	0	HLOPERATOR wander wander.soar wander 56 18
+25	24	FOPERATOR elaborations elaborations.soar 19
+26	24	OPERATOR backward backward.soar 22
+27	24	OPERATOR move move.soar 20
+28	24	OPERATOR turn turn.soar 21
+END

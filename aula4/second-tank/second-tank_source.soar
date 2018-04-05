@@ -1,0 +1,21 @@
+source _firstload.soar
+pushd all
+source all_source.soar
+popd
+pushd elaborations
+source elaborations_source.soar
+popd
+source atack.soar
+pushd atack
+source atack_source.soar
+popd
+source chase.soar
+pushd chase
+source chase_source.soar
+popd
+source initialize-tanksoar-default.soar
+source retreat.soar
+source wander.soar
+pushd wander
+source wander_source.soar
+popd

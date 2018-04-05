@@ -1,0 +1,9 @@
+## Propose Turn Operator
+## If the state is named chase and the sound is coming from left or right, turn that direction.
+sp {chase*propose*turn
+   (state <s> ^name chase
+              ^sound-direction {<< left right >> <direction>})
+-->
+   (<s> ^operator <o> + =)
+   (<o> ^name turn
+        ^actions.rotate.direction <direction>)}

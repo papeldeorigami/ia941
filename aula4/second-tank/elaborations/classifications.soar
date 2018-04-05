@@ -1,0 +1,13 @@
+sp {elaborate*state*missiles*low
+   (state <s> ^name tanksoar
+              ^io.input-link.missiles 0)
+-->
+   (<s> ^missiles-energy low)
+}
+
+sp {elaborate*state*energy*low
+   (state <s> ^name tanksoar
+              ^io.input-link.energy <= 200)
+-->
+   (<s> ^missiles-energy low)
+}

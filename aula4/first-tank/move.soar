@@ -1,0 +1,12 @@
+## Move Operator Proposal
+# If the task is tanksoar and the tank is not blocked in the forward
+# direction, propose the move operator.
+sp {first-tank*propose*move
+   (state <s> ^name first-tank
+              ^io.input-link.blocked.forward no)
+-->
+   (<s> ^operator <op> + =)
+   (<op> ^name move
+         ^actions.move.direction forward)
+}
+

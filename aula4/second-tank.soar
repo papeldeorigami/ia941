@@ -1,0 +1,3 @@
+pushd second-tank
+source second-tank_source.soar
+popd

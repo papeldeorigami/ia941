@@ -1,0 +1,9 @@
+sp {apply*operator*create-action-command
+   (state <s> ^operator <o>
+              ^io.output-link <out>)
+   (<o> ^actions <act>)
+   (<act> ^<att> <value>)
+   (<value> ^<att2> <value2>)
+-->
+   (<out> ^<att> <value3>)
+   (<value3> ^<att2> <value2>)}

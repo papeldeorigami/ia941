@@ -1,0 +1,14 @@
+##Propose Chase Operator
+# If the task is tanksoar, and sound sensor is not silent, and there
+# is no tank on radar, and energy or missiles is not low, then propose the
+# chase operator.
+sp {propose*chase
+   (state <s> ^name tanksoar
+              ^io.input-link <io>
+             -^missiles-energy low)
+   (<io> ^sound <> silent
+        -^radar.tank)
+-->
+   (<s> ^operator <o> +)
+   (<o> ^name chase)
+}

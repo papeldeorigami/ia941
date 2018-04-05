@@ -1,0 +1,15 @@
+VERSION 4
+/first-tank/first-tank.dm
+0	ROOT first-tank first-tank 1
+1	0	FOPERATOR _firstload _firstload.soar 2
+2	0	FOLDER all all 3
+3	2	FOPERATOR output output.soar 4
+4	2	OPERATOR radar-off radar-off.soar 5
+5	0	FOLDER elaborations elaborations 6
+6	5	FOPERATOR _all _all.soar 7
+7	5	FOPERATOR top-state top-state.soar 8
+8	0	OPERATOR initialize-first-tank initialize-first-tank.soar 9
+9	0	OPERATOR move move.soar 10
+10	0	OPERATOR radar-off radar-off.soar 11
+11	0	OPERATOR turn turn.soar 12
+END

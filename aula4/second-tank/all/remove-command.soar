@@ -1,0 +1,7 @@
+sp {apply*operator*remove-command
+   (state <s> ^operator.actions
+              ^io.output-link <out>)
+   (<out> ^<att> <value>)
+   (<value> ^status complete)
+-->
+   (<out> ^<att> <value> -)}

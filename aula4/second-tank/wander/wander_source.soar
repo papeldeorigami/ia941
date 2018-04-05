@@ -1,0 +1,4 @@
+source elaborations.soar
+source backward.soar
+source move.soar
+source turn.soar
