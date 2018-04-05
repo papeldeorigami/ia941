@@ -1,0 +1,24 @@
+# Apply*move*create*last-direction
+# If the move operator for a direction is selected,
+# create an augmentation called last-direction with that direction.
+sp {apply*move*create*last-direction   
+   (state <s> ^operator <o>)
+   (<o> ^name move
+        ^direction <direction>)
+-->
+   (<s> ^last-direction <direction>)
+}
+
+# Apply*move*remove*last-direction
+# If the move operator for a direction is selected,
+# and the last-direction is not equal to that direction,
+# then remove the last-direction.
+sp {apply*move*remove*last-direction
+   (state <s> ^operator <o>
+              ^last-direction <last-direction>)
+   (<o> ^direction <> <last-direction>
+        ^name move)
+-->
+   (<s> ^last-direction <last-direction> -)
+}
+

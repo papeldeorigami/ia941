@@ -1,0 +1,29 @@
+sp {eaters-generalized*propose*move
+   (state <s> ^io.input-link.my-location.<direction>.content { <content> <> wall })
+-->
+   (write (crlf) |Propose move to direction | <direction> | where there is content | <content>)
+   (<s> ^operator <op> + =)
+   (<op> ^name move
+         ^direction <direction>
+         ^content <content>)
+}
+
+#sp {apply*move
+#   (state <s> ^operator <op>
+#              ^io.output-link <out>)
+#   (<op> ^name move
+#         ^direction <direction>)
+#-->
+#   (write (crlf) |Apply move to direction | <direction>)
+#   (<out> ^move.direction <direction>)
+#}
+#
+#sp {apply*move*remove-move
+#   (state <s> ^operator.name move
+#              ^io.output-link <out>)
+#   (<out> ^move <direction>)
+#   (<direction> ^status complete)
+#-->
+#   (<out> ^move <direction> -)
+#}
+#

@@ -6,15 +6,16 @@
 
 # Relatório da Aula 3 - Tutorial 2 do SOAR
 
-Usando Tutorial 9.6:
-
+As atividades abaixo foram realizadas com a versão 9.6 do tutorial, disponível em:
 https://soar.eecs.umich.edu/articles/downloads/soar-suite/228-soar-tutorial-9-6-0
+
+## Atividade 1
 
 _Como o estado atual da criatura é considerado nas regras?_
 
 Regra de proposição examina o conteúdo das células adjacentes em busca de comida.
 Regra de aplicação move na direção da comida.
-Regra de remoção para evitar acúmulo de movimentos anteriores.
+Regra de remoção para evitar acúmulo de movimentos anteriores na WME move.
 
 _Como a decisão de ação escolhida é aplicada de fato ao jogo?_
 
@@ -61,4 +62,50 @@ Ele não consegue avançar se não encontrar mais comida.
 _O que seria necessário fazer para que ele não ficasse paralizado, depois de um tempo?_
 
 Mudar a proposição para não depender da existência de comida.
+
+## Atividade 2
+
+Seguindo o tutorial, foi implementado o movimentador para o norte e depois ajustado para buscar comida.
+Durante esse desenvolvimento, foi importante aprender a utilizar o debugger.
+
+* Uso da interface de entrada e saída de um programa Soar
+
+	^io.input-link: conteudo das celulas adjacentes
+	^io.output-link: determina a direcao do movimento
+
+* Uso de shortcuts em programas Soar
+	
+	Ao inves de `(<s> ^io <io>) (<io>.input-link)` pode-se utilizar `(<s> ^io.input-link)`
+
+* Uso do SoarJavaDebugger para acompanhar o processo de escolha e aplicação de operadores, por meio de traces.
+
+	Rodar com step e utilizar e mover a barra verde para escolher em qual etapa o programa deve parar.
+	Tambem é util usar `run 1 -p` para ir etapa por etapa.
+	Existe ainda a possibilidade de se utilizar comandos write para simplificar o debug.
+	
+* Diferença entre ações o-supported e i-supported, e WMEs persistentes
+
+	Na fase de proposição, em geral são i-supported; na fase apply, são o-supported. As o-supported são WME persistentes.
+
+* Uso de preferências entre operadores
+
+	Utilizar sinal de = para indicar que as preferencias podem ser tomadas de maneira randômica.
+
+* Uso de extensões em regras
+
+	Pode-se utilizar regras "monitor" para depuração.
+	Também é possível substituir listas de valores pela notação << >>
+
+* Uso do VisualSoar para detectar erros em regras
+
+	Menu Datamap --> check for syntax errors.
+
+* Uso de comandos do Debugger em tempo de execução
+
+	A maior parte está disponível através dos próprios botões da interface gráfica.
+
+## Atividade 3
+
+Foram implementados os comandos move e jump, incluindo seletores para decidir pela melhor pontuacao.
+
 

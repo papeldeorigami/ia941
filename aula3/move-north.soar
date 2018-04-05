@@ -4,6 +4,7 @@
 # Propose*move-north:
 # If I exist, then propose the move-north operator.
 
+
 sp {propose*move-north
    (state <s> ^type state ^io.input-link.eater <e>)
        (<e> ^x <x> ^y <y>)
@@ -31,3 +32,11 @@ sp {apply*move-north
 #              ^io.output-link <ol>)
 #-->
 #   (<ol> ^move.direction north)}
+
+sp {apply*move-north*remove-move
+   (state <s> ^operator.name move-north
+              ^io.output-link <out>)
+   (<out> ^move <move>)
+   (<move> ^status complete)
+-->
+   (<out> ^move <move> -)}

@@ -1,0 +1,3 @@
+pushd eaters-generalized
+source eaters-generalized_source.soar
+popd

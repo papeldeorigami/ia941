@@ -1,0 +1,11 @@
+# Propose*jump:
+# If the content of a cell two steps away in a direction is not a wall,
+# propose jump in the direction of that cell, with the cell’s content,
+# and indicate that this operator can be selected randomly.
+sp {propose*jump  
+   (state <s> ^io.input-link.my-location.<dir>.<dir>.content { <content> <> wall })
+-->
+   (<s> ^operator <o> + =)
+   (<o> ^name jump     
+        ^direction <dir>
+        ^content <content>)}
