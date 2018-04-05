@@ -1,0 +1,3 @@
+pushd mac-aula5
+source mac-aula5_source.soar
+popd
