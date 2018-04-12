@@ -12,7 +12,5 @@ Controle deliberativo versus controle reativo.
 Controle deliberativo envolve **auto-correção**.
 
 ## Tutorial 4
-
-
-
+## Tutorial 5
 
