@@ -8,6 +8,7 @@ package SoarBridge;
 import Simulation.Environment;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -17,6 +18,7 @@ import org.jsoar.kernel.Phase;
 import org.jsoar.kernel.RunType;
 import org.jsoar.kernel.memory.Wme;
 import org.jsoar.kernel.memory.Wmes;
+import org.jsoar.kernel.symbols.IntegerSymbol;
 import org.jsoar.kernel.symbols.DoubleSymbol;
 import org.jsoar.kernel.symbols.Identifier;
 import org.jsoar.kernel.symbols.StringSymbol;
@@ -27,6 +29,7 @@ import org.jsoar.util.commands.SoarCommands;
 import ws3dproxy.CommandExecException;
 import ws3dproxy.CommandUtility;
 import ws3dproxy.model.Creature;
+import ws3dproxy.model.Leaflet;
 import ws3dproxy.model.Thing;
 import ws3dproxy.util.Constants;
 
@@ -47,6 +50,7 @@ public class SoarBridge
     Identifier creature;
     Identifier creatureSensor;
     Identifier creatureParameters;
+    Identifier creatureLeaflets;
     Identifier creaturePosition;
     Identifier creatureMemory;
     
@@ -93,6 +97,12 @@ public class SoarBridge
         Identifier newID = sf.createIdentifier('I');
         agent.getInputOutput().addInputWme(id, sf.createString(s), newID);
         return(newID);
+    }
+    
+    private void CreateIntegerWME(Identifier id, String s, int value) {
+        SymbolFactory sf = agent.getSymbols();
+        IntegerSymbol newID = sf.createInteger(value);
+        agent.getInputOutput().addInputWme(id, sf.createString(s), newID);
     }
     
     private void CreateFloatWME(Identifier id, String s, double value) {
@@ -158,6 +168,21 @@ public class SoarBridge
               creaturePosition = CreateIdWME(creature, "POSITION");
               CreateFloatWME(creaturePosition, "X", c.getPosition().getX());
               CreateFloatWME(creaturePosition, "Y", c.getPosition().getY());
+              // Set Creature LEAFLETS
+              creatureLeaflets = CreateIdWME(creature, "LEAFLETS");
+              for (Leaflet l : c.getLeaflets()) {
+                Identifier leaflet = CreateIdWME(creatureLeaflets, "LEAFLET");
+                CreateStringWME(leaflet, "ID", l.getID().toString());
+                CreateIntegerWME(leaflet, "PAYMENT", l.getPayment());
+                CreateIntegerWME(leaflet, "SITUATION", l.getSituation());
+                HashMap<String, Integer[]> items = l.getItems();
+                for (HashMap.Entry<String, Integer[]> entry: items.entrySet()) {
+                    Identifier item = CreateIdWME(leaflet, "JEWEL");
+                    CreateStringWME(item, "COLOR", entry.getKey());
+                    CreateIntegerWME(item, "NEEDED", entry.getValue()[0]);
+                    CreateIntegerWME(item, "COLLECTED", entry.getValue()[1]);
+                }              
+              }
               // Set creature sensors
               creatureSensor = CreateIdWME(creature, "SENSOR");
               // Create Fuel Sensors
