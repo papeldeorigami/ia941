@@ -18,18 +18,10 @@ sp {apply*initCreature
    (state <s> ^operator.name initCreature
               ^io.input-link.CREATURE <creature>)
    (<creature> ^MEMORY <memory>)
-   (<creature> ^LEAFLETS.LEAFLET <leaflet>)
-   (<leaflet> ^ITEM <item>)
-   (<item> ^COLOR <color>)
-   (<item> ^COLLECTED <collected>)
-   (<memory> ^JEWELS_BY_COLOR <jewelsByColor>)
-   (<jewelsByColor> ^<color> <jewelsByColorCount>)
 -->
    (<creature> ^INITIALIZED 1)
-   (<memory> ^JEWELS_BY_COLOR <jewelsByColor>)
-   (<jewelsByColor> ^<color> <jewelsByColorCount>- (+ <jewelsByColorCount> <collected>)
    (<memory> ^COLLECTED_JEWELS 0)
-   (write (crlf) | Init Creature | <memory>)
+   (write (crlf) | Init Creature| <memory>)
 }
 
 ###################################  WANDER  ###################################

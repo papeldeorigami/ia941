@@ -1,0 +1,76 @@
+###################################  INIT CREATURE  ###################################
+# This operator will execute only once for each creature created
+
+# Check if creature was not initialized yet
+sp {propose*init*creature
+   (state <s> ^io.input-link <il>
+              ^superstate nil)
+   (<il> ^CREATURE <creature>)
+   (<creature> -^INITIALIZED)
+-->
+   (<s> ^operator <o> +)
+   (<o> ^name initCreature)
+}
+   
+# Ensure that counters are initialized with zero
+sp {apply*init*creature
+   (state <s> ^operator <o>
+              ^io <io>)
+   (<io> ^input-link.CREATURE <creature>)  
+   (<creature> ^MEMORY <memory>)
+   (<o> ^name initCreature)
+-->
+   (<creature> ^INITIALIZED 1)
+   (<memory> ^COUNT 0)
+   (write (crlf) | Init Creature |)
+}
+
+# Check if leaflet was not initialized yet
+sp {propose*init*leaflet
+   (state <s> ^io.input-link <il>
+              ^superstate nil)
+   (<il> ^CREATURE.LEAFLETS.LEAFLET <leaflet>)
+   (<leaflet> -^INITIALIZED)
+-->
+   (<s> ^operator <o> + =)
+   (<o> ^name initLeaflet)}
+   
+# Ensure that counters are initialized with zero
+sp {apply*init*leaflet
+   (state <s> ^operator <o>
+              ^io <io>)
+   (<io> ^input-link.CREATURE.LEAFLETS.LEAFLET <leaflet>)  
+   (<o> ^name initLeaflet)
+-->
+   (<leaflet> ^INITIALIZED 1)
+   (<leaflet> ^COLLECTED_JEWELS 0)
+   (write (crlf) | Init leaflet | <leaflet>)
+}
+
+
+
+# Init creature preferences
+sp {init*creature*preferences
+(state <s> ^operator <o> + 
+                     <o2> +)
+(<o> ^name initCreature)
+(<o2> ^name seeEntityWithMemoryCount)
+-->
+(<s> ^operator <o> > <o2>)} 
+
+sp {init*leaflet*initCreature*preferences
+(state <s> ^operator <o> + 
+                     <o2> +)
+(<o> ^name initLeaflet)
+(<o2> ^name initCreature)
+-->
+(<s> ^operator <o> < <o2>)} 
+
+sp {init*leaflet*seeEntityWithMemoryCount*preferences
+(state <s> ^operator <o> + 
+                     <o2> +)
+(<o> ^name initLeaflet)
+(<o2> ^name seeEntityWithMemoryCount)
+-->
+(<s> ^operator <o> > <o2>)} 
+
