@@ -81,7 +81,73 @@ Utilizamos o inicializador para criar um knapsack na criatura; desta forma, pode
 
 ### Salvar quantidade de joias por leaflet
 
-A regra getJewel foi estendida
+A regra getJewel foi estendida:
+
+```
+# Propose*get*jewel:
+sp {propose*get*jewel
+   (state <s> ^io.input-link <il>)
+   (<il> ^CREATURE <creature>)
+   (<creature> ^SENSOR.VISUAL.ENTITY <entity>)
+   (<entity> ^TYPE JEWEL)
+   (<entity> ^DISTANCE <jewelDistance> < 30)
+   (<entity> ^NAME <jewelName>)
+   (<creature> ^MEMORY.ENTITY.NAME <memoryItemName> <jewelName>)
+   
+   # additional rules to enable leaflets
+   (<entity> ^COLOR <color>)
+   (<creature> ^LEAFLETS.LEAFLET <leaflet>)
+   (<leaflet> ^JEWEL <leafletJewel>)
+   (<leafletJewel> ^COLOR <color>)
+   (<leafletJewel> ^NEEDED <needed>)
+   (<leafletJewel> ^COLLECTED <collected> < <needed>)
+   (<leaflet> ^ID <leafletId>)
+-->
+   (<s> ^operator <o> +)
+   (<o> ^name getJewel)
+   (<o> ^parameter <jewel>)
+   (<jewel> ^NAME <jewelName>)
+   (<jewel> ^DISTANCE <jewelDistance>)
+   (<jewel> ^COLOR <color>)
+
+   (<jewel> ^LEAFLETID <leafletId>)
+}
+
+# Apply*get*jewel:
+# If the move operator is selected, then generate an output command to it 
+sp {apply*get*jewel
+   (state <s> ^operator <o>
+              ^io <io>)
+   (<io> ^input-link <il>)      
+   (<io> ^output-link <ol>)
+   (<o> ^name getJewel)
+   (<o> ^parameter.NAME <jewelName>)
+   (<il> ^CREATURE <creature>) 
+   (<creature> ^MEMORY <memory>)
+   (<memory> ^COUNT <quantity>)  
+   (<memory> ^ENTITY <memoryEntity>)
+   (<memoryEntity> ^NAME <memoryEntityName> <jewelName>)
+   -(<ol> ^GET <anything>)
+
+   # additional checks to enable leaflets
+   (<o> ^parameter.LEAFLETID <leafletId>)
+   (<creature> ^LEAFLETS.LEAFLET <leaflet>)
+   (<leaflet> ^ID <leafletId>)
+   (<leaflet> ^JEWEL <leafletJewel>)
+   (<leafletJewel> ^COLOR <jewelColor>)
+   (<leafletJewel> ^COLLECTED <collected>)
+-->
+   (<ol> ^GET <command>)
+   (<command> ^Name <jewelName>)
+   (<memory> ^COUNT <quantity> -
+             ^COUNT (- <quantity> 1))
+   (<memory> ^ENTITY <memoryEntity> -)
+
+   (<leafletJewel> ^COLLECTED <collected> - (+ <collected> 1))
+}
+```
+
+Nota: a mesma condição (de buscar joias dos Leaflets) foi acrescentada na moveJewel para evitar impasse.
 
 ### Ignorar joias que nao estao nos leaflets
 

@@ -6,7 +6,7 @@ epmem --set learning off
 #log --level error
 
 ###################################  INIT CREATURE  ###################################
-# This operator will execute only once for every creature
+# This operator will execute only once for each creature created
 
 # Check if creature was not initialized yet
 sp {propose*init*creature
@@ -26,8 +26,10 @@ sp {apply*init*creature
    (<o> ^name initCreature)
 -->
    (<creature> ^INITIALIZED 1)
+   (<creature> ^DELIVERY_SPOT <deliverySpot>)
+   (<deliverySpot> ^X 0 ^Y 0)
    (<creature> ^KNAPSACK <knapsack>)
-   (<knapsack> ^RED 0 
+   (<knapsack> ^RED 0
                ^GREEN 0
                ^BLUE 0
                ^YELLOW 0
@@ -90,9 +92,9 @@ sp {propose*see*entity*with*memory*count
    (<entity> ^NAME <name>)
    (<creature> ^MEMORY <memory>)   
    -(<memory> ^ENTITY.NAME <name>)
-   (<memory> ^COUNT <quantity> < 7)
+   #(<memory> ^COUNT <quantity> < 7)
 -->
-   (<s> ^operator <o> +)
+   (<s> ^operator <o> + =)
    (<o> ^name seeEntityWithMemoryCount)
    (<o> ^parameterEntity <newEntity>)
    (<newEntity> ^Name <name>)
@@ -288,10 +290,18 @@ sp {propose*move*jewel
    (<entityInMemory> ^Y <entityInMemoryPositionY>)
    (<entityInMemory> ^NAME <entityInMemoryName>)
    (<entityInMemory> ^COLOR <entityInMemoryColor>)       
+
+   # additional checks to enable leaflets
+   (<creature> ^LEAFLETS.LEAFLET <leaflet>)
+   (<leaflet> ^JEWEL <leafletJewel>)
+   (<leafletJewel> ^COLOR <entityInMemoryColor>)
+   (<leafletJewel> ^NEEDED <needed>)
+   (<leafletJewel> ^COLLECTED <collected> < <needed>)
 -->
    (<s> ^operator <o> +)
    (<o> ^name moveJewel)
    (<o> ^parameter <jewel>)
+   (<jewel> ^leaflet <leaflet>)
    (<jewel> ^distance (sqrt (+ (* (- <creaturePositionX> <entityInMemoryPositionX>) (- <creaturePositionX> <entityInMemoryPositionX>)) (* (- <creaturePositionY> <entityInMemoryPositionY>) (- <creaturePositionY> <entityInMemoryPositionY>)))))
    (<jewel> ^X <entityInMemoryPositionX>)
    (<jewel> ^Y <entityInMemoryPositionY>)
@@ -366,16 +376,28 @@ sp {propose*get*jewel
    (state <s> ^io.input-link <il>)
    (<il> ^CREATURE <creature>)
    (<creature> ^SENSOR.VISUAL.ENTITY <entity>)
-   (<entity> ^TYPE JEWEL) 
+   (<entity> ^TYPE JEWEL)
    (<entity> ^DISTANCE <jewelDistance> < 30)
    (<entity> ^NAME <jewelName>)
-   (<creature> ^MEMORY.ENTITY.NAME <memoryItemName> <jewelName>)     
+   (<creature> ^MEMORY.ENTITY.NAME <memoryItemName> <jewelName>)
+
+   # additional checks to enable leaflets
+   (<entity> ^COLOR <color>)
+   (<creature> ^LEAFLETS.LEAFLET <leaflet>)
+   (<leaflet> ^JEWEL <leafletJewel>)
+   (<leafletJewel> ^COLOR <color>)
+   (<leafletJewel> ^NEEDED <needed>)
+   (<leafletJewel> ^COLLECTED <collected> < <needed>)
 -->
    (<s> ^operator <o> +)
    (<o> ^name getJewel)
    (<o> ^parameter <jewel>)
    (<jewel> ^NAME <jewelName>)
-   (<jewel> ^DISTANCE <jewelDistance>)}
+   (<jewel> ^DISTANCE <jewelDistance>)
+   (<jewel> ^COLOR <color>)
+
+   (<jewel> ^LEAFLET <leaflet>)
+}
    
 # Apply*get*jewel:
 # If the move operator is selected, then generate an output command to it 
@@ -391,14 +413,23 @@ sp {apply*get*jewel
    (<memory> ^COUNT <quantity>)  
    (<memory> ^ENTITY <memoryEntity>)
    (<memoryEntity> ^NAME <memoryEntityName> <jewelName>)
-   - (<ol> ^GET <anything>)   # Colocado por Ricardo
+   -(<ol> ^GET <anything>)
+
+   # additional checks to enable leaflets
+   (<o> ^parameter.LEAFLET.ID <leafletId>)
+   (<creature> ^LEAFLETS.LEAFLET <leaflet>)
+   (<leaflet> ^ID <leafletId>)
+   (<leaflet> ^JEWEL <leafletJewel>)
+   (<leafletJewel> ^COLOR <jewelColor>)
+   (<leafletJewel> ^COLLECTED <collected>)
 -->
    (<ol> ^GET <command>)
    (<command> ^Name <jewelName>)
    (<memory> ^COUNT <quantity> -
              ^COUNT (- <quantity> 1))
    (<memory> ^ENTITY <memoryEntity> -)
-   #(halt)
+
+   (<leafletJewel> ^COLLECTED <collected> - (+ <collected> 1))
 }
   
 # Apply*get*remove-move:
@@ -480,7 +511,7 @@ sp {apply*avoidBrick*remove-move
 sp {moveJewel*seeEntity*preferences
 (state <s> ^operator <o> + 
                      <o2> +)
-(<o> ^name << seeEntityWithMemoryCount seeEntityWithoutMemoryCount >>)
+(<o> ^name seeEntityWithMemoryCount)
 (<o2> ^name << moveJewel moveFood eatFood >>)
 -->
 (<s> ^operator <o> > <o2>)} 
@@ -490,17 +521,9 @@ sp {avoidBrick*seeEntityWithMemory*preferences
 (state <s> ^operator <o> + 
                      <o2> +)
 (<o> ^name avoidBrick)
-(<o2> ^name << seeEntityWithMemoryCount seeEntityWithoutMemoryCount >>)
+(<o2> ^name seeEntityWithMemoryCount)
 -->
 (<s> ^operator <o> > <o2>)} 
-
-# See Ententy Without Memory Preferences
-sp {seeEntity*without*memory*preferences
-(state <s> ^operator <o> +)
-(<o> ^name << seeEntityWithMemoryCount seeEntityWithoutMemoryCount >>)
--->
-(<s> ^operator <o> =)}
-
 
 #JEWEL
 
@@ -518,7 +541,7 @@ sp {getJewel*seeEntity*preferences
 (state <s> ^operator <o> + 
                      <o2> +)
 (<o> ^name getJewel)
-(<o2> ^name << seeEntityWithMemoryCount seeEntityWithoutMemoryCount >>)
+(<o2> ^name seeEntityWithMemoryCount)
 -->
 (<s> ^operator <o> > <o2>)} 
 
@@ -541,21 +564,42 @@ sp {moveJewel*moveJewel*less*distance
 (<il> ^CREATURE <creature>)                 
 (<o> ^name moveJewel)
 (<o2> ^name moveJewel)
-(<o2> ^parameter.distance <distance2>)
-(<o>  ^parameter.distance <distance> <= <distance2>)
+(<o2> ^parameter <parameter2>)
+(<parameter2> ^distance <distance2>)
+(<o> ^parameter <parameter>)
+(<parameter> ^distance <distance> < <distance2>)
+-->
+(<ss> ^operator <o> > <o2>)} 
+
+# Move Jewel vs Move Jewel Preferences
+sp {moveJewel*moveJewel*better*leaflet*payment
+(state <s> ^attribute operator 
+           ^impasse tie
+           ^item <o> {<> <o> <o2>}
+           ^superstate <ss>)
+(<ss> ^io.input-link <il>)
+(<il> ^CREATURE <creature>)
+(<o> ^name moveJewel)
+(<o2> ^name moveJewel)
+(<o2> ^parameter <parameter2>)
+(<parameter2> ^NAME <name2>)
+(<parameter2> ^leaflet.PAYMENT <payment2>)
+(<o> ^parameter <parameter>)
+(<parameter> ^NAME <name> = <name2>)
+(<parameter> ^leaflet.PAYMENT <payment> >= <payment2>)
 -->
 (<ss> ^operator <o> > <o2>)} 
 
 # Get Jewel vs Get Jewel Preferences
-sp {getJewel*getJewel*preferences
+sp {getJewel*getJewel*preferences*highest*value
 (state <s> ^attribute operator 
            ^impasse tie
            ^item <o> {<> <o> <o2>}
            ^superstate <ss>)        
 (<o> ^name getJewel)
 (<o2> ^name getJewel)
-(<o2> ^parameter.distance <distance2>)
-(<o>  ^parameter.distance <distance> <= <distance2>)
+(<o2> ^parameter.LEAFLET.PAYMENT <payment2>)
+(<o>  ^parameter.LEAFLET.PAYMENT <payment> >= <payment2>)
 -->
 (<ss> ^operator <o> > <o2>)} 
 
@@ -682,6 +726,15 @@ sp {wander*preferences
 (<o> ^name wander)
 -->
 (<s> ^operator <o> <)}
+
+# Init creature preferences
+sp {init*creature*preferences
+(state <s> ^operator <o> + 
+                     <o2> +)
+(<o> ^name initCreature)
+(<o2> ^name seeEntityWithMemoryCount)
+-->
+(<s> ^operator <o> > <o2>)} 
 
 # HALT
 
