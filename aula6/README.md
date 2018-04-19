@@ -84,90 +84,134 @@ Utilizamos o inicializador para criar um knapsack na criatura; desta forma, pode
 A regra getJewel foi estendida:
 
 ```
-# Propose*get*jewel:
-sp {propose*get*jewel
-   (state <s> ^io.input-link <il>)
-   (<il> ^CREATURE <creature>)
-   (<creature> ^SENSOR.VISUAL.ENTITY <entity>)
-   (<entity> ^TYPE JEWEL)
-   (<entity> ^DISTANCE <jewelDistance> < 30)
-   (<entity> ^NAME <jewelName>)
-   (<creature> ^MEMORY.ENTITY.NAME <memoryItemName> <jewelName>)
-   
-   # additional rules to enable leaflets
-   (<entity> ^COLOR <color>)
-   (<creature> ^LEAFLETS.LEAFLET <leaflet>)
-   (<leaflet> ^JEWEL <leafletJewel>)
-   (<leafletJewel> ^COLOR <color>)
-   (<leafletJewel> ^NEEDED <needed>)
-   (<leafletJewel> ^COLLECTED <collected> < <needed>)
-   (<leaflet> ^ID <leafletId>)
--->
-   (<s> ^operator <o> +)
-   (<o> ^name getJewel)
-   (<o> ^parameter <jewel>)
-   (<jewel> ^NAME <jewelName>)
-   (<jewel> ^DISTANCE <jewelDistance>)
-   (<jewel> ^COLOR <color>)
-
-   (<jewel> ^LEAFLETID <leafletId>)
-}
-
-# Apply*get*jewel:
-# If the move operator is selected, then generate an output command to it 
-sp {apply*get*jewel
+# This will update the leaflets jewels collected count
+sp {apply*get*jewel*update*leaflets*collected
    (state <s> ^operator <o>
               ^io <io>)
    (<io> ^input-link <il>)      
-   (<io> ^output-link <ol>)
    (<o> ^name getJewel)
-   (<o> ^parameter.NAME <jewelName>)
    (<il> ^CREATURE <creature>) 
    (<creature> ^MEMORY <memory>)
    (<memory> ^COUNT <quantity>)  
    (<memory> ^ENTITY <memoryEntity>)
-   (<memoryEntity> ^NAME <memoryEntityName> <jewelName>)
-   -(<ol> ^GET <anything>)
 
    # additional checks to enable leaflets
-   (<o> ^parameter.LEAFLETID <leafletId>)
+   (<memoryEntity> ^COLOR <color>)
    (<creature> ^LEAFLETS.LEAFLET <leaflet>)
-   (<leaflet> ^ID <leafletId>)
+   (<leaflet> ^COLLECTED_JEWELS <collectedJewels>)
    (<leaflet> ^JEWEL <leafletJewel>)
-   (<leafletJewel> ^COLOR <jewelColor>)
-   (<leafletJewel> ^COLLECTED <collected>)
+   (<leafletJewel> ^COLOR <color>)
+   (<leafletJewel> ^NEEDED <needed>)
+   (<leafletJewel> ^COLLECTED <collected> < <needed>)
 -->
-   (<ol> ^GET <command>)
-   (<command> ^Name <jewelName>)
-   (<memory> ^COUNT <quantity> -
-             ^COUNT (- <quantity> 1))
-   (<memory> ^ENTITY <memoryEntity> -)
-
    (<leafletJewel> ^COLLECTED <collected> - (+ <collected> 1))
+   (<leaflet> ^COLLECTED_JEWELS <collectedJewels> - (+ <collectedJewels> 1))
+}
+
+```
+
+### Detectar leaflet completo
+
+Assumindo que todo leaflet tem 9 jóias, a detecção de leaflets completos ficou da seguinte forma:
+
+```
+##############################  LEAFLETS DETECTION #####################################
+# detect leaflets completion
+
+# detect if a single leaflet is complete
+sp {detect*leaflet*complete
+   (state <s> ^io.input-link <il>)
+   (<il> ^CREATURE <creature>) 
+   (<creature> ^LEAFLETS.LEAFLET <leaflet>)
+   -(<leaflet> ^COMPLETED)
+   (<leaflet> ^COLLECTED_JEWELS 9)
+-->
+   (<leaflet> ^COMPLETED 1)
+}
+
+# detect if all leaflets are complete
+sp {detect*all*leaflets*complete
+   (state <s> ^io.input-link <il>)
+   (<il> ^CREATURE <creature>) 
+   (<creature> ^LEAFLETS <leaflets>)
+   (<leaflets> ^LEAFLET <leaflet1>)
+   (<leaflet1> ^COMPLETED 1)
+   (<leaflets> ^LEAFLET <leaflet2>)
+   (<leaflet2> ^COMPLETED 1)
+   (<leaflets> ^LEAFLET <leaflet3>)
+   (<leaflet3> ^COMPLETED 1)
+-->
+   (<leaflets> ^ALL_COMPLETED 1)
 }
 ```
 
-Nota: a mesma condição (de buscar joias dos Leaflets) foi acrescentada na moveJewel para evitar impasse.
+### Entregar jóias no delivery spot
 
-### Ignorar joias que nao estao nos leaflets
-
-Basta nao salvar na memória, acrescentando a seguinte condição nas duas regras responsáveis por "enxergar" os objetos:
 ```
-   (<creature> ^LEAFLETS.LEAFLET.JEWEL.COLOR <color>)
+# Propose*move*delivery*spot:
+sp {propose*move*delivery*spot
+   (state <s> ^io.input-link <il>)
+   (<il> ^CREATURE <creature>)
+   (<creature> ^LEAFLETS.ALL_COMPLETED 1)
+-->
+   (<s> ^operator <o> +)
+   (<o> ^name moveDeliverySpot)
+}
+   
+# move to delivery spot position (defaults to 0,0)
+sp {apply*move*delivery*spot
+   (state <s> ^operator <o>
+              ^io <io>)
+   (<io> ^input-link <il>)           
+   (<io> ^output-link <ol>)
+   (<o> ^name moveDeliverySpot)
+-->
+   (<ol> ^MOVE <command>)
+   (<command> ^Vel 1)
+   (<command> ^VelR 1)
+   (<command> ^VelL 1)
+   (<command> ^X 0)
+   (<command> ^Y 0)
+}
+
+# Apply*moveDeliverySpot*remove-move:
+# If the moveDeliverySpot operator is selected,
+# and there is a completed move command on the output link,
+# then remove that command.   
+sp {apply*moveDeliverySpot*remove-move
+(state <s> ^operator.name moveDeliverySpot
+           ^io.output-link <out>)
+(<out> ^MOVE <move>)
+(<move> ^status complete)
+-->
+(<out> ^MOVE <move> -)}   
+
+# Move Jewel vs Move Delivery Spot Preferences - Move DeliverySpot wins
+sp {moveJewel*moveDeliverySpot*preferences
+(state <s> ^attribute operator
+           ^impasse tie
+           ^item <o> {<> <o> <o2>}
+           ^superstate <ss>)
+(<ss> ^io.input-link <il>)
+(<o> ^name moveJewel)
+(<o2> ^name moveDeliverySpot)
+-->
+(<ss> ^operator <o2> > <o>)} 
+
+# Move Food vs Move Delivery Spot Preferences - Move DeliverySpot wins
+sp {moveFood*moveDeliverySpot*preferences
+(state <s> ^attribute operator
+           ^impasse tie
+           ^item <o> {<> <o> <o2>}
+           ^superstate <ss>)
+(<ss> ^io.input-link <il>)
+(<o> ^name moveFood)
+(<o2> ^name moveDeliverySpot)
+-->
+(<ss> ^operator <o2> > <o>)} 
+
 ```
-REMOVIDO, pois estava travando o agente.
+## Conclusão
 
-- Estrategias de inicio: todas as joias ja estao lá; rodar em torno de si ate aparecerem todas as joias; etc.
-- pegar joia vermelha que apareceu mais perto do que aquela que estava no plano original
-
-
-So pequenas modificacoes no programa em java
-Trazer informacoes do leaflet (so traz outras infos do mundo)
-
-Leaflets: 3 combinacoes com 3 joias; 9 joias ao todo. Se joias com mesma cor, decidir pela mais proxima ou uma sequencia mais proxima
-
-gerar planejamento para raciocinio deliberativo
-executar primeiro operador, primeira tarefa
-trocar no leaflet spot em pontos
-checar se atingiu o objetivo
-indicar que atingiu a tarefa, exemplo parar e ficar girando
+O programa desenvolvido utiliza raciocinio deliberativo para atingir o objetivo de trocar leaflets por pontos.
+Uma melhoria possível seria priorizar jóias dos leaflets na busca, considerando ainda a pontuação de cada leaflet.
