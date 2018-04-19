@@ -1,0 +1,13 @@
+﻿<Properties StartupItem="tower/tower.csproj">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|x86" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="tower/Towers - Simple.cs">
+    <Files>
+      <File FileName="../../../../Downloads/Clarion/Samples/Beginner/Towers - Simple.cs" Line="87" Column="68" />
+      <File FileName="tower/Towers - Simple.cs" Line="164" Column="38" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+</Properties>

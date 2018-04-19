@@ -1,0 +1,6 @@
+/net/nfs1.fee.unicamp.br/export/vol1/home/feec/ra003314/ia941/aula7/tower/tower/tower/obj/x86/Debug/.NETFramework,Version=v4.5.AssemblyAttribute.cs
+/net/nfs1.fee.unicamp.br/export/vol1/home/feec/ra003314/ia941/aula7/tower/tower/tower/bin/Debug/ClarionLibrary.dll
+/net/nfs1.fee.unicamp.br/export/vol1/home/feec/ra003314/ia941/aula7/tower/tower/tower/bin/Debug/tower.exe.mdb
+/net/nfs1.fee.unicamp.br/export/vol1/home/feec/ra003314/ia941/aula7/tower/tower/tower/bin/Debug/tower.exe
+/net/nfs1.fee.unicamp.br/export/vol1/home/feec/ra003314/ia941/aula7/tower/tower/tower/obj/x86/Debug/tower.exe
+/net/nfs1.fee.unicamp.br/export/vol1/home/feec/ra003314/ia941/aula7/tower/tower/tower/obj/x86/Debug/tower.exe.mdb

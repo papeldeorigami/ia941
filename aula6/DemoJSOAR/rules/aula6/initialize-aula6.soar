@@ -1,0 +1,32 @@
+sp {propose*initialize-aula6
+   (state <s> ^superstate nil
+             -^name)
+-->
+   (<s> ^operator <o> + =)
+   (<o> ^name initialize-aula6)
+}
+
+sp {apply*initialize-aula6
+   (state <s> ^operator.name initialize-aula6
+              ^io.input-link.CREATURE <creature>)
+   (<creature> ^LEAFLETS <leaflets>)
+   (<leaflets> ^LEAFLET <l1> {<> <l1> <l2> <l3>})
+   (<creature> ^MEMORY <memory>)
+-->
+   (<s> ^name aula6)
+   (<s> ^problem-space <p>)
+   (<p> ^name aula6
+        ^deliverySpot <deliverySpot>
+        ^knapsack <knapsack>
+        ^creatureLeaflets <creatureLeaflets>)
+   (<deliverySpot> ^X 0 ^Y 0)
+   (<knapsack> ^RED 0
+               ^GREEN 0
+               ^BLUE 0
+               ^YELLOW 0
+               ^MAGENTA 0
+               ^WHITE 0
+               ^TOTAL 0)
+   (<p> ^leafletsControl <l>)
+   (<l> ^two-level-attributes <creatureLeaflets>)
+}

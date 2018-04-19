@@ -71,6 +71,15 @@ Para que o SOAR tenha acesso à informação dos Leaflets, estendemos a classe S
 			^LEAFLET I10
 				...
 
+	CREATURE I4
+		^LEAFLETS I8
+			^LEAFLET I9
+				^PAYMENT 50
+				^RED 1
+				^GREEN 3
+				...
+			^LEAFLET I10
+				...
 ### Inicializador da criatura
 
 Para simplificar um pouco o código, criamos uma regra de inicialização da criatura. Desta forma, podemos inicializar contadores de jóias, eliminando a necessidade de rotinas duplicadas, tais como a see\*entity, que tinha duas versões (see\*entity\*with\*memory\*count e see\*entity\*without\*memory\*count).

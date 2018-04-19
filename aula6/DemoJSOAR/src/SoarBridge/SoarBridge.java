@@ -176,6 +176,7 @@ public class SoarBridge
                 CreateIntegerWME(leaflet, "PAYMENT", l.getPayment());
                 CreateIntegerWME(leaflet, "SITUATION", l.getSituation());
                 HashMap<String, Integer[]> items = l.getItems();
+                HashMap<String, Integer[]> colors = new HashMap()<String, Integer>;
                 for (HashMap.Entry<String, Integer[]> entry: items.entrySet()) {
                     Identifier item = CreateIdWME(leaflet, "JEWEL");
                     CreateStringWME(item, "COLOR", entry.getKey());
