@@ -174,15 +174,22 @@ public class SoarBridge
                 Identifier leaflet = CreateIdWME(creatureLeaflets, "LEAFLET");
                 CreateStringWME(leaflet, "ID", l.getID().toString());
                 CreateIntegerWME(leaflet, "PAYMENT", l.getPayment());
-                CreateIntegerWME(leaflet, "SITUATION", l.getSituation());
                 HashMap<String, Integer[]> items = l.getItems();
-                HashMap<String, Integer[]> colors = new HashMap()<String, Integer>;
+                HashMap<String, Integer> colors = new HashMap<String,Integer>();
+                colors.put("Red", 0);
+                colors.put("Green", 0);
+                colors.put("Blue", 0);
+                colors.put("Yellow", 0);
+                colors.put("Magenta", 0);
+                colors.put("White", 0);
                 for (HashMap.Entry<String, Integer[]> entry: items.entrySet()) {
-                    Identifier item = CreateIdWME(leaflet, "JEWEL");
-                    CreateStringWME(item, "COLOR", entry.getKey());
-                    CreateIntegerWME(item, "NEEDED", entry.getValue()[0]);
-                    CreateIntegerWME(item, "COLLECTED", entry.getValue()[1]);
-                }              
+                    String color = entry.getKey();
+                    Integer needed = entry.getValue()[0];
+                    colors.put(color, needed);
+                }
+                for (HashMap.Entry<String, Integer> entry: colors.entrySet()) {
+                    CreateIntegerWME(leaflet, entry.getKey(), entry.getValue());
+                }
               }
               // Set creature sensors
               creatureSensor = CreateIdWME(creature, "SENSOR");

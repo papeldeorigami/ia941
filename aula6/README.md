@@ -59,21 +59,6 @@ Para que o SOAR tenha acesso à informação dos Leaflets, estendemos a classe S
 	CREATURE I4
 		^LEAFLETS I8
 			^LEAFLET I9
-				^ITEM I11
-					^COLOR RED
-					^TARGET 1
-					^COLLECTED 0
-				^ITEM I12
-					^COLOR GREEN
-					^TARGET 0
-					^COLLECTED 0
-				...
-			^LEAFLET I10
-				...
-
-	CREATURE I4
-		^LEAFLETS I8
-			^LEAFLET I9
 				^PAYMENT 50
 				^RED 1
 				^GREEN 3
