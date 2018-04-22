@@ -7,5 +7,6 @@ VERSION 4
 4	3	FOPERATOR _all _all.soar 5
 5	3	FOPERATOR top-state top-state.soar 6
 6	0	FOPERATOR old old.soar 7
-7	0	OPERATOR initialize-aula6 initialize-aula6.soar 8
+7	0	FOPERATOR simulate-input simulate-input.soar 9
+8	0	OPERATOR initialize-aula6 initialize-aula6.soar 8
 END

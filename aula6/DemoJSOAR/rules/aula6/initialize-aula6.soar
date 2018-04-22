@@ -1,6 +1,8 @@
 sp {propose*initialize-aula6
-   (state <s> ^superstate nil
-             -^name)
+   (state <s> #^superstate nil
+#             -^name
+              ^name simulation-started
+              ^io.input-link.CREATURE)
 -->
    (<s> ^operator <o> + =)
    (<o> ^name initialize-aula6)
@@ -10,38 +12,13 @@ sp {apply*initialize-aula6
    (state <s> ^operator.name initialize-aula6
               ^io.input-link.CREATURE <creature>)
    (<creature> ^LEAFLETS <leaflets>)
-   (<leaflets> ^LEAFLET <l1> {<> <l1> <l2> <l3>})
-#   (<l1> ^ID <l1id> 
-#         ^PAYMENT <l1payment>
-#         ^Red <l1red>
-#         ^Green <l1green>
-#         ^Blue <l1blue>
-#         ^Yellow <l1yellow>
-#         ^Magenta <l1magenta>
-#         ^White <l1white>)
-#   (<l2> ^ID <l2id> 
-#         ^PAYMENT <l2payment>
-#         ^Red <l2red>
-#         ^Green <l2green>
-#         ^Blue <l2blue>
-#         ^Yellow <l2yellow>
-#         ^Magenta <l2magenta>
-#         ^White <l2white>)
-#   (<l3> ^ID <l3id> 
-#         ^PAYMENT <l3payment>
-#         ^Red <l3red>
-#         ^Green <l3green>
-#         ^Blue <l3blue>
-#         ^Yellow <l3yellow>
-#         ^Magenta <l3magenta>
-#         ^White <l3white>)
 -->
    (<s> ^name aula6)
    (<s> ^problem-space <p>)
    (<p> ^name aula6
         ^deliverySpot <deliverySpot>
         ^knapsack <knapsack>
-        ^leaflets <l>)
+        ^leaflets <leaflets>)
    (<deliverySpot> ^X 0 ^Y 0)
    (<knapsack> ^Red 0
                ^Green 0
@@ -50,31 +27,4 @@ sp {apply*initialize-aula6
                ^Magenta 0
                ^White 0
                ^TOTAL 0)
-   (<l> ^leaflet1 <ll1>)
-#   (<ll1> ^ID <l1id> 
-#         ^PAYMENT <l1payment>
-#         ^Red <l1red>
-#         ^Green <l1green>
-#         ^Blue <l1blue>
-#         ^Yellow <l1yellow>
-#         ^Magenta <l1magenta>
-#         ^White <l1white>)
-   (<l> ^leaflet2 <ll2>)
-#   (<ll2> ^ID <l2id> 
-#         ^PAYMENT <l2payment>
-#         ^Red <l2red>
-#         ^Green <l2green>
-#         ^Blue <l2blue>
-#         ^Yellow <l2yellow>
-#         ^Magenta <l2magenta>
-#         ^White <l2white>)
-   (<l> ^leaflet3 <ll3>)
-#   (<ll3> ^ID <l3id> 
-#         ^PAYMENT <l3payment>
-#         ^Red <l3red>
-#         ^Green <l3green>
-#         ^Blue <l3blue>
-#         ^Yellow <l3yellow>
-#         ^Magenta <l3magenta>
-#         ^White <l3white>)
 }

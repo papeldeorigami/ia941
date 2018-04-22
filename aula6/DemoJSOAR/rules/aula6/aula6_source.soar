@@ -6,4 +6,5 @@ pushd elaborations
 source elaborations_source.soar
 popd
 source old.soar
+source simulate-input.soar
 source initialize-aula6.soar
