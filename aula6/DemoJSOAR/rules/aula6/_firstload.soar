@@ -1,6 +1,0 @@
-#pushd "../default" 
-#source selection.soar
-#popd
-
-#chunk always
-#chunk add-osk on

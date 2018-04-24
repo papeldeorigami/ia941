@@ -1,0 +1,66 @@
+sp {propose*initialize-solution
+   (state <s>
+#             ^superstate nil
+#             -^name
+              ^name simulation-started
+              ^io.input-link.CREATURE.LEAFLETS <leaflets>)
+   (<leaflets> ^LEAFLET <l1>)
+   (<leaflets> ^LEAFLET <l2>)
+   (<leaflets> ^LEAFLET <l3>)
+   (<l1> ^ID <id1>)
+   (<l2> ^ID <id2> {<id1> > <id2>})
+   (<l3> ^ID <id3> {<id2> > <id3>})
+-->
+   (<s> ^operator <o> + =)
+   (<o> ^name initialize-solution
+        ^leaflet1 <l1>
+        ^leaflet2 <l2>
+        ^leaflet3 <l3>)
+}
+
+sp {apply*initialize-solution
+   (state <s> ^operator <op>)
+   (<op> ^name initialize-solution
+        ^leaflet1 <l1>
+        ^leaflet2 <l2>
+        ^leaflet3 <l3>)
+   (<l1> ^Red <Red1>
+         ^Green <Green1>
+         ^Blue <Blue1>
+         ^Yellow <Yellow1>
+         ^Magenta <Magenta1>
+         ^White <White1>)
+   (<l2> ^Red <Red2>
+         ^Green <Green2>
+         ^Blue <Blue2>
+         ^Yellow <Yellow2>
+         ^Magenta <Magenta2>
+         ^White <White2>)
+   (<l3> ^Red <Red3>
+         ^Green <Green3>
+         ^Blue <Blue3>
+         ^Yellow <Yellow3>
+         ^Magenta <Magenta3>
+         ^White <White3>)
+-->
+   (<s> ^name start
+        ^deliverySpot <deliverySpot>
+        ^needed <needed>
+        ^knapsack <knapsack>
+        ^desired <d>)
+   (<deliverySpot> ^X 0 ^Y 0)
+   (<knapsack> ^Red 0
+               ^Green 0
+               ^Blue 0
+               ^Yellow 0
+               ^Magenta 0
+               ^White 0)
+   #   (<desired> ^Red (+ <Red1> <Red2> <Red3>))
+   #             ^Green (+ <Green1> <Green2> <Green3>)
+   #             ^Blue (+ <Blue1> <Blue2> <Blue3>)
+   #             ^Yellow (+ <Yellow1> <Yellow2> <Yellow3>)
+   #             ^Magenta (+ <Magenta1> <Magenta2> <Magenta3>)
+   #             ^White (+ <White1> <White2> <White3>))
+   #
+(write (crlf) | Red 1 | <Red1> | 2 | <Red2> | 3 | <Red3> | |)
+}

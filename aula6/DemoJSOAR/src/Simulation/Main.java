@@ -29,8 +29,8 @@ public class Main
         SilenceLoggers();
         try
         {
-            NativeUtils.loadFileFromJar("/aula6.soar");
-            String soarRulesPath = "rules/aula6.soar";
+            NativeUtils.loadFileFromJar("/solution.soar");
+            String soarRulesPath = "rules/solution.soar";
 
             //Start enviroment data
             Environment e = new Environment(Boolean.TRUE);

@@ -1,0 +1,23 @@
+sp {solution*propose*see-entity
+   (state <s> ^name start)
+   (state <s> ^problem-space <p>)
+   (<p> ^creature <creature>)
+   (<p> ^memory <memory>)
+   (<creature> ^SENSOR.VISUAL.ENTITY <entity>)
+   (<entity> ^TYPE <type> << JEWEL FOOD >>)
+   (<entity> ^COLOR <color>)
+   (<entity> ^X <x>)
+   (<entity> ^Y <y>)
+   (<entity> ^NAME <name>)
+   (<creature> ^MEMORY <memory>)
+  -(<memory> ^ENTITY.NAME <name>)
+-->
+   (<s> ^operator <op> + =)
+   (<op> ^name see-entity)
+   (<op> ^parameterEntity <newEntity>)
+   (<newEntity> ^Name <name>)
+   (<newEntity> ^Type <type>)
+   (<newEntity> ^X <x>)
+   (<newEntity> ^Y <y>)
+   (<newEntity> ^Color <color>)
+}
