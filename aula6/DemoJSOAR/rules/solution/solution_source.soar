@@ -5,7 +5,7 @@ popd
 pushd elaborations
 source elaborations_source.soar
 popd
-source see-entity.soar
 source old.soar
+source see-entity.soar
 source simulate-input.soar
 source initialize-solution.soar
