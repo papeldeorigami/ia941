@@ -1,8 +1,7 @@
 sp {propose*initialize-solution
    (state <s>
-#             ^superstate nil
-#             -^name
-              ^name simulation-started
+             ^superstate nil
+             -^name
               ^io.input-link.CREATURE.LEAFLETS <leaflets>)
    (<leaflets> ^LEAFLET <l1>)
    (<leaflets> ^LEAFLET <l2> {<l1> > <l2>})
@@ -58,5 +57,4 @@ sp {apply*initialize-solution
               ^Yellow (+ <Yellow1> <Yellow2> <Yellow3>)
               ^Magenta (+ <Magenta1> <Magenta2> <Magenta3>)
               ^White (+ <White1> <White2> <White3>))
-   (write (crlf) | Red=(| <Red1> |, | <Red2> |, | <Red3> |)|)
 }

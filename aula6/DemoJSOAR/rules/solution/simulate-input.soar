@@ -1,6 +1,7 @@
 sp {propose*simulate-input
    (state <s> ^superstate nil
              -^name)
+  -(<s> ^io.input-link.CREATURE)
 -->
    (<s> ^operator <o> + =)
    (<o> ^name simulate-input)
@@ -9,7 +10,6 @@ sp {propose*simulate-input
 sp {apply*simulate-input
    (state <s> ^operator.name simulate-input)
 -->
-   (<s> ^name simulation-started)
    (<s> ^io.input-link.CREATURE <creature>)
    (<creature> ^LEAFLETS <leaflets> ^MEMORY <memory> ^PARAMETERS <parameters> ^POSITION <position> ^SENSOR <sensor>)
    (<leaflets> ^LEAFLET <leaflet1> ^LEAFLET <leaflet2> ^LEAFLET <leaflet3>)
