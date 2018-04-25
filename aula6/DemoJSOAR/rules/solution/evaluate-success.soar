@@ -1,0 +1,18 @@
+sp {solution*evaluate*state*success
+   (state <s> ^desired <d>
+              ^problem-space.name solution
+              ^knapsack <k>)
+   (<d> ^Red <Red>
+        ^Green <Green>
+        ^Blue <Blue>
+        ^Yellow <Yellow>
+        ^Magenta <Magenta>
+        ^White <White>)        
+   (<k> ^Red <Red> 
+        ^Green <Green>
+        ^Blue <Blue>
+        ^Yellow <Yellow>
+        ^Magenta <Magenta>
+        ^White <White>)
+-->
+   (<s> ^success <d>)}

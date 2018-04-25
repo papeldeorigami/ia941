@@ -1,0 +1,8 @@
+## Move Jewel or Move Food vs See Entity
+sp {move*see-entity*preferences
+   (state <s> ^operator <o> +
+          <o2> +)
+   (<o> ^name see-entity)
+   (<o2> ^name move)
+-->
+   (<s> ^operator <o> > <o2>)}

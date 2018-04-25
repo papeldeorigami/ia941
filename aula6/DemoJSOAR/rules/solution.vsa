@@ -8,8 +8,12 @@ VERSION 4
 5	3	FOPERATOR apply-command apply-command.soar 6
 6	3	FOPERATOR problem-space problem-space.soar 7
 7	3	FOPERATOR top-state top-state.soar 8
-8	0	FOPERATOR old old.soar 9
-9	0	FOPERATOR see-entity see-entity.soar 10
-10	0	FOPERATOR simulate-input simulate-input.soar 11
-11	0	OPERATOR initialize-solution initialize-solution.soar 12
+8	0	FOPERATOR evaluate-failure evaluate-failure.soar 17
+9	0	FOPERATOR evaluate-success evaluate-success.soar 14
+10	0	FOPERATOR move move.soar 15
+11	0	FOPERATOR old old.soar 9
+12	0	FOPERATOR preferences preferences.soar 16
+13	0	FOPERATOR see-entity see-entity.soar 10
+14	0	FOPERATOR simulate-input simulate-input.soar 11
+15	0	OPERATOR initialize-solution initialize-solution.soar 12
 END
