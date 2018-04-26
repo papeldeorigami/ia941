@@ -1,0 +1,49 @@
+sp {propose*get
+   (state <s> ^name solution
+              ^desired <desired>
+              ^memory <memory>
+              ^knapsack <knapsack>
+              ^position <position>)
+   (<position> ^X <creaturePositionX>)
+   (<position> ^Y <creaturePositionY>)
+   # find a jewel
+   (<memory> ^ENTITY <entity>)
+   (<entity> ^X <entityPositionX>)
+   (<entity> ^Y <entityPositionY>)
+   (<entity> ^NAME <entityName>)
+   (<entity> ^TYPE JEWEL)
+   (<entity> ^COLOR <color>)
+   # move only if distance is less than 30
+   (<entity> ^distance { <distance> < 30 })
+   # filter colors only that are missing in some leaflet
+   (<desired> ^<color> <desiredQuantity>)
+   (<knapsack> ^<color> { <quantity> < <desiredQuantity> })
+-->
+   (<s> ^operator <o> +)
+   (<o> ^name get)
+   (<o> ^parameter <p>)
+   (<p> ^X <entityPositionX>)
+   (<p> ^Y <entityPositionY>)
+   (<p> ^NAME <entityName>)
+   (<p> ^distance <distance>)
+   (write (crlf) | propose get: name = | <entityName> | distance = | <distance> ||)
+}
+
+sp {solution*apply*get
+   (state <s> ^operator <o>
+              ^io.input-link.CREATURE <creature>
+              ^memory <memory>)
+   (<o> ^name get)
+   (<o> ^parameter <p>)
+   (<p> ^NAME <name>)
+   (<p> ^distance <distance>)
+   (<creature> ^SENSOR.VISUAL <visual>)
+   (<visual> ^ENTITY <visualEntity>)
+   (<visualEntity> ^NAME <name>)
+   (<memory> ^ENTITY <memoryEntity>)
+   (<memoryEntity> ^NAME <name>)
+-->
+   (<memory> ^ENTITY <memoryEntity> -)
+   (<visual> ^ENTITY <visualEntity> -)
+   (write (crlf) | apply get: name = | <name> | distance = | <distance> ||)
+}

@@ -2,16 +2,19 @@ sp {propose*initialize-solution
    (state <s>
 #             ^superstate nil
              -^name
-              ^io.input-link.CREATURE.LEAFLETS <leaflets>)
+              ^io.input-link.CREATURE <creature>)
+   (<creature> ^POSITION <position>)
+   (<creature> ^LEAFLETS <leaflets>)
    (<leaflets> ^LEAFLET <l1>)
    (<leaflets> ^LEAFLET <l2> {<l1> > <l2>})
    (<leaflets> ^LEAFLET <l3> {<l2> > <l3>})
 -->
-   (<s> ^operator <o> + =)
+   (<s> ^operator <o> +)
    (<o> ^name initialize-solution
         ^leaflet1 <l1>
         ^leaflet2 <l2>
-        ^leaflet3 <l3>)
+        ^leaflet3 <l3>
+        ^position <position>)
 }
 
 sp {apply*initialize-solution
@@ -19,7 +22,8 @@ sp {apply*initialize-solution
    (<op> ^name initialize-solution
         ^leaflet1 <l1>
         ^leaflet2 <l2>
-        ^leaflet3 <l3>)
+        ^leaflet3 <l3>
+        ^position <p>)
    (<l1> ^Red <Red1>
          ^Green <Green1>
          ^Blue <Blue1>
@@ -38,14 +42,19 @@ sp {apply*initialize-solution
          ^Yellow <Yellow3>
          ^Magenta <Magenta3>
          ^White <White3>)
+   (<p> ^X <positionX>
+        ^Y <positionY>)
 -->
-   (<s> ^name start
+   (<s> ^name solution
         ^deliverySpot <deliverySpot>
         ^needed <needed>
         ^knapsack <knapsack>
         ^desired <desired>
-        ^memory <memory>)
+        ^memory <memory>
+        ^position <position>)
    (<deliverySpot> ^X 0 ^Y 0)
+   (<position> ^X <positionX>
+               ^Y <positionY>)
    (<knapsack> ^Red 0
                ^Green 0
                ^Blue 0

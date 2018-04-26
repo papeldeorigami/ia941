@@ -1,0 +1,21 @@
+sp {solution*evaluate*state*failure*duplicate
+   (state <s2> ^name solution
+               ^superstate-set <s1>
+               ^knapsack <k2>
+               ^tried-tied-operator)
+   (<s1> ^knapsack <k1>)
+   (<k1> ^Red <Red>
+         ^Green <Green>
+         ^Blue <Blue>
+         ^Yellow <Yellow>
+         ^Magenta <Magenta>
+         ^White <White>)
+   (<k2> ^Red <Red>
+         ^Green <Green>
+         ^Blue <Blue>
+         ^Yellow <Yellow>
+         ^Magenta <Magenta>
+         ^White <White>)
+  -(state <s3> ^superstate <s2>)
+-->
+   (<s2> ^failure <d>)}

@@ -1,70 +1,54 @@
-##############################  MOVE ENTITY #####################################
-# This operator will make the agent go straight to the entity (food/jewel)
-
-# Propose*move:
 sp {solution*propose*move
-   (state <s> ^io.input-link <il>)
-   (<il> ^CREATURE <creature>)
-   (<s> ^memory <memory>)
-   (<memory> ^ENTITY <entityInMemory>)
-   (<creature> ^POSITION <creaturePosition>)
-   (<creaturePosition> ^X <creaturePositionX>)
-   (<creaturePosition> ^Y <creaturePositionY>)
-   (<entityInMemory> ^X <entityInMemoryPositionX>)
-   (<entityInMemory> ^Y <entityInMemoryPositionY>)
-   (<entityInMemory> ^NAME <entityInMemoryName>) 
-   (<creature> ^PARAMETERS.MINFUEL <minFuel>) 
+   (state <s> ^name solution
+              ^position <position>
+              ^memory <memory>
+              ^knapsack <knapsack>
+              ^desired <desired>)
+   (<position> ^X <creaturePositionX>)
+   (<position> ^Y <creaturePositionY>)
+   # find a jewel
+   (<memory> ^ENTITY <entity>)
+   (<entity> ^X <entityPositionX>)
+   (<entity> ^Y <entityPositionY>)
+   (<entity> ^NAME <entityName>)
+   (<entity> ^TYPE JEWEL)
+   (<entity> ^COLOR <color>)
+   # move only if distance is greater than 30
+   (<entity> ^distance { <distance> > 30 })
+   # filter colors only that are missing in some leaflet
+   (<desired> ^<color> <desiredQuantity>)
+   (<knapsack> ^<color> { <quantity> < <desiredQuantity> })
 -->
    (<s> ^operator <o> +)
    (<o> ^name move)
-   (<o> ^parameter <entity>)
-   (<entity> ^distance (sqrt (+ (* (- <creaturePositionX> <entityInMemoryPositionX>) (- <creaturePositionX> <entityInMemoryPositionX>)) (* (- <creaturePositionY> <entityInMemoryPositionY>) (- <creaturePositionY> <entityInMemoryPositionY>)))))
-   (<entity> ^X <entityInMemoryPositionX>)
-   (<entity> ^Y <entityInMemoryPositionY>)
-   (<entity> ^NAME <entityInMemoryName>)
-   (<o> ^parameterFuel <minFuel>)
+   (<o> ^parameter <p>)
+   (<p> ^NAME <entityName>)
+   (write (crlf) | propose move: name = | <entityName> | distance = | <distance> ||)
 }
    
-# Apply*move*:
-# If the move operator is selected, then generate an output command to it 
 sp {solution*apply*move
    (state <s> ^operator <o>
-              ^io <io>)
-   (<io> ^input-link <il>)             
+#              ^io.input-link.CREATURE <creature>
+              ^position <position>
+              ^memory <memory>)
    (<o> ^name move)
-   (<o> ^parameter <entity>
-        ^actions <actions>)
+   (<o> ^parameter.NAME <entityName>)
+   (<memory> ^ENTITY <entity>)
+   (<entity> ^NAME <entityName>)
    (<entity> ^X <x>)
    (<entity> ^Y <y>)
-   (<entity> ^NAME <entityInMemoryName>)
-   (<il> ^CREATURE <creature>)
-   (<creature> ^MEMORY <memory>)
-   (<memory> ^ENTITY <entityInMemory>)
-   (<entityInMemory> ^NAME <entityInMemoryName>)
+   (<entity> ^distance <distance>)
 -->
-   (<actions> ^MOVE <command>)
-   (<command> ^Vel 1)
-   (<command> ^VelR 1)
-   (<command> ^VelL 1)
-   (<command> ^X <x>)
-   (<command> ^Y <y>)
-}
-
-#Remove the entity from memory because it is not there anymore 
-sp {apply*move*remove-disappeared
-   (state <s> ^operator <o>
-              ^io.input-link <il>)
-   (<o> ^name move)
-   (<o> ^parameter <entity>)
-   (<entity> ^X <x>)
-   (<entity> ^Y <y>)
-   (<il> ^CREATURE <creature>)
-   (<creature> ^MEMORY <memory>)
-   (<memory> ^ENTITY <entityInMemory>)
-   (<entityInMemory> ^X <x>)
-   (<entityInMemory> ^Y <y>)
-  -(<creature> ^SENSOR.VISUAL.ENTITY.X <entityX> <x>)
-  -(<creature> ^SENSOR.VISUAL.ENTITY.Y <entityY> <y>)
--->
-   (<memory> ^ENTITY <entityInMemory> -)
+   (<entity> ^distance <distance> -)
+   (<entity> ^distance 0)
+   (<position> ^X <x>)
+   (<position> ^Y <y>)
+   #   (<s> ^actions <actions>)
+   #   (<actions> ^MOVE <command>)
+   #   (<command> ^Vel 1)
+   #   (<command> ^VelR 1)
+   #   (<command> ^VelL 1)
+   #   (<command> ^X <x>)
+   #   (<command> ^Y <y>)
+   (write (crlf) | apply move: name = | <entityName> | distance = | <distance> ||)
 }

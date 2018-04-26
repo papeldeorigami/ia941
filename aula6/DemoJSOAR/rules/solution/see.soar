@@ -1,0 +1,46 @@
+sp {solution*propose*see
+   (state <s> ^name solution
+              ^memory <memory>
+              ^io.input-link.CREATURE <creature>)
+   (<creature> ^SENSOR.VISUAL.ENTITY <entity>)
+   (<entity> ^TYPE <type> << JEWEL FOOD >>)
+   (<entity> ^COLOR <color>)
+   (<entity> ^X <x>)
+   (<entity> ^Y <y>)
+   (<entity> ^NAME <name>)
+  -(<memory> ^ENTITY.NAME <name>)
+-->
+   (<s> ^operator <op> + =)
+   (<op> ^name see)
+   (<op> ^parameter <newEntity>)
+   (<newEntity> ^Name <name>)
+   (<newEntity> ^Type <type>)
+   (<newEntity> ^X <x>)
+   (<newEntity> ^Y <y>)
+   (<newEntity> ^Color <color>)
+   (write (crlf) | propose see: name = | <name> | x = | <x> | y = | <y> | color = | <color> ||)
+}
+
+sp {solution*apply*see
+   (state <s> ^operator <op>
+              ^memory <memory>
+              ^position <position>)
+   (<position> ^X <px>)
+   (<position> ^Y <py>)
+   (<op> ^name see)
+   (<op> ^parameter <newEntity>)
+   (<newEntity> ^X <x>)
+   (<newEntity> ^Y <y>)
+   (<newEntity> ^Name <name>)
+   (<newEntity> ^Type <type>)
+   (<newEntity> ^Color <color>)
+-->
+   (<memory> ^ENTITY <entity>)
+   (<entity> ^X <x>)
+   (<entity> ^Y <y>)
+   (<entity> ^NAME <name>)
+   (<entity> ^TYPE <type>)
+   (<entity> ^COLOR <color>) 
+   (<entity> ^distance (sqrt (+ (* (- <px> <x>) (- <px> <x>)) (* (- <py> <y>) (- <py> <y>)))))
+   (write (crlf) | apply see: name = | <name> | x = | <x> | y = | <y> | color = | <color> ||)
+}

@@ -5,11 +5,18 @@ popd
 pushd elaborations
 source elaborations_source.soar
 popd
-source evaluate-failure.soar
-source evaluate-success.soar
+source apply-command.soar
+source get.soar
 source move.soar
 source old.soar
 source preferences.soar
-source see-entity.soar
+pushd preferences
+source preferences_source.soar
+popd
+source see.soar
 source simulate-input.soar
+source evaluations.soar
+pushd evaluations
+source evaluations_source.soar
+popd
 source initialize-solution.soar

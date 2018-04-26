@@ -1,0 +1,7 @@
+sp {impasse-no-change*elaborate*solution
+   (state <s> ^superstate <ss>
+              ^impasse no-change)
+   (<ss> ^name solution)
+-->
+   (<ss> ^name see)
+}

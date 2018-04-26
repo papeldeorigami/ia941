@@ -1,4 +1,5 @@
 source _all.soar
-source apply-command.soar
+source entity-distance.soar
+source impasse-no-change-solution.soar
 source problem-space.soar
 source top-state.soar
