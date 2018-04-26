@@ -1,20 +1,14 @@
 sp {solution*evaluate*state*failure*duplicate
-   (state <s1> ^knapsack <k1>)
+   (state <s1> ^position <p1>
+               ^operator.name <o1>)
    (state { <> <s1> <s2> }
-               ^knapsack <k2>
+               ^position <p2>
+               ^operator.name <o1>
                ^tried-tied-operator)
-   (<k1> ^Red <Red>
-         ^Green <Green>
-         ^Blue <Blue>
-         ^Yellow <Yellow>
-         ^Magenta <Magenta>
-         ^White <White>)
-   (<k2> ^Red <Red>
-         ^Green <Green>
-         ^Blue <Blue>
-         ^Yellow <Yellow>
-         ^Magenta <Magenta>
-         ^White <White>)
+   (<p1> ^X <x1>
+         ^Y <y1>)
+   (<p2> ^X <x2>
+         ^Y <y2>)
 -->
    (<s2> ^failure <d>)
    (write (crlf) | Duplicate failure! |)

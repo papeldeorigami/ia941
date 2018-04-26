@@ -108,7 +108,10 @@ sp {selection*compare*prefer-lower-evaluation
          ^desired <d>)
    (<d> ^better lower)
 -->
-   (<ss> ^operator <o2> < <o1>)}
+   (<ss> ^operator <o2> < <o1>)
+      (write (crlf) | prefer lower with | <v> ||)
+
+   }
 
 
 ###

@@ -1,0 +1,8 @@
+sp {solution*evaluate*numeric-value
+   (state <s> ^desired <d>
+              ^tried-tied-operator
+              ^traveledDistance <traveledDistance>)
+-->
+   (<s> ^numeric-value <traveledDistance>)
+   (write (crlf) | ************ numeric-value = | <traveledDistance> ||)
+}

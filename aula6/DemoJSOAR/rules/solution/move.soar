@@ -33,7 +33,6 @@ sp {solution*apply*move
    (state <s> 
         ^operator <o>
         ^position <position>
-        ^memory <memory>
         ^traveledDistance <traveledDistance>)
    (<position> ^X <oldX>)
    (<position> ^Y <oldY>)
@@ -58,6 +57,7 @@ sp {solution*apply*move
    (<s> ^traveledDistance <traveledDistance> -
         ^traveledDistance (+ <traveledDistance> <DISTANCE>))
    (write (crlf) | apply move: name = | <entityName> | traveledDistance = | <traveledDistance> | + | <DISTANCE> ||)
+   #(write (crlf) | apply move: name = | <entityName> | distance = | <DISTANCE> ||)
 }
 
 sp {solution*apply*move*update-distances

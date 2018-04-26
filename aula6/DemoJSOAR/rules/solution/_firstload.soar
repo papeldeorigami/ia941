@@ -2,5 +2,6 @@ pushd "../default"
 source selection.soar
 popd
 
-#chunk always
+chunk always
+#watch --chunks
 #chunk add-osk on
