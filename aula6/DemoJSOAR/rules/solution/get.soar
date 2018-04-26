@@ -14,7 +14,7 @@ sp {propose*get
    (<entity> ^TYPE JEWEL)
    (<entity> ^COLOR <color>)
    # move only if distance is less than 30
-   (<entity> ^distance { <distance> < 30 })
+   (<entity> ^DISTANCE { <DISTANCE> < 30 })
    # filter colors only that are missing in some leaflet
    (<desired> ^<color> <desiredQuantity>)
    (<knapsack> ^<color> { <quantity> < <desiredQuantity> })
@@ -23,7 +23,7 @@ sp {propose*get
    (<o> ^name get)
    (<o> ^parameter <p>)
    (<p> ^NAME <entityName>)
-   (write (crlf) | propose get: name = | <entityName> | distance = | <distance> ||)
+   (write (crlf) | propose get: name = | <entityName> | distance = | <DISTANCE> ||)
 }
 
 sp {solution*apply*get
@@ -40,7 +40,6 @@ sp {solution*apply*get
    (<visualEntity> ^NAME <name>)
    (<memory> ^ENTITY <memoryEntity>)
    (<memoryEntity> ^NAME <name>)
-   (<memoryEntity> ^distance <distance>)
    (<memoryEntity> ^COLOR <color>)
    (<knapsack> ^<color> <quantity>
                ^Red <kred>

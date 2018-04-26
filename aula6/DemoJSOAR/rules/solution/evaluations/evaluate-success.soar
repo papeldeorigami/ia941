@@ -1,6 +1,6 @@
 sp {solution*evaluate*state*success
    (state <s> ^desired <d>
-              ^problem-space.name solution
+              ^name solution
               ^knapsack <k>)
    (<d> ^Red <Red>
         ^Green <Green>
@@ -15,4 +15,7 @@ sp {solution*evaluate*state*success
         ^Magenta <Magenta>
         ^White <White>)
 -->
-   (<s> ^success <d>)}
+   (<s> ^success <d>)
+   (write (crlf) | Success! |)
+   (halt)
+}

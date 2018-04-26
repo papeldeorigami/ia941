@@ -14,7 +14,7 @@ sp {solution*propose*move
    (<entity> ^TYPE JEWEL)
    (<entity> ^COLOR <color>)
    # move only if distance is greater than 30
-   (<entity> ^distance { <distance> > 30 })
+   (<entity> ^DISTANCE { <DISTANCE> > 30 })
    # filter colors only that are missing in some leaflet
    (<desired> ^<color> <desiredQuantity>)
    (<knapsack> ^<color> { <quantity> < <desiredQuantity> })
@@ -25,8 +25,8 @@ sp {solution*propose*move
    (<p> ^NAME <entityName>)
    (<p> ^X <entityPositionX>)
    (<p> ^Y <entityPositionY>)
-   (<p> ^distance <distance>)
-   (write (crlf) | propose move: name = | <entityName> | distance = | <distance> ||)
+   (<p> ^DISTANCE <DISTANCE>)
+   (write (crlf) | propose move: name = | <entityName> | distance = | <DISTANCE> ||)
 }
    
 sp {solution*apply*move
@@ -39,7 +39,7 @@ sp {solution*apply*move
    (<o> ^name move)
    (<o> ^parameter <p>)
    (<p> ^NAME <entityName>)
-   (<p> ^distance <distance>)
+   (<p> ^DISTANCE <DISTANCE>)
    (<p> ^X <x>)
    (<p> ^Y <y>)
    #(<memory> ^ENTITY <entity>)
@@ -58,7 +58,7 @@ sp {solution*apply*move
    #   (<command> ^VelL 1)
    #   (<command> ^X <x>)
    #   (<command> ^Y <y>)
-   (write (crlf) | apply move: name = | <entityName> | distance = | <distance> ||)
+   (write (crlf) | apply move: name = | <entityName> | distance = | <DISTANCE> ||)
 }
 
 sp {solution*apply*move*update-distances
@@ -75,10 +75,10 @@ sp {solution*apply*move*update-distances
    (<entity> ^Y <y>)
    (<entity> ^creatureX {<oldX> <> <newX>})
    (<entity> ^creatureY {<oldY> <> <newY>})
-   (<entity> ^distance <distance>)
+   (<entity> ^DISTANCE <DISTANCE>)
 -->
-   (<entity> ^distance <distance> -
-             ^distance (sqrt (+ (* (- <newX> <x>) (- <newX> <x>)) (* (- <newY> <y>) (- <newY> <y>)))))
+   (<entity> ^DISTANCE <DISTANCE> -
+             ^DISTANCE (sqrt (+ (* (- <newX> <x>) (- <newX> <x>)) (* (- <newY> <y>) (- <newY> <y>)))))
    (<entity> ^creatureX <oldX> - ^creatureX <newX>)
    (<entity> ^creatureY <oldY> - ^creatureY <newY>)
    (write (crlf) | apply move*update-distances: name = | <entityName> | oldX = | <oldX> | oldY = | <oldY> | newX = | <newX> | newY = | <newY> ||)

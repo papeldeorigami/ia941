@@ -1,5 +1,4 @@
 source _all.soar
-source entity-distance.soar
 source impasse-no-change-incomplete.soar
 source impasse-no-change-see-solution.soar
 source problem-space.soar

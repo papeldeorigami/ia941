@@ -3,6 +3,6 @@ sp {solution*impasse-no-change*incomplete
               ^impasse no-change)
    (<ss> ^name solution)
 -->
-   (write (crlf) | No leaflets enough! Giving up. |)
+   (write (crlf) | No jewels enough to complete all leaflets! Giving up. |)
    (halt)
 }
