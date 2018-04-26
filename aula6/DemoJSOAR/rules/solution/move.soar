@@ -33,7 +33,8 @@ sp {solution*apply*move
    (state <s> 
         ^operator <o>
         ^position <position>
-        ^memory <memory>)
+        ^memory <memory>
+        ^traveledDistance <traveledDistance>)
    (<position> ^X <oldX>)
    (<position> ^Y <oldY>)
    (<o> ^name move)
@@ -42,10 +43,6 @@ sp {solution*apply*move
    (<p> ^DISTANCE <DISTANCE>)
    (<p> ^X <x>)
    (<p> ^Y <y>)
-   #(<memory> ^ENTITY <entity>)
-   #(<entity> ^NAME <entityName>)
-   #(<entity> ^X <x>)
-   #(<entity> ^Y <y>)
 -->
    (<position> ^X <oldX> -)
    (<position> ^Y <oldY> -)
@@ -58,7 +55,9 @@ sp {solution*apply*move
    #   (<command> ^VelL 1)
    #   (<command> ^X <x>)
    #   (<command> ^Y <y>)
-   (write (crlf) | apply move: name = | <entityName> | distance = | <DISTANCE> ||)
+   (<s> ^traveledDistance <traveledDistance> -
+        ^traveledDistance (+ <traveledDistance> <DISTANCE>))
+   (write (crlf) | apply move: name = | <entityName> | traveledDistance = | <traveledDistance> | + | <DISTANCE> ||)
 }
 
 sp {solution*apply*move*update-distances

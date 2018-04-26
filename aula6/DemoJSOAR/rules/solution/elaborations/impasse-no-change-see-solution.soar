@@ -1,7 +1,0 @@
-sp {impasse-no-change*see*solution
-   (state <s> ^superstate <ss>
-              ^impasse no-change)
-   (<ss> ^name see)
--->
-   (<ss> ^name solution)
-}

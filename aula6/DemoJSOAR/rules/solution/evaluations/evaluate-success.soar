@@ -1,7 +1,8 @@
 sp {solution*evaluate*state*success
    (state <s> ^desired <d>
               ^name solution
-              ^knapsack <k>)
+              ^knapsack <k>
+              ^traveledDistance <traveledDistance>)
    (<d> ^Red <Red>
         ^Green <Green>
         ^Blue <Blue>
@@ -16,8 +17,9 @@ sp {solution*evaluate*state*success
         ^White <White>)
 -->
    (<s> ^success <d>)
-   (write (crlf) | *********************** |)
-   (write (crlf) | ****** Success! ******* |)
-   (write (crlf) | *********************** |)
-   (halt)
+   (write (crlf) | ****************************** |)
+   (write (crlf) | ********** Success! ********** |)
+   (write (crlf) | traveledDistance =  | <traveledDistance> ||)
+   (write (crlf) | ****************************** |)
+#   (halt)
 }

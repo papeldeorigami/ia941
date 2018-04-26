@@ -1,8 +1,8 @@
 sp {propose*initialize-solution
    (state <s>
-#             ^superstate nil
-             -^name
-              ^io.input-link.CREATURE <creature>)
+             ^superstate nil
+            -^name
+             ^io.input-link.CREATURE <creature>)
    (<creature> ^POSITION <position>)
    (<creature> ^LEAFLETS <leaflets>)
    (<leaflets> ^LEAFLET <l1>)
@@ -45,12 +45,12 @@ sp {apply*initialize-solution
    (<p> ^X <positionX>
         ^Y <positionY>)
 -->
-   (<s> ^name see
+   (<s> ^name solution
         ^deliverySpot <deliverySpot>
-        ^needed <needed>
         ^knapsack <knapsack>
         ^desired <desired>
         ^memory <memory>
+        ^traveledDistance 0
         ^position <position>)
    (<deliverySpot> ^X 0 ^Y 0)
    (<position> ^X <positionX>
@@ -66,7 +66,8 @@ sp {apply*initialize-solution
               ^Blue (+ <Blue1> <Blue2> <Blue3>)
               ^Yellow (+ <Yellow1> <Yellow2> <Yellow3>)
               ^Magenta (+ <Magenta1> <Magenta2> <Magenta3>)
-              ^White (+ <White1> <White2> <White3>))
+              ^White (+ <White1> <White2> <White3>)
+              ^better lower)
    (write (crlf) | Red=(| <Red1> |, | <Red2> |, | <Red3> |)|)
    (write (crlf) | Green=(| <Green1> |, | <Green2> |, | <Green3> |)|)
    (write (crlf) | Blue=(| <Blue1> |, | <Blue2> |, | <Blue3> |)|)

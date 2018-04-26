@@ -1,9 +1,8 @@
 sp {solution*evaluate*state*failure*duplicate
-   (state <s2> ^name solution
-               ^superstate-set <s1>
+   (state <s1> ^knapsack <k1>)
+   (state { <> <s1> <s2> }
                ^knapsack <k2>
                ^tried-tied-operator)
-   (<s1> ^knapsack <k1>)
    (<k1> ^Red <Red>
          ^Green <Green>
          ^Blue <Blue>
@@ -16,6 +15,7 @@ sp {solution*evaluate*state*failure*duplicate
          ^Yellow <Yellow>
          ^Magenta <Magenta>
          ^White <White>)
-  -(state <s3> ^superstate <s2>)
 -->
-   (<s2> ^failure <d>)}
+   (<s2> ^failure <d>)
+   (write (crlf) | Duplicate failure! |)
+}

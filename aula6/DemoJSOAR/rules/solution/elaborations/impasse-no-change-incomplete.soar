@@ -1,8 +1,9 @@
-sp {solution*impasse-no-change*incomplete
-   (state <s> ^superstate.superstate <ss>
-              ^impasse no-change)
-   (<ss> ^name solution)
--->
-   (write (crlf) | No jewels enough to complete all leaflets! Giving up. |)
-   (halt)
-}
+#sp {solution*impasse-no-change*incomplete
+#   (state <s> ^superstate.superstate <ss>
+#              ^impasse no-change)
+#   (<ss> ^name solution)
+#-->
+#   (write (crlf) | No jewels enough to complete all leaflets! Giving up. |)
+#   (halt)
+#}
+

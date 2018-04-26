@@ -1,4 +1,0 @@
-sp {Impasse__Operator_Tie*elaborate*move-closest
-   (state <s> ^operator <ss>)
--->
-   (<s> ^superstate-set <ss>)}

@@ -1,8 +1,10 @@
-#sp {solution*elaborate*problem-space
-#   (state <s> ^name solution)
-#-->
-#   (<s> ^problem-space <p>)
-#   (<p> ^name solution
-#        ^default-state-copy yes
-#        ^two-level-attributes knapsack
-#        ^two-level-attributes position)}
+sp {solution*elaborate*problem-space
+   (state <s> ^name solution)
+-->
+   (<s> ^problem-space <p>)
+   (<p> ^name solution
+        ^default-state-copy yes
+        ^one-level-attributes traveledDistance
+        ^two-level-attributes knapsack position
+        ^three-level-attributes memory)
+}

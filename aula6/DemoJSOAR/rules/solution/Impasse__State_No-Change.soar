@@ -1,5 +1,0 @@
-sp {solution*elaborate*state
-   (state <s> ^name solution)
--->
-   (<s>)
-}
