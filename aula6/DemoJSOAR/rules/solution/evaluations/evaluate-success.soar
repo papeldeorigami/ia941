@@ -16,6 +16,8 @@ sp {solution*evaluate*state*success
         ^White <White>)
 -->
    (<s> ^success <d>)
-   (write (crlf) | Success! |)
+   (write (crlf) | *********************** |)
+   (write (crlf) | ****** Success! ******* |)
+   (write (crlf) | *********************** |)
    (halt)
 }
