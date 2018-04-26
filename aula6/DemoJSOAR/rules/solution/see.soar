@@ -41,6 +41,8 @@ sp {solution*apply*see
    (<entity> ^NAME <name>)
    (<entity> ^TYPE <type>)
    (<entity> ^COLOR <color>) 
+   (<entity> ^creatureX <px>)
+   (<entity> ^creatureY <py>)
    (<entity> ^distance (sqrt (+ (* (- <px> <x>) (- <px> <x>)) (* (- <py> <y>) (- <py> <y>)))))
    (write (crlf) | apply see: name = | <name> | x = | <x> | y = | <y> | color = | <color> ||)
 }

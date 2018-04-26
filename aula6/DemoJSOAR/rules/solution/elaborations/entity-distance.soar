@@ -1,18 +1,23 @@
 #sp {elaborations*elaborate*entity*distance
 #   (state <s> ^position <position>
 #              ^memory <memory>)
-#   (<position> ^X <creaturePositionX>)
-#   (<position> ^Y <creaturePositionY>)
+#   (<position> ^X <newX>)
+#   (<position> ^Y <newY>)
 #   # find a jewel
 #   (<memory> ^ENTITY <entity>)
 #   (<entity> ^X <entityPositionX>)
 #   (<entity> ^Y <entityPositionY>)
+#   (<entity> ^creatureX {<oldX> <> <newX>})
+#   (<entity> ^creatureY {<oldY> <> <newY>})
 #   (<entity> ^NAME <entityName>)
 #   (<entity> ^TYPE JEWEL)
 #   (<entity> ^COLOR <color>)
-#   (<entity> ^distance {<distance> <> (sqrt (+ (* (- <creaturePositionX> <entityPositionX>) (- <creaturePositionX> <entityPositionX>)) (* (- <creaturePositionY> <entityPositionY>) (- <creaturePositionY> <entityPositionY>))))})
+#   (<entity> ^distance <distance>)
 #-->
 #   (<entity> ^distance <distance> -
-#             ^distance (sqrt (+ (* (- <creaturePositionX> <entityPositionX>) (- <creaturePositionX> <entityPositionX>)) (* (- <creaturePositionY> <entityPositionY>) (- <creaturePositionY> <entityPositionY>)))))
-#   (write (crlf) | elaborate entity distance: name = | <entityName> ||)
+#             ^distance (sqrt (+ (* (- <newX> <entityPositionX>) (- <newX> <entityPositionX>)) (* (- <newY> <entityPositionY>) (- <newY> <entityPositionY>)))))
+#   (<entity> ^creatureX <oldX> - ^creatureX <newX>)
+#   (<entity> ^creatureY <oldY> - ^creatureY <newY>)
+#   (write (crlf) | elaborate entity distance: name = | <entityName> | oldX = | <oldX> | oldY = | <oldY> | newX = | <newX> | newY = | <newY> ||)
 #}
+#

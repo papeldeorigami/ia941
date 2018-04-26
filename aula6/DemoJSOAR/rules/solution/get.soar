@@ -30,7 +30,8 @@ sp {solution*apply*get
    (state <s> ^operator <o>
               ^io.input-link.CREATURE <creature>
               ^knapsack <knapsack>
-              ^memory <memory>)
+              ^memory <memory>
+              ^desired <desired>)
    (<o> ^name get)
    (<o> ^parameter <p>)
    (<p> ^NAME <name>)
@@ -41,10 +42,30 @@ sp {solution*apply*get
    (<memoryEntity> ^NAME <name>)
    (<memoryEntity> ^distance <distance>)
    (<memoryEntity> ^COLOR <color>)
-   (<knapsack> ^<color> <quantity>)
+   (<knapsack> ^<color> <quantity>
+               ^Red <kred>
+               ^Green <kgreen>
+               ^Blue <kblue>
+               ^Yellow <kyellow>
+               ^Magenta <kmagenta>
+               ^White <kwhite>)
+   (<desired> ^<color> <dquantity>
+              ^Red <dred>
+              ^Green <dgreen>
+              ^Blue <dblue>
+              ^Yellow <dyellow>
+              ^Magenta <dmagenta>
+              ^White <dwhite>)
 -->
    (<memory> ^ENTITY <memoryEntity> -)
    (<visual> ^ENTITY <visualEntity> -)
    (<knapsack> ^<color> <quantity> - (+ <quantity> 1))
-   (write (crlf) | apply get: name = | <name> | distance = | <distance> ||)
+   (write (crlf) | apply get: name = | <name> | Knapsack was: |)
+   (write (crlf) | Red=| <kred> |/| <dred> ||)
+   (write (crlf) | Green=| <kgreen> |/| <dgreen> ||)
+   (write (crlf) | Blue=| <kblue> |/| <dblue> ||)
+   (write (crlf) | Yellow=| <kyellow> |/| <dyellow> ||)
+   (write (crlf) | Magenta=| <kmagenta> |/| <dmagenta> ||)
+   (write (crlf) | White=| <kwhite> |/| <dwhite> ||)
+   (write (crlf) | Now | <color> | is | (+ <quantity> 1) |/| <dquantity> ||)
 }

@@ -47,7 +47,6 @@ sp {solution*apply*move
    #(<entity> ^X <x>)
    #(<entity> ^Y <y>)
 -->
-   (<s> ^name solution - ^name remove-distances)
    (<position> ^X <oldX> -)
    (<position> ^Y <oldY> -)
    (<position> ^X <x>)
@@ -60,5 +59,28 @@ sp {solution*apply*move
    #   (<command> ^X <x>)
    #   (<command> ^Y <y>)
    (write (crlf) | apply move: name = | <entityName> | distance = | <distance> ||)
+}
+
+sp {solution*apply*move*update-distances
+   (state <s> 
+        ^operator <o>
+        ^position <position>
+        ^memory <memory>)
+   (<o> ^name move)
+   (<position> ^X <newX>)
+   (<position> ^Y <newY>)
+   (<memory> ^ENTITY <entity>)
+   (<entity> ^NAME <entityName>)
+   (<entity> ^X <x>)
+   (<entity> ^Y <y>)
+   (<entity> ^creatureX {<oldX> <> <newX>})
+   (<entity> ^creatureY {<oldY> <> <newY>})
+   (<entity> ^distance <distance>)
+-->
+   (<entity> ^distance <distance> -
+             ^distance (sqrt (+ (* (- <newX> <x>) (- <newX> <x>)) (* (- <newY> <y>) (- <newY> <y>)))))
+   (<entity> ^creatureX <oldX> - ^creatureX <newX>)
+   (<entity> ^creatureY <oldY> - ^creatureY <newY>)
+   (write (crlf) | apply move*update-distances: name = | <entityName> | oldX = | <oldX> | oldY = | <oldY> | newX = | <newX> | newY = | <newY> ||)
 }
 
