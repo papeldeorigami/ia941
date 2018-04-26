@@ -1,5 +1,5 @@
-# see-entity > get
-sp {move*see-entity*preferences
+# see > get
+sp {move*see*preferences
    (state <s> ^operator <o> +
           <o2> +)
    (<o> ^name see)

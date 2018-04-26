@@ -10,9 +10,9 @@
 #   (<entity> ^NAME <entityName>)
 #   (<entity> ^TYPE JEWEL)
 #   (<entity> ^COLOR <color>)
+#   (<entity> ^distance {<distance> <> (sqrt (+ (* (- <creaturePositionX> <entityPositionX>) (- <creaturePositionX> <entityPositionX>)) (* (- <creaturePositionY> <entityPositionY>) (- <creaturePositionY> <entityPositionY>))))})
 #-->
-#   (<entity> ^distance -
+#   (<entity> ^distance <distance> -
 #             ^distance (sqrt (+ (* (- <creaturePositionX> <entityPositionX>) (- <creaturePositionX> <entityPositionX>)) (* (- <creaturePositionY> <entityPositionY>) (- <creaturePositionY> <entityPositionY>)))))
 #   (write (crlf) | elaborate entity distance: name = | <entityName> ||)
 #}
-#

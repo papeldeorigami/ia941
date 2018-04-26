@@ -45,7 +45,7 @@ sp {apply*initialize-solution
    (<p> ^X <positionX>
         ^Y <positionY>)
 -->
-   (<s> ^name solution
+   (<s> ^name see
         ^deliverySpot <deliverySpot>
         ^needed <needed>
         ^knapsack <knapsack>

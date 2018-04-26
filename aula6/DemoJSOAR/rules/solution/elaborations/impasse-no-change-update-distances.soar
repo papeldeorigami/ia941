@@ -1,0 +1,7 @@
+sp {impasse-no-change*update-distances
+   (state <s> ^superstate <ss>
+              ^impasse no-change)
+   (<ss> ^name update-distances)
+-->
+   (<ss> ^name solution)
+}

@@ -13,8 +13,10 @@ source preferences.soar
 pushd preferences
 source preferences_source.soar
 popd
+source remove-distances.soar
 source see.soar
 source simulate-input.soar
+source update-distances.soar
 source evaluations.soar
 pushd evaluations
 source evaluations_source.soar

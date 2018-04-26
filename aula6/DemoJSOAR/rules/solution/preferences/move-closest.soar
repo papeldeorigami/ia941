@@ -9,6 +9,7 @@ sp {preference*move-closest
    (<o2> ^parameter <parameter2>)
    (<parameter2> ^distance <distance2>)
    (<o> ^parameter <parameter>)
-   (<parameter> ^distance <distance> < <distance2>)
+   (<parameter> ^distance { <distance> < <distance2> })
 -->
    (<ss> ^operator <o> > <o2>)}
+

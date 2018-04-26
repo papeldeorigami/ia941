@@ -1,5 +1,5 @@
 sp {solution*propose*see
-   (state <s> ^name solution
+   (state <s> ^name see
               ^memory <memory>
               ^io.input-link.CREATURE <creature>)
    (<creature> ^SENSOR.VISUAL.ENTITY <entity>)

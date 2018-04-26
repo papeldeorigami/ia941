@@ -22,28 +22,29 @@ sp {propose*get
    (<s> ^operator <o> +)
    (<o> ^name get)
    (<o> ^parameter <p>)
-   (<p> ^X <entityPositionX>)
-   (<p> ^Y <entityPositionY>)
    (<p> ^NAME <entityName>)
-   (<p> ^distance <distance>)
    (write (crlf) | propose get: name = | <entityName> | distance = | <distance> ||)
 }
 
 sp {solution*apply*get
    (state <s> ^operator <o>
               ^io.input-link.CREATURE <creature>
+              ^knapsack <knapsack>
               ^memory <memory>)
    (<o> ^name get)
    (<o> ^parameter <p>)
    (<p> ^NAME <name>)
-   (<p> ^distance <distance>)
    (<creature> ^SENSOR.VISUAL <visual>)
    (<visual> ^ENTITY <visualEntity>)
    (<visualEntity> ^NAME <name>)
    (<memory> ^ENTITY <memoryEntity>)
    (<memoryEntity> ^NAME <name>)
+   (<memoryEntity> ^distance <distance>)
+   (<memoryEntity> ^COLOR <color>)
+   (<knapsack> ^<color> <quantity>)
 -->
    (<memory> ^ENTITY <memoryEntity> -)
    (<visual> ^ENTITY <visualEntity> -)
+   (<knapsack> ^<color> <quantity> - (+ <quantity> 1))
    (write (crlf) | apply get: name = | <name> | distance = | <distance> ||)
 }

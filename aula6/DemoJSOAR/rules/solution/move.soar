@@ -23,24 +23,33 @@ sp {solution*propose*move
    (<o> ^name move)
    (<o> ^parameter <p>)
    (<p> ^NAME <entityName>)
+   (<p> ^X <entityPositionX>)
+   (<p> ^Y <entityPositionY>)
+   (<p> ^distance <distance>)
    (write (crlf) | propose move: name = | <entityName> | distance = | <distance> ||)
 }
    
 sp {solution*apply*move
-   (state <s> ^operator <o>
-#              ^io.input-link.CREATURE <creature>
-              ^position <position>
-              ^memory <memory>)
+   (state <s> 
+        ^operator <o>
+        ^position <position>
+        ^memory <memory>)
+   (<position> ^X <oldX>)
+   (<position> ^Y <oldY>)
    (<o> ^name move)
-   (<o> ^parameter.NAME <entityName>)
-   (<memory> ^ENTITY <entity>)
-   (<entity> ^NAME <entityName>)
-   (<entity> ^X <x>)
-   (<entity> ^Y <y>)
-   (<entity> ^distance <distance>)
+   (<o> ^parameter <p>)
+   (<p> ^NAME <entityName>)
+   (<p> ^distance <distance>)
+   (<p> ^X <x>)
+   (<p> ^Y <y>)
+   #(<memory> ^ENTITY <entity>)
+   #(<entity> ^NAME <entityName>)
+   #(<entity> ^X <x>)
+   #(<entity> ^Y <y>)
 -->
-   (<entity> ^distance <distance> -)
-   (<entity> ^distance 0)
+   (<s> ^name solution - ^name remove-distances)
+   (<position> ^X <oldX> -)
+   (<position> ^Y <oldY> -)
    (<position> ^X <x>)
    (<position> ^Y <y>)
    #   (<s> ^actions <actions>)
@@ -52,3 +61,4 @@ sp {solution*apply*move
    #   (<command> ^Y <y>)
    (write (crlf) | apply move: name = | <entityName> | distance = | <distance> ||)
 }
+

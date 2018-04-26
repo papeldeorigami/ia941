@@ -1,2 +1,2 @@
-source evaluate-failure.soar
+source evaluate-failure-duplicate.soar
 source evaluate-success.soar
