@@ -28,16 +28,16 @@ sp {propose*get
 
 sp {solution*apply*get
    (state <s> ^operator <o>
-#              ^io.input-link.CREATURE <creature>
+              ^io.input-link.CREATURE <creature>
               ^knapsack <knapsack>
               ^memory <memory>
               ^desired <desired>)
    (<o> ^name get)
    (<o> ^parameter <p>)
    (<p> ^NAME <name>)
-#   (<creature> ^SENSOR.VISUAL <visual>)
-#   (<visual> ^ENTITY <visualEntity>)
-#   (<visualEntity> ^NAME <name>)
+   (<creature> ^SENSOR.VISUAL <visual>)
+   (<visual> ^ENTITY <visualEntity>)
+   (<visualEntity> ^NAME <name>)
    (<memory> ^ENTITY <memoryEntity>)
    (<memoryEntity> ^NAME <name>)
    (<memoryEntity> ^COLOR <color>)
@@ -57,7 +57,7 @@ sp {solution*apply*get
               ^White <dwhite>)
 -->
    (<memory> ^ENTITY <memoryEntity> -)
-#   (<visual> ^ENTITY <visualEntity> -)
+   (<visual> ^ENTITY <visualEntity> -)
    (<knapsack> ^<color> <quantity> - (+ <quantity> 1))
    (write (crlf) | apply get: name = | <name> | Knapsack was: |)
    (write (crlf) | Red=| <kred> |/| <dred> ||)

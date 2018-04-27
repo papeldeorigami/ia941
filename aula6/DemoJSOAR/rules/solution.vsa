@@ -5,23 +5,24 @@ VERSION 4
 2	0	FOLDER all all 3
 3	0	FOLDER elaborations elaborations 4
 4	3	FOPERATOR _all _all.soar 5
-5	3	FOPERATOR evaluate-numeric-value evaluate-numeric-value.soar 31
-6	3	FOPERATOR impasse-no-change-incomplete impasse-no-change-incomplete.soar 29
-7	3	FOPERATOR problem-space problem-space.soar 10
-8	3	FOPERATOR top-state top-state.soar 11
-9	0	FOPERATOR apply-command apply-command.soar 12
-10	0	FOPERATOR get get.soar 13
-11	0	FOPERATOR move move.soar 14
-12	0	FOPERATOR old old.soar 15
-13	0	HLFOPERATOR preferences preferences.soar preferences 0 16
-14	13	FOPERATOR get-versus-move get-versus-move.soar 17
-15	13	OPERATOR move-closest move-closest.soar 18
-16	13	OPERATOR see-versus-get see-versus-get.soar 19
-17	13	OPERATOR see-versus-move see-versus-move.soar 20
-18	0	FOPERATOR see see.soar 22
-19	0	FOPERATOR simulate-input simulate-input.soar 23
-20	0	HLOPERATOR evaluations evaluations.soar evaluations 11 25
-21	20	FOPERATOR evaluate-failure-duplicate evaluate-failure-duplicate.soar 26
-22	20	FOPERATOR evaluate-success evaluate-success.soar 27
-23	0	OPERATOR initialize-solution initialize-solution.soar 28
+5	3	FOPERATOR evaluate-numeric-value evaluate-numeric-value.soar 6
+6	3	FOPERATOR impasse-no-change-incomplete impasse-no-change-incomplete.soar 7
+7	3	FOPERATOR problem-space problem-space.soar 8
+8	3	FOPERATOR substate-io substate-io.soar 25
+9	3	FOPERATOR top-state top-state.soar 9
+10	0	FOPERATOR apply-command apply-command.soar 10
+11	0	FOPERATOR get get.soar 11
+12	0	FOPERATOR move move.soar 12
+13	0	FOPERATOR old old.soar 13
+14	0	HLFOPERATOR preferences preferences.soar preferences 0 14
+15	14	FOPERATOR get-versus-move get-versus-move.soar 15
+16	14	OPERATOR move-closest move-closest.soar 16
+17	14	OPERATOR see-versus-get see-versus-get.soar 17
+18	14	OPERATOR see-versus-move see-versus-move.soar 18
+19	0	FOPERATOR see see.soar 19
+20	0	FOPERATOR simulate-input simulate-input.soar 20
+21	0	HLOPERATOR evaluations evaluations.soar evaluations 11 21
+22	21	FOPERATOR evaluate-failure-duplicate evaluate-failure-duplicate.soar 22
+23	21	FOPERATOR evaluate-success evaluate-success.soar 23
+24	0	OPERATOR initialize-solution initialize-solution.soar 24
 END
