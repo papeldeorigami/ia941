@@ -1,0 +1,23 @@
+sp {propose*deliver
+   (state <s> ^name solution
+              ^readyToDeliver true
+              ^delivered false
+              ^deliverySpot <deliverySpot>
+              ^position <position>)
+   (<position> ^X <creaturePositionX>
+               ^Y <creaturePositionY>)
+   (<deliverySpot> ^X <creaturePositionX>
+                   ^Y <creaturePositionY>)
+-->
+   (<s> ^operator <o> +)
+   (<o> ^name deliver)
+   (write (crlf) | propose deliver |)
+}
+
+sp {solution*apply*deliver
+   (state <s> ^operator.name deliver)
+-->
+   (<s> ^delivered false -
+        ^delivered true)
+   (write (crlf) | Delivered! |)
+}

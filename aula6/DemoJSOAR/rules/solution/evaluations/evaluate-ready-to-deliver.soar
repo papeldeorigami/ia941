@@ -1,0 +1,27 @@
+sp {solution*evaluate*readyToDeliver
+   (state <s> ^desired <d>
+              ^name solution
+              ^knapsack <k>
+              ^readyToDeliver false
+              ^delivered false
+              ^traveledDistance <traveledDistance>)
+   (<d> ^knapsack <dk>)
+   (<dk>
+        ^Red <Red>
+        ^Green <Green>
+        ^Blue <Blue>
+        ^Yellow <Yellow>
+        ^Magenta <Magenta>
+        ^White <White>)
+   (<k> ^Red <Red> 
+        ^Green <Green>
+        ^Blue <Blue>
+        ^Yellow <Yellow>
+        ^Magenta <Magenta>
+        ^White <White>)
+-->
+   (<s> ^readyToDeliver false -
+        ^readyToDeliver true)
+   (write (crlf) | **** Ready to deliver!|)
+}
+

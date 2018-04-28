@@ -1,6 +1,6 @@
 sp {propose*get
    (state <s> ^name solution
-              ^desired <desired>
+              ^desired.knapsack <dk>
               ^memory <memory>
               ^knapsack <knapsack>
               ^position <position>)
@@ -16,7 +16,7 @@ sp {propose*get
    # move only if distance is less than 30
    (<entity> ^DISTANCE { <DISTANCE> < 30 })
    # filter colors only that are missing in some leaflet
-   (<desired> ^<color> <desiredQuantity>)
+   (<dk> ^<color> <desiredQuantity>)
    (<knapsack> ^<color> { <quantity> < <desiredQuantity> })
 -->
    (<s> ^operator <o> +)
@@ -31,9 +31,9 @@ sp {solution*apply*get
               ^io.input-link.CREATURE <creature>
               ^knapsack <knapsack>
               ^memory <memory>
-              ^desired <desired>)
-   (<o> ^name get)
-   (<o> ^parameter <p>)
+              ^desired.knapsack <dk>)
+   (<o> ^name get
+        ^parameter <p>)
    (<p> ^NAME <name>)
    (<creature> ^SENSOR.VISUAL <visual>)
    (<visual> ^ENTITY <visualEntity>)
@@ -48,7 +48,7 @@ sp {solution*apply*get
                ^Yellow <kyellow>
                ^Magenta <kmagenta>
                ^White <kwhite>)
-   (<desired> ^<color> <dquantity>
+   (<dk> ^<color> <dquantity>
               ^Red <dred>
               ^Green <dgreen>
               ^Blue <dblue>
@@ -66,5 +66,18 @@ sp {solution*apply*get
    (write (crlf) | Yellow=| <kyellow> |/| <dyellow> ||)
    (write (crlf) | Magenta=| <kmagenta> |/| <dmagenta> ||)
    (write (crlf) | White=| <kwhite> |/| <dwhite> ||)
-   (write (crlf) | Now | <color> | is | (+ <quantity> 1) |/| <dquantity> ||)
+   (write (crlf) <color> | is now | (+ <quantity> 1) |/| <dquantity> ||)
 }
+
+sp {solution*apply*get*evaluate*readyToDeliver
+   (state <s> ^operator.name get
+              ^knapsack <k>
+              ^desired.knapsack <dk>)
+   
+   ### FAZER o COUNT
+-->
+   (<s> ^readyToDeliver false -
+        ^readyToDeliver true)
+   (write (crlf) | **** Ready to deliver!|)
+}
+

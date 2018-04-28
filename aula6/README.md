@@ -55,7 +55,7 @@ Construir um controlador deliberativo, ao invés de reativo, para encontrar as j
 
 ### Leaflets no SOAR
 
-Para que o SOAR tenha acesso à informação dos Leaflets, estendemos a classe SoarBridge, metodo prepareInputLink, com a seguinte representação:
+Para que o SOAR tenha acesso à informação dos Leaflets, estendemos a classe SoarBridge, metodo prepareInputLink, com a seguinte representação, onde cada folha com nome de cor representa o número de jóias necessário para completar aquele leaflet:
 	CREATURE I4
 		^LEAFLETS I8
 			^LEAFLET I9
@@ -65,77 +65,58 @@ Para que o SOAR tenha acesso à informação dos Leaflets, estendemos a classe S
 				...
 			^LEAFLET I10
 				...
-### Inicializador da criatura
 
-Para simplificar um pouco o código, criamos uma regra de inicialização da criatura. Desta forma, podemos inicializar contadores de jóias, eliminando a necessidade de rotinas duplicadas, tais como a see\*entity, que tinha duas versões (see\*entity\*with\*memory\*count e see\*entity\*without\*memory\*count).
-
-### Knapsack
+### Knapsack & desired result
 
 Utilizamos o inicializador para criar um knapsack na criatura; desta forma, podemos contar quantas jóias de cada cor ela está carregando.
 
-### Salvar quantidade de joias por leaflet
-
-A regra getJewel foi estendida:
+Sendo assim, o resultado esperado (^desired) ficou sendo a soma de cada cor dos três leaflets, como demonstrado no trecho abaixo do initialize-solution:
 
 ```
-# This will update the leaflets jewels collected count
-sp {apply*get*jewel*update*leaflets*collected
-   (state <s> ^operator <o>
-              ^io <io>)
-   (<io> ^input-link <il>)      
-   (<o> ^name getJewel)
-   (<il> ^CREATURE <creature>) 
-   (<creature> ^MEMORY <memory>)
-   (<memory> ^COUNT <quantity>)  
-   (<memory> ^ENTITY <memoryEntity>)
-
-   # additional checks to enable leaflets
-   (<memoryEntity> ^COLOR <color>)
-   (<creature> ^LEAFLETS.LEAFLET <leaflet>)
-   (<leaflet> ^COLLECTED_JEWELS <collectedJewels>)
-   (<leaflet> ^JEWEL <leafletJewel>)
-   (<leafletJewel> ^COLOR <color>)
-   (<leafletJewel> ^NEEDED <needed>)
-   (<leafletJewel> ^COLLECTED <collected> < <needed>)
--->
-   (<leafletJewel> ^COLLECTED <collected> - (+ <collected> 1))
-   (<leaflet> ^COLLECTED_JEWELS <collectedJewels> - (+ <collectedJewels> 1))
-}
-
+   (<desired>
+               ^Red (+ <Red1> <Red2> <Red3>)
+               ^Green (+ <Green1> <Green2> <Green3>)
+               ^Blue (+ <Blue1> <Blue2> <Blue3>)
+               ^Yellow (+ <Yellow1> <Yellow2> <Yellow3>)
+               ^Magenta (+ <Magenta1> <Magenta2> <Magenta3>)
+               ^White (+ <White1> <White2> <White3>))
 ```
+
+### Dicas
+
+* Para simplificar um pouco o código, criou-se uma regra de inicialização da criatura. Desta forma, pode-se inicializar contadores de jóias, eliminando a necessidade de rotinas duplicadas, tais como a see\*entity, que tinha duas versões (see\*entity\*with\*memory\*count e see\*entity\*without\*memory\*count).
+
+* Foi introduzido ainda um operador de simulação (simulate-input) para permitir o desenvolvimento de código SOAR sem o Java. Isto é, simulou-se todos os inputs relevantes do WS3D, permitindo-se utilizar o SoarJavaDebugger diretamente, sem a necessidade de se iniciar o programa Java para verificar os resultados.
+
+* Utilizou-se o VisualSoar para se organizar melhor o código, com um arquivo para cada operador, permitindo ainda a verificação de sintaxe no próprio editor. Para abrir o código no VisualSoar, basta acessar o arquivo "rules/solution.vsa".
+
 
 ### Detectar leaflet completo
-
-Assumindo que todo leaflet tem 9 jóias, a detecção de leaflets completos ficou da seguinte forma:
-
 ```
-##############################  LEAFLETS DETECTION #####################################
-# detect leaflets completion
-
-# detect if a single leaflet is complete
-sp {detect*leaflet*complete
-   (state <s> ^io.input-link <il>)
-   (<il> ^CREATURE <creature>) 
-   (<creature> ^LEAFLETS.LEAFLET <leaflet>)
-   -(<leaflet> ^COMPLETED)
-   (<leaflet> ^COLLECTED_JEWELS 9)
+sp {solution*evaluate*state*success
+   (state <s> ^desired <d>
+              ^name solution
+              ^knapsack <k>
+              ^traveledDistance <traveledDistance>)
+   (<d> ^Red <Red>
+        ^Green <Green>
+        ^Blue <Blue>
+        ^Yellow <Yellow>
+        ^Magenta <Magenta>
+        ^White <White>)        
+   (<k> ^Red <Red> 
+        ^Green <Green>
+        ^Blue <Blue>
+        ^Yellow <Yellow>
+        ^Magenta <Magenta>
+        ^White <White>)
 -->
-   (<leaflet> ^COMPLETED 1)
-}
-
-# detect if all leaflets are complete
-sp {detect*all*leaflets*complete
-   (state <s> ^io.input-link <il>)
-   (<il> ^CREATURE <creature>) 
-   (<creature> ^LEAFLETS <leaflets>)
-   (<leaflets> ^LEAFLET <leaflet1>)
-   (<leaflet1> ^COMPLETED 1)
-   (<leaflets> ^LEAFLET <leaflet2>)
-   (<leaflet2> ^COMPLETED 1)
-   (<leaflets> ^LEAFLET <leaflet3>)
-   (<leaflet3> ^COMPLETED 1)
--->
-   (<leaflets> ^ALL_COMPLETED 1)
+   (<s> ^success <d>)
+   (write (crlf) | ****************************** |)
+   (write (crlf) | ********** Success! ********** |)
+   (write (crlf) | traveledDistance =  | <traveledDistance> ||)
+   (write (crlf) | ****************************** |)
+#   (halt)
 }
 ```
 

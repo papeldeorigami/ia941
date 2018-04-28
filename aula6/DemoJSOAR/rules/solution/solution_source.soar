@@ -6,6 +6,7 @@ pushd elaborations
 source elaborations_source.soar
 popd
 source apply-command.soar
+source deliver.soar
 source get.soar
 source move.soar
 source old.soar

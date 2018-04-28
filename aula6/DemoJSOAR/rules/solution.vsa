@@ -11,18 +11,20 @@ VERSION 4
 8	3	FOPERATOR substate-io substate-io.soar 25
 9	3	FOPERATOR top-state top-state.soar 9
 10	0	FOPERATOR apply-command apply-command.soar 10
-11	0	FOPERATOR get get.soar 11
-12	0	FOPERATOR move move.soar 12
-13	0	FOPERATOR old old.soar 13
-14	0	HLFOPERATOR preferences preferences.soar preferences 0 14
-15	14	FOPERATOR get-versus-move get-versus-move.soar 15
-16	14	OPERATOR move-closest move-closest.soar 16
-17	14	OPERATOR see-versus-get see-versus-get.soar 17
-18	14	OPERATOR see-versus-move see-versus-move.soar 18
-19	0	FOPERATOR see see.soar 19
-20	0	FOPERATOR simulate-input simulate-input.soar 20
-21	0	HLOPERATOR evaluations evaluations.soar evaluations 11 21
-22	21	FOPERATOR evaluate-failure-duplicate evaluate-failure-duplicate.soar 22
-23	21	FOPERATOR evaluate-success evaluate-success.soar 23
-24	0	OPERATOR initialize-solution initialize-solution.soar 24
+11	0	FOPERATOR deliver deliver.soar 27
+12	0	FOPERATOR get get.soar 11
+13	0	FOPERATOR move move.soar 12
+14	0	FOPERATOR old old.soar 13
+15	0	HLFOPERATOR preferences preferences.soar preferences 0 14
+16	15	FOPERATOR get-versus-move get-versus-move.soar 15
+17	15	OPERATOR move-closest move-closest.soar 16
+18	15	OPERATOR see-versus-get see-versus-get.soar 17
+19	15	OPERATOR see-versus-move see-versus-move.soar 18
+20	0	FOPERATOR see see.soar 19
+21	0	FOPERATOR simulate-input simulate-input.soar 20
+22	0	HLOPERATOR evaluations evaluations.soar evaluations 11 21
+23	22	FOPERATOR evaluate-failure-duplicate evaluate-failure-duplicate.soar 22
+24	22	FOPERATOR evaluate-ready-to-deliver evaluate-ready-to-deliver.soar 23
+25	22	FOPERATOR evaluate-success evaluate-success.soar 26
+26	0	OPERATOR initialize-solution initialize-solution.soar 24
 END

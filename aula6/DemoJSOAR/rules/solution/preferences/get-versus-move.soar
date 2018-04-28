@@ -1,8 +1,9 @@
 # get > move
-sp {move*get*preferences
-   (state <s> ^operator <o> +
-          <o2> +)
-   (<o> ^name get)
-   (<o2> ^name move)
--->
-   (<s> ^operator <o> > <o2>)}
+#sp {move*get*preferences
+#   (state <s> ^operator <o> +
+#          <o2> +)
+#   (<o> ^name get)
+#   (<o2> ^name move)
+#-->
+#   (<s> ^operator <o> > <o2>)}
+#

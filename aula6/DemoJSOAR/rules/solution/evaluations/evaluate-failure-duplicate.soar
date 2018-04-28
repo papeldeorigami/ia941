@@ -13,3 +13,4 @@ sp {solution*evaluate*state*failure*duplicate
    (<s2> ^failure <d>)
    (write (crlf) | Duplicate failure! |)
 }
+

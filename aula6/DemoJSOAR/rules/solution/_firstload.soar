@@ -4,4 +4,4 @@ popd
 
 chunk always
 #watch --chunks
-#chunk add-osk on
+chunk add-osk on

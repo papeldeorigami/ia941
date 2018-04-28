@@ -3,23 +3,23 @@ sp {solution*propose*see
               ^memory <memory>
               ^io.input-link.CREATURE <creature>)
    (<creature> ^SENSOR.VISUAL.ENTITY <entity>)
-   (<entity> ^TYPE <type> << JEWEL FOOD >>)
-   (<entity> ^COLOR <color>)
-   (<entity> ^X <x>)
-   (<entity> ^Y <y>)
-   (<entity> ^NAME <name>)
-   (<entity> ^DISTANCE <DISTANCE>)
+   (<entity> ^TYPE <type> << JEWEL FOOD >>
+             ^COLOR <color>
+             ^X <x>
+             ^Y <y>
+             ^NAME <name>
+             ^DISTANCE <DISTANCE>)
   -(<memory> ^ENTITY.NAME <name>)
 -->
-   (<s> ^operator <op> + =)
+   (<s> ^operator <op> +)
    (<op> ^name see)
    (<op> ^parameter <newEntity>)
-   (<newEntity> ^Name <name>)
-   (<newEntity> ^Type <type>)
-   (<newEntity> ^X <x>)
-   (<newEntity> ^Y <y>)
-   (<newEntity> ^DISTANCE <DISTANCE>)
-   (<newEntity> ^Color <color>)
+   (<newEntity> ^Name <name>
+                ^Type <type>
+                ^X <x>
+                ^Y <y>
+                ^DISTANCE <DISTANCE>
+                ^Color <color>)
    (write (crlf) | propose see: name = | <name> | x = | <x> | y = | <y> | color = | <color> ||)
 }
 
@@ -27,25 +27,25 @@ sp {solution*apply*see
    (state <s> ^operator <op>
               ^memory <memory>
               ^position <position>)
-   (<position> ^X <px>)
-   (<position> ^Y <py>)
-   (<op> ^name see)
-   (<op> ^parameter <newEntity>)
-   (<newEntity> ^X <x>)
-   (<newEntity> ^Y <y>)
-   (<newEntity> ^Name <name>)
-   (<newEntity> ^Type <type>)
-   (<newEntity> ^Color <color>)
-   (<newEntity> ^DISTANCE <DISTANCE>)
+   (<position> ^X <px>
+               ^Y <py>)
+   (<op> ^name see
+         ^parameter <newEntity>)
+   (<newEntity> ^X <x>
+                ^Y <y>
+                ^Name <name>
+                ^Type <type>
+                ^Color <color>
+                ^DISTANCE <DISTANCE>)
 -->
    (<memory> ^ENTITY <entity>)
-   (<entity> ^X <x>)
-   (<entity> ^Y <y>)
-   (<entity> ^NAME <name>)
-   (<entity> ^TYPE <type>)
-   (<entity> ^COLOR <color>) 
-   (<entity> ^creatureX <px>)
-   (<entity> ^creatureY <py>)
-   (<entity> ^DISTANCE <DISTANCE>)
+   (<entity> ^X <x>
+             ^Y <y>
+             ^NAME <name>
+             ^TYPE <type>
+             ^COLOR <color>
+             ^creatureX <px>
+             ^creatureY <py>
+             ^DISTANCE <DISTANCE>)
    (write (crlf) | apply see: name = | <name> | x = | <x> | y = | <y> | color = | <color> ||)
 }
