@@ -1,9 +1,9 @@
 sp {solution*evaluate*state*failure*duplicate
    (state <s1> ^position <p1>
-               ^operator.name <o1>)
+               ^operator.name move)
    (state { <> <s1> <s2> }
                ^position <p2>
-               ^operator.name <o1>
+               ^operator.name move
                ^tried-tied-operator)
    (<p1> ^X <x1>
          ^Y <y1>)

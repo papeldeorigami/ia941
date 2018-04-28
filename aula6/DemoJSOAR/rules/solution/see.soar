@@ -11,7 +11,7 @@ sp {solution*propose*see
              ^DISTANCE <DISTANCE>)
   -(<memory> ^ENTITY.NAME <name>)
 -->
-   (<s> ^operator <op> +)
+   (<s> ^operator <op> + =)
    (<op> ^name see)
    (<op> ^parameter <newEntity>)
    (<newEntity> ^Name <name>

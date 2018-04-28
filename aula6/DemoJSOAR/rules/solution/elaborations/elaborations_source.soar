@@ -1,5 +1,4 @@
 source _all.soar
-source evaluate-numeric-value.soar
 source impasse-no-change-incomplete.soar
 source problem-space.soar
 source substate-io.soar

@@ -1,6 +1,6 @@
 sp {propose*get
    (state <s> ^name solution
-              ^desired.knapsack <dk>
+              ^desired <desired>
               ^memory <memory>
               ^knapsack <knapsack>
               ^position <position>)
@@ -16,7 +16,7 @@ sp {propose*get
    # move only if distance is less than 30
    (<entity> ^DISTANCE { <DISTANCE> < 30 })
    # filter colors only that are missing in some leaflet
-   (<dk> ^<color> <desiredQuantity>)
+   (<desired> ^<color> <desiredQuantity>)
    (<knapsack> ^<color> { <quantity> < <desiredQuantity> })
 -->
    (<s> ^operator <o> +)
@@ -29,9 +29,10 @@ sp {propose*get
 sp {solution*apply*get
    (state <s> ^operator <o>
               ^io.input-link.CREATURE <creature>
+              ^collected <collected>
               ^knapsack <knapsack>
               ^memory <memory>
-              ^desired.knapsack <dk>)
+              ^desired <desired>)
    (<o> ^name get
         ^parameter <p>)
    (<p> ^NAME <name>)
@@ -48,7 +49,7 @@ sp {solution*apply*get
                ^Yellow <kyellow>
                ^Magenta <kmagenta>
                ^White <kwhite>)
-   (<dk> ^<color> <dquantity>
+   (<desired> ^<color> <dquantity>
               ^Red <dred>
               ^Green <dgreen>
               ^Blue <dblue>
@@ -58,6 +59,7 @@ sp {solution*apply*get
 -->
    (<memory> ^ENTITY <memoryEntity> -)
    (<visual> ^ENTITY <visualEntity> -)
+   (<s> ^collected <collected> - (+ <collected> 1))
    (<knapsack> ^<color> <quantity> - (+ <quantity> 1))
    (write (crlf) | apply get: name = | <name> | Knapsack was: |)
    (write (crlf) | Red=| <kred> |/| <dred> ||)
@@ -71,10 +73,8 @@ sp {solution*apply*get
 
 sp {solution*apply*get*evaluate*readyToDeliver
    (state <s> ^operator.name get
-              ^knapsack <k>
-              ^desired.knapsack <dk>)
-   
-   ### FAZER o COUNT
+              ^collected 8    # actually 9 is the full knapsack, but we just got the last one, so it is 9 - 1 = 8
+              ^readyToDeliver false)
 -->
    (<s> ^readyToDeliver false -
         ^readyToDeliver true)

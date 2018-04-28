@@ -50,7 +50,8 @@ sp {apply*initialize-solution
         ^knapsack <knapsack>
         ^desired <desired>
         ^memory <memory>
-        ^traveledDistance 0   # this is the numeric-value of success
+        ^collected 0          # number of jewels collected
+        ^traveledDistance 0   # this will be the numeric-value of success
         ^readyToDeliver false # to if all leaflets are complete (ready to deliver)
         ^delivered false      # to control whether leaflets have been exchanged in the deliverySpot
         ^position <position>)
@@ -72,15 +73,13 @@ sp {apply*initialize-solution
                ^White 0)
    (<desired>
                ^better lower # success will be the lowest possible value for the numeric-value (traveledDistance)
-               ^knapsack <dk>)
-   (<memory> ^ENTITY <deliverySpot>)
-   (<dk>
                ^Red (+ <Red1> <Red2> <Red3>)
                ^Green (+ <Green1> <Green2> <Green3>)
                ^Blue (+ <Blue1> <Blue2> <Blue3>)
                ^Yellow (+ <Yellow1> <Yellow2> <Yellow3>)
                ^Magenta (+ <Magenta1> <Magenta2> <Magenta3>)
                ^White (+ <White1> <White2> <White3>))
+   (<memory> ^ENTITY <deliverySpot>)
    (write (crlf) | Red=(| <Red1> |, | <Red2> |, | <Red3> |)|)
    (write (crlf) | Green=(| <Green1> |, | <Green2> |, | <Green3> |)|)
    (write (crlf) | Blue=(| <Blue1> |, | <Blue2> |, | <Blue3> |)|)

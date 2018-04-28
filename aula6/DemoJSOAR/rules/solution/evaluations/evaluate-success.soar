@@ -1,5 +1,5 @@
 sp {solution*evaluate*state*success
-   (state <s> ^name solution
+   (state <s> # ^tried-tied-operator
               ^desired <d>
               ^delivered true
               ^traveledDistance <traveledDistance>)

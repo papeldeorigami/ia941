@@ -3,7 +3,8 @@ sp {solution*propose*move*jewel
               ^position <position>
               ^memory.ENTITY <entity>
               ^knapsack <knapsack>
-              ^desired.knapsack <dk>)
+              ^traveledDistance <traveledDistance>
+              ^desired <desired>)
    (<position> ^X <x>
                ^Y <y>)
    (<entity> ^X { <entityPositionX> <> <x> }
@@ -14,7 +15,7 @@ sp {solution*propose*move*jewel
    # move only if distance is greater than 30
              ^DISTANCE { <DISTANCE> > 30 })
    # filter colors only that are missing in some leaflet
-   (<dk> ^<color> <desiredQuantity>)
+   (<desired> ^<color> <desiredQuantity>)
    (<knapsack> ^<color> { <quantity> < <desiredQuantity> })
 -->
    (<s> ^operator <o> +)
@@ -24,7 +25,7 @@ sp {solution*propose*move*jewel
         ^X <entityPositionX>
         ^Y <entityPositionY>
         ^DISTANCE <DISTANCE>)
-   (write (crlf) | propose move to jewel: name = | <entityName> | distance = | <DISTANCE> ||)
+   (write (crlf) | propose move (to jewel): name = | <entityName> | distance = | <DISTANCE> ||)
 }
    
 sp {solution*propose*move*delivery-spot
@@ -49,7 +50,7 @@ sp {solution*propose*move*delivery-spot
         ^X <entityPositionX>
         ^Y <entityPositionY>
         ^DISTANCE <DISTANCE>)
-   (write (crlf) | propose move to deliverySpot |)
+   (write (crlf) | propose move (to deliverySpot) |)
 }
 
 sp {solution*apply*move
@@ -118,4 +119,3 @@ sp {solution*apply*move*update-other-distances
              ^creatureY <newY>)
    (write (crlf) | apply move*update-other-distances: name = | <entityName> | oldX = | <oldX> | oldY = | <oldY> | newX = | <newX> | newY = | <newY> ||)
 }
-
