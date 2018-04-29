@@ -1,7 +1,7 @@
 sp {solution*propose*move*jewel
    (state <s> ^name solution
               ^position <position>
-              ^memory.ENTITY <entity>
+              ^ENTITY <entity>
               ^knapsack <knapsack>
               ^traveledDistance <traveledDistance>
               ^desired <desired>)
@@ -31,7 +31,7 @@ sp {solution*propose*move*jewel
 sp {solution*propose*move*delivery-spot
    (state <s> ^name solution
               ^position <position>
-              ^memory.ENTITY <entity>
+              ^ENTITY <entity>
               ^deliverySpot <deliverySpot>
               ^delivered false
               ^readyToDeliver true)
@@ -57,8 +57,7 @@ sp {solution*apply*move
    (state <s> 
         ^operator <o>
         ^position <position>
-        ^traveledDistance <traveledDistance>
-        ^memory <memory>)
+        ^traveledDistance <traveledDistance>)
    (<position> ^X <oldX>
                ^Y <oldY>)
    (<o> ^name move
@@ -67,7 +66,7 @@ sp {solution*apply*move
         ^DISTANCE <DISTANCE>
         ^X <x>
         ^Y <y>)
-   (<memory> ^ENTITY <entity>)
+   (<s> ^ENTITY <entity>)
    (<entity> ^NAME <entityName>)
 -->
    (<position> ^X <oldX> -
@@ -93,17 +92,39 @@ sp {solution*apply*move
    #(write (crlf) | apply move: name = | <entityName> | distance = | <DISTANCE> ||)
 }
 
+#sp {solution*apply*move*test
+#   (state <s> 
+#        ^operator <o>
+#        ^position <position>
+#        ^traveledDistance <traveledDistance>)
+#   (<position> ^X <oldX>
+#               ^Y <oldY>)
+#   (<o> ^name move
+#        ^parameter <p>)
+#   (<p> ^NAME <entityName>
+#        ^DISTANCE <DISTANCE>
+#        ^X <x>
+#        ^Y <y>)
+#-->
+#   (<position> ^X <oldX> -
+#               ^Y <oldY> -
+#               ^X <x>
+#               ^Y <y>)
+#   (write (cmd print --depth 2 <s>))
+#   (write (crlf) | *********** apply move test: traveledDistance = | <traveledDistance> | + | <DISTANCE> ||)
+#   #(write (crlf) | apply move: name = | <entityName> | distance = | <DISTANCE> ||)
+#}
+#
 sp {solution*apply*move*update-other-distances
    (state <s> 
         ^operator <o>
-        ^position <position>
-        ^memory <memory>)
+        ^position <position>)
    (<o> ^name move
         ^parameter <p>)
    (<position> ^X <newX>
                ^Y <newY>)
    (<p> ^NAME <targetName>)
-   (<memory> ^ENTITY <entity>)
+   (<s> ^ENTITY <entity>)
    (<entity> ^NAME { <entityName> <> <targetName> }
              ^X <x>
              ^Y <y>

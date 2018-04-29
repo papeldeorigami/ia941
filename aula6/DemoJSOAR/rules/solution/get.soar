@@ -1,13 +1,12 @@
 sp {propose*get
    (state <s> ^name solution
               ^desired <desired>
-              ^memory <memory>
               ^knapsack <knapsack>
               ^position <position>)
    (<position> ^X <creaturePositionX>)
    (<position> ^Y <creaturePositionY>)
    # find a jewel
-   (<memory> ^ENTITY <entity>)
+   (<s> ^ENTITY <entity>)
    (<entity> ^X <entityPositionX>)
    (<entity> ^Y <entityPositionY>)
    (<entity> ^NAME <entityName>)
@@ -31,7 +30,6 @@ sp {solution*apply*get
               ^io.input-link.CREATURE <creature>
               ^collected <collected>
               ^knapsack <knapsack>
-              ^memory <memory>
               ^desired <desired>)
    (<o> ^name get
         ^parameter <p>)
@@ -39,7 +37,7 @@ sp {solution*apply*get
    (<creature> ^SENSOR.VISUAL <visual>)
    (<visual> ^ENTITY <visualEntity>)
    (<visualEntity> ^NAME <name>)
-   (<memory> ^ENTITY <memoryEntity>)
+   (<s> ^ENTITY <memoryEntity>)
    (<memoryEntity> ^NAME <name>)
    (<memoryEntity> ^COLOR <color>)
    (<knapsack> ^<color> <quantity>
@@ -57,7 +55,7 @@ sp {solution*apply*get
               ^Magenta <dmagenta>
               ^White <dwhite>)
 -->
-   (<memory> ^ENTITY <memoryEntity> -)
+   (<s> ^ENTITY <memoryEntity> -)
    (<visual> ^ENTITY <visualEntity> -)
    (<s> ^collected <collected> - (+ <collected> 1))
    (<knapsack> ^<color> <quantity> - (+ <quantity> 1))

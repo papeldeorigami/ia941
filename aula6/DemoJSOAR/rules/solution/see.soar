@@ -1,6 +1,5 @@
 sp {solution*propose*see
    (state <s> ^name solution
-              ^memory <memory>
               ^io.input-link.CREATURE <creature>)
    (<creature> ^SENSOR.VISUAL.ENTITY <entity>)
    (<entity> ^TYPE <type> << JEWEL FOOD >>
@@ -9,7 +8,7 @@ sp {solution*propose*see
              ^Y <y>
              ^NAME <name>
              ^DISTANCE <DISTANCE>)
-  -(<memory> ^ENTITY.NAME <name>)
+  -(<s> ^ENTITY.NAME <name>)
 -->
    (<s> ^operator <op> + =)
    (<op> ^name see)
@@ -25,7 +24,6 @@ sp {solution*propose*see
 
 sp {solution*apply*see
    (state <s> ^operator <op>
-              ^memory <memory>
               ^position <position>)
    (<position> ^X <px>
                ^Y <py>)
@@ -38,7 +36,7 @@ sp {solution*apply*see
                 ^Color <color>
                 ^DISTANCE <DISTANCE>)
 -->
-   (<memory> ^ENTITY <entity>)
+   (<s> ^ENTITY <entity>)
    (<entity> ^X <x>
              ^Y <y>
              ^NAME <name>

@@ -79,7 +79,7 @@ sp {apply*initialize-solution
                ^Yellow (+ <Yellow1> <Yellow2> <Yellow3>)
                ^Magenta (+ <Magenta1> <Magenta2> <Magenta3>)
                ^White (+ <White1> <White2> <White3>))
-   (<memory> ^ENTITY <deliverySpot>)
+   (<s> ^ENTITY <deliverySpot>)
    (write (crlf) | Red=(| <Red1> |, | <Red2> |, | <Red3> |)|)
    (write (crlf) | Green=(| <Green1> |, | <Green2> |, | <Green3> |)|)
    (write (crlf) | Blue=(| <Blue1> |, | <Blue2> |, | <Blue3> |)|)
