@@ -9,5 +9,6 @@ sp {solution*evaluate*state*success
    (write (crlf) | ********** Success! ********** |)
    (write (crlf) | traveledDistance =  | <traveledDistance> ||)
    (write (crlf) | ****************************** |)
+   (<s> ^apply true)
 #   (halt)
 }

@@ -16,6 +16,7 @@ source preferences_source.soar
 popd
 source see.soar
 source simulate-input.soar
+source wander.soar
 source evaluations.soar
 pushd evaluations
 source evaluations_source.soar

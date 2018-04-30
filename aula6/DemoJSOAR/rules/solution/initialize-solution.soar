@@ -51,6 +51,7 @@ sp {apply*initialize-solution
         ^desired <desired>
         ^memory <memory>
         ^distances <distances>
+        ^actions <actions>    # hold the actions to be applied (but if action is move, just apply the first one)
         ^collected 0          # number of jewels collected
         ^traveledDistance 0   # this will be the numeric-value of success
         ^readyToDeliver false # to if all leaflets are complete (ready to deliver)

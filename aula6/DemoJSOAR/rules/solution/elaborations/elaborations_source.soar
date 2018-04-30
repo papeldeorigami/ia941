@@ -1,6 +1,5 @@
 source _all.soar
 source entity-distance.soar
-source impasse-no-change-incomplete.soar
 source problem-space.soar
 source substate-io.soar
 source top-state.soar

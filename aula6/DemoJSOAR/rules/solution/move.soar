@@ -75,13 +75,6 @@ sp {solution*apply*move
                ^Y <oldY> -
                ^X <x>
                ^Y <y>)
-   #   (<s> ^actions <actions>)
-   #   (<actions> ^MOVE <command>)
-   #   (<command> ^Vel 1)
-   #   (<command> ^VelR 1)
-   #   (<command> ^VelL 1)
-   #   (<command> ^X <x>)
-   #   (<command> ^Y <y>)
    (<distances> ^<entity> <DISTANCE> - ^<entity> 0)
    (<s> ^traveledDistance <traveledDistance> -
         ^traveledDistance (+ <traveledDistance> <DISTANCE>))
@@ -89,25 +82,23 @@ sp {solution*apply*move
    #(write (crlf) | apply move: name = | <entityName> | distance = | <DISTANCE> ||)
 }
 
-#sp {solution*apply*move*test
-#   (state <s> 
-#        ^operator <o>
-#        ^position <position>
-#        ^traveledDistance <traveledDistance>)
-#   (<position> ^X <oldX>
-#               ^Y <oldY>)
-#   (<o> ^name move
-#        ^parameter <p>)
-#   (<p> ^NAME <entityName>
-#        ^DISTANCE <DISTANCE>
-#        ^X <x>
-#        ^Y <y>)
-#-->
-#   (<position> ^X <oldX> -
-#               ^Y <oldY> -
-#               ^X <x>
-#               ^Y <y>)
-#   (write (cmd print --depth 2 <s>))
-#   (write (crlf) | *********** apply move test: traveledDistance = | <traveledDistance> | + | <DISTANCE> ||)
-#   #(write (crlf) | apply move: name = | <entityName> | distance = | <DISTANCE> ||)
-#}
+sp {solution*apply*move*real*only*once
+   (state <s> 
+        ^operator <o>
+        ^actions <actions>)
+  -(<actions> ^MOVE)
+   (<o> ^name move
+        ^parameter <p>)
+   (<p> ^ENTITY <entity>
+        ^X <x>
+        ^Y <y>)
+-->
+   (<actions> ^MOVE <command>)
+   (<command> ^Vel 1)
+   (<command> ^VelR 1)
+   (<command> ^VelL 1)
+   (<command> ^X <x>)
+   (<command> ^Y <y>)
+   (write (crlf) | will apply actual move to x= | <x> | y= | <y> ||)
+   #(write (crlf) | apply move: name = | <entityName> | distance = | <DISTANCE> ||)
+}

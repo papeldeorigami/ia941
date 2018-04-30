@@ -33,15 +33,16 @@ sp {solution*apply*get
               ^collected <collected>
               ^knapsack <knapsack>
               ^memory <memory>
+              ^actions <actions>
               ^desired <desired>)
    (<o> ^name get
         ^parameter <p>)
-   (<p> ^NAME <name>)
+   (<p> ^NAME <entityName>)
    (<creature> ^SENSOR.VISUAL <visual>)
    (<visual> ^ENTITY <visualEntity>)
-   (<visualEntity> ^NAME <name>)
+   (<visualEntity> ^NAME <entityName>)
    (<memory> ^ENTITY <memoryEntity>)
-   (<memoryEntity> ^NAME <name>)
+   (<memoryEntity> ^NAME <entityName>)
    (<memoryEntity> ^COLOR <color>)
    (<knapsack> ^<color> <quantity>
                ^Red <kred>
@@ -62,7 +63,9 @@ sp {solution*apply*get
    (<visual> ^ENTITY <visualEntity> -)
    (<s> ^collected <collected> - (+ <collected> 1))
    (<knapsack> ^<color> <quantity> - (+ <quantity> 1))
-   (write (crlf) | apply get: name = | <name> | Knapsack was: |)
+   (<actions> ^GET <command>)
+   (<command> ^Name <entityName>)
+   (write (crlf) | apply get: name = | <entityName> | Knapsack was: |)
    (write (crlf) | Red=| <kred> |/| <dred> ||)
    (write (crlf) | Green=| <kgreen> |/| <dgreen> ||)
    (write (crlf) | Blue=| <kblue> |/| <dblue> ||)
