@@ -2,18 +2,20 @@ sp {propose*get
    (state <s> ^name solution
               ^desired <desired>
               ^knapsack <knapsack>
+              ^memory <memory>
+              ^distances <distances>
               ^position <position>)
    (<position> ^X <creaturePositionX>)
    (<position> ^Y <creaturePositionY>)
    # find a jewel
-   (<s> ^ENTITY <entity>)
+   (<memory> ^ENTITY <entity>)
    (<entity> ^X <entityPositionX>)
    (<entity> ^Y <entityPositionY>)
    (<entity> ^NAME <entityName>)
    (<entity> ^TYPE JEWEL)
    (<entity> ^COLOR <color>)
    # move only if distance is less than 30
-   (<entity> ^DISTANCE { <DISTANCE> < 30 })
+   (<distances> ^<entity> { <DISTANCE> < 30 })
    # filter colors only that are missing in some leaflet
    (<desired> ^<color> <desiredQuantity>)
    (<knapsack> ^<color> { <quantity> < <desiredQuantity> })
@@ -22,7 +24,7 @@ sp {propose*get
    (<o> ^name get)
    (<o> ^parameter <p>)
    (<p> ^NAME <entityName>)
-   (write (crlf) | propose get: name = | <entityName> | distance = | <DISTANCE> ||)
+#   (write (crlf) | propose get: name = | <entityName> | distance = | <DISTANCE> ||)
 }
 
 sp {solution*apply*get
@@ -30,6 +32,7 @@ sp {solution*apply*get
               ^io.input-link.CREATURE <creature>
               ^collected <collected>
               ^knapsack <knapsack>
+              ^memory <memory>
               ^desired <desired>)
    (<o> ^name get
         ^parameter <p>)
@@ -37,7 +40,7 @@ sp {solution*apply*get
    (<creature> ^SENSOR.VISUAL <visual>)
    (<visual> ^ENTITY <visualEntity>)
    (<visualEntity> ^NAME <name>)
-   (<s> ^ENTITY <memoryEntity>)
+   (<memory> ^ENTITY <memoryEntity>)
    (<memoryEntity> ^NAME <name>)
    (<memoryEntity> ^COLOR <color>)
    (<knapsack> ^<color> <quantity>
@@ -55,7 +58,7 @@ sp {solution*apply*get
               ^Magenta <dmagenta>
               ^White <dwhite>)
 -->
-   (<s> ^ENTITY <memoryEntity> -)
+   (<memory> ^ENTITY <memoryEntity> -)
    (<visual> ^ENTITY <visualEntity> -)
    (<s> ^collected <collected> - (+ <collected> 1))
    (<knapsack> ^<color> <quantity> - (+ <quantity> 1))
@@ -66,7 +69,7 @@ sp {solution*apply*get
    (write (crlf) | Yellow=| <kyellow> |/| <dyellow> ||)
    (write (crlf) | Magenta=| <kmagenta> |/| <dmagenta> ||)
    (write (crlf) | White=| <kwhite> |/| <dwhite> ||)
-   (write (crlf) <color> | is now | (+ <quantity> 1) |/| <dquantity> ||)
+   (write (crlf) | ---> | <color> | is now | (+ <quantity> 1) |/| <dquantity> ||)
 }
 
 sp {solution*apply*get*evaluate*readyToDeliver

@@ -5,5 +5,5 @@ sp {solution*elaborate*problem-space
    (<p> ^name solution
         ^default-state-copy yes
         ^one-level-attributes traveledDistance readyToDeliver delivered collected
-        ^two-level-attributes knapsack position ENTITY)
+        ^two-level-attributes knapsack position distances)
 }

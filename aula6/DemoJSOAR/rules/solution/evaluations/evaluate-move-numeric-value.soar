@@ -1,43 +1,10 @@
-#sp {solution*evaluate*numeric-value
-#   (state <s> ^desired <d>
-#              ^tried-tied-operator
-#              ^traveledDistance <traveledDistance>)
-#-->
-#   (<s> ^numeric-value <traveledDistance>)
-#   (write (crlf) | ************ numeric-value = | <traveledDistance> ||)
-#}
-
-
 sp {solution*evaluate*numeric-value
-   (state <s> ^operator <o>
-              ^desired <d>
-              ^tried-tied-operator
+   (state <s> ^desired <d>
+              ^tried-tied-operator <o>
               ^traveledDistance <traveledDistance>)
    (<o> ^name move
         ^parameter.DISTANCE <DISTANCE>)
 -->
    (<s> ^numeric-value (+ <traveledDistance> <DISTANCE>))
-   #(<s> ^numeric-value <traveledDistance>)
-   #(write (cmd print --depth 2 <s>))
-   #(write <DISTANCE>)
    (write (crlf) | ************ numeric-value = | <traveledDistance> | + | <DISTANCE> ||)
-   (write (crlf) | ************ |)
 }
-
-#sp {solution*evaluate*numeric-value*exists
-#   (state <s> ^operator <o>
-#              ^desired <d>
-#              ^tried-tied-operator
-#              ^traveledDistance <traveledDistance>)
-#   (<o> ^name move
-#        ^parameter.DISTANCE <DISTANCE>)
-#   (<s> ^numeric-value <numericValue>)
-#-->
-#   (<s> ^numeric-value <numericValue> -
-#        ^numeric-value (+ <traveledDistance> <DISTANCE>))
-#   (write (cmd print --depth 2 <s>))
-#   (write <DISTANCE>)
-#   (write (crlf) | ************ numeric-value = | <traveledDistance> | + | <DISTANCE> ||)
-#   (write (crlf) | ************ |)
-#}
-#

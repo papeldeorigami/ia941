@@ -1,14 +1,14 @@
 sp {solution*propose*see
    (state <s> ^name solution
+              ^memory <memory>
               ^io.input-link.CREATURE <creature>)
    (<creature> ^SENSOR.VISUAL.ENTITY <entity>)
    (<entity> ^TYPE <type> << JEWEL FOOD >>
              ^COLOR <color>
              ^X <x>
              ^Y <y>
-             ^NAME <name>
-             ^DISTANCE <DISTANCE>)
-  -(<s> ^ENTITY.NAME <name>)
+             ^NAME <name>)
+  -(<memory> ^ENTITY.NAME <name>)
 -->
    (<s> ^operator <op> + =)
    (<op> ^name see)
@@ -17,13 +17,14 @@ sp {solution*propose*see
                 ^Type <type>
                 ^X <x>
                 ^Y <y>
-                ^DISTANCE <DISTANCE>
                 ^Color <color>)
-   (write (crlf) | propose see: name = | <name> | x = | <x> | y = | <y> | color = | <color> ||)
+#   (write (crlf) | propose see: name = | <name> | x = | <x> | y = | <y> | color = | <color> ||)
 }
 
 sp {solution*apply*see
    (state <s> ^operator <op>
+              ^memory <memory>
+              ^distances <distances>
               ^position <position>)
    (<position> ^X <px>
                ^Y <py>)
@@ -33,17 +34,14 @@ sp {solution*apply*see
                 ^Y <y>
                 ^Name <name>
                 ^Type <type>
-                ^Color <color>
-                ^DISTANCE <DISTANCE>)
+                ^Color <color>)
 -->
-   (<s> ^ENTITY <entity>)
+   (<memory> ^ENTITY <entity>)
    (<entity> ^X <x>
              ^Y <y>
              ^NAME <name>
              ^TYPE <type>
-             ^COLOR <color>
-             ^creatureX <px>
-             ^creatureY <py>
-             ^DISTANCE <DISTANCE>)
+             ^COLOR <color>)
+   (<distances> ^<entity> (sqrt (+ (* (- <px> <x>) (- <px> <x>)) (* (- <py> <y>) (- <py> <y>)))))
    (write (crlf) | apply see: name = | <name> | x = | <x> | y = | <y> | color = | <color> ||)
 }

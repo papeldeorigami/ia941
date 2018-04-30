@@ -1,7 +1,8 @@
 sp {solution*propose*move*jewel
    (state <s> ^name solution
               ^position <position>
-              ^ENTITY <entity>
+              ^memory.ENTITY <entity>
+              ^distances <distances>
               ^knapsack <knapsack>
               ^traveledDistance <traveledDistance>
               ^desired <desired>)
@@ -11,9 +12,8 @@ sp {solution*propose*move*jewel
              ^Y { <entityPositionY> <> <y> }
              ^NAME <entityName>
              ^TYPE JEWEL
-             ^COLOR <color>
-   # move only if distance is greater than 30
-             ^DISTANCE { <DISTANCE> > 30 })
+             ^COLOR <color>)
+   (<distances> ^<entity> { <DISTANCE> > 30 }) # move only if distance is greater than 30
    # filter colors only that are missing in some leaflet
    (<desired> ^<color> <desiredQuantity>)
    (<knapsack> ^<color> { <quantity> < <desiredQuantity> })
@@ -21,53 +21,55 @@ sp {solution*propose*move*jewel
    (<s> ^operator <o> +)
    (<o> ^name move)
    (<o> ^parameter <p>)
-   (<p> ^NAME <entityName>
+   (<p> ^ENTITY <entity>
+        ^NAME <entityName>
         ^X <entityPositionX>
         ^Y <entityPositionY>
         ^DISTANCE <DISTANCE>)
-   (write (crlf) | propose move (to jewel): name = | <entityName> | distance = | <DISTANCE> ||)
+#   (write (crlf) | propose move (to jewel): name = | <entityName> | distance = | <DISTANCE> ||)
 }
    
 sp {solution*propose*move*delivery-spot
    (state <s> ^name solution
               ^position <position>
-              ^ENTITY <entity>
+              ^memory.ENTITY <entity>
+              ^distances <distances>
               ^deliverySpot <deliverySpot>
               ^delivered false
               ^readyToDeliver true)
+   (<distances> ^<entity> { <DISTANCE> > 30 }) # move only if distance is greater than 30
    (<position> ^X <x>
                ^Y <y>)
    (<entity> ^X { <entityPositionX> <> <x> }
              ^Y { <entityPositionY> <> <y> }
-             ^NAME deliverySpot
-   # move only if distance is greater than 30
-             ^DISTANCE { <DISTANCE> > 30 })
+             ^NAME deliverySpot)
 -->
    (<s> ^operator <o> +)
    (<o> ^name move
         ^parameter <p>)
-   (<p> ^NAME deliverySpot
+   (<p> ^ENTITY <entity>
+        ^NAME deliverySpot
         ^X <entityPositionX>
         ^Y <entityPositionY>
         ^DISTANCE <DISTANCE>)
-   (write (crlf) | propose move (to deliverySpot) |)
+#   (write (crlf) | propose move (to deliverySpot) |)
 }
 
 sp {solution*apply*move
    (state <s> 
         ^operator <o>
         ^position <position>
+        ^distances <distances>
         ^traveledDistance <traveledDistance>)
    (<position> ^X <oldX>
                ^Y <oldY>)
    (<o> ^name move
         ^parameter <p>)
-   (<p> ^NAME <entityName>
+   (<p> ^ENTITY <entity>
+        ^NAME <entityName>
         ^DISTANCE <DISTANCE>
         ^X <x>
         ^Y <y>)
-   (<s> ^ENTITY <entity>)
-   (<entity> ^NAME <entityName>)
 -->
    (<position> ^X <oldX> -
                ^Y <oldY> -
@@ -80,12 +82,7 @@ sp {solution*apply*move
    #   (<command> ^VelL 1)
    #   (<command> ^X <x>)
    #   (<command> ^Y <y>)
-   (<entity> ^DISTANCE <DISTANCE> -
-             ^DISTANCE 0
-             ^creatureX <oldX> -
-             ^creatureX <x>
-             ^creatureY <oldY> - 
-             ^creatureY <y>)
+   (<distances> ^<entity> <DISTANCE> - ^<entity> 0)
    (<s> ^traveledDistance <traveledDistance> -
         ^traveledDistance (+ <traveledDistance> <DISTANCE>))
    (write (crlf) | apply move: name = | <entityName> | traveledDistance = | <traveledDistance> | + | <DISTANCE> ||)
@@ -114,29 +111,3 @@ sp {solution*apply*move
 #   (write (crlf) | *********** apply move test: traveledDistance = | <traveledDistance> | + | <DISTANCE> ||)
 #   #(write (crlf) | apply move: name = | <entityName> | distance = | <DISTANCE> ||)
 #}
-#
-sp {solution*apply*move*update-other-distances
-   (state <s> 
-        ^operator <o>
-        ^position <position>)
-   (<o> ^name move
-        ^parameter <p>)
-   (<position> ^X <newX>
-               ^Y <newY>)
-   (<p> ^NAME <targetName>)
-   (<s> ^ENTITY <entity>)
-   (<entity> ^NAME { <entityName> <> <targetName> }
-             ^X <x>
-             ^Y <y>
-             ^creatureX {<oldX> <> <newX>}
-             ^creatureY {<oldY> <> <newY>}
-             ^DISTANCE <DISTANCE>)
--->
-   (<entity> ^DISTANCE <DISTANCE> -
-             ^DISTANCE (sqrt (+ (* (- <newX> <x>) (- <newX> <x>)) (* (- <newY> <y>) (- <newY> <y>))))
-             ^creatureX <oldX> - 
-             ^creatureX <newX>
-             ^creatureY <oldY> - 
-             ^creatureY <newY>)
-   (write (crlf) | apply move*update-other-distances: name = | <entityName> | oldX = | <oldX> | oldY = | <oldY> | newX = | <newX> | newY = | <newY> ||)
-}

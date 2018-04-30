@@ -50,6 +50,7 @@ sp {apply*initialize-solution
         ^knapsack <knapsack>
         ^desired <desired>
         ^memory <memory>
+        ^distances <distances>
         ^collected 0          # number of jewels collected
         ^traveledDistance 0   # this will be the numeric-value of success
         ^readyToDeliver false # to if all leaflets are complete (ready to deliver)
@@ -59,10 +60,9 @@ sp {apply*initialize-solution
                    ^Y 0 
                    ^NAME deliverySpot
                    ^TYPE deliverySpot
-                   ^COLOR none
-                   ^creatureX <positionX>
-                   ^creatureY <positionY>
-                   ^DISTANCE 99999)
+                   ^COLOR none)
+   (<memory> ^ENTITY <deliverySpot>)
+   (<distances> ^<deliverySpot> 99999)
    (<position> ^X <positionX>
                ^Y <positionY>)
    (<knapsack> ^Red 0
