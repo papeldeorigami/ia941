@@ -5,7 +5,7 @@ VERSION 4
 2	0	FOLDER all all 3
 3	0	FOLDER elaborations elaborations 4
 4	3	FOPERATOR _all _all.soar 5
-5	3	FOPERATOR entity-distance entity-distance.soar 27
+5	3	FOPERATOR entity-distance entity-distance.soar 6
 6	3	FOPERATOR problem-space problem-space.soar 7
 7	3	FOPERATOR substate-io substate-io.soar 8
 8	3	FOPERATOR top-state top-state.soar 9
@@ -21,10 +21,11 @@ VERSION 4
 18	14	OPERATOR see-versus-move see-versus-move.soar 19
 19	0	FOPERATOR see see.soar 20
 20	0	FOPERATOR simulate-input simulate-input.soar 21
-21	0	FOPERATOR wander wander.soar 28
-22	0	HLOPERATOR evaluations evaluations.soar evaluations 11 22
-23	22	FOPERATOR evaluate-move-numeric-value evaluate-move-numeric-value.soar 24
+21	0	FOPERATOR wander wander.soar 22
+22	0	HLOPERATOR evaluations evaluations.soar evaluations 11 23
+23	22	FOPERATOR avoid-infinite-no-change avoid-infinite-no-change.soar 28
 24	22	FOPERATOR evaluate-delivered-apply evaluate-delivered-apply.soar 25
-25	22	FOPERATOR evaluate-no-jewels-enough evaluate-no-jewels-enough.soar 6
-26	0	OPERATOR initialize-solution initialize-solution.soar 26
+25	22	FOPERATOR evaluate-move-numeric-value evaluate-move-numeric-value.soar 24
+26	22	FOPERATOR evaluate-no-jewels-enough evaluate-no-jewels-enough.soar 26
+27	0	OPERATOR initialize-solution initialize-solution.soar 27
 END

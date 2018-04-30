@@ -9,6 +9,7 @@ sp {apply*operator*create-action-command
    (<out> ^<att> <value3>)
    (<value3> ^<att2> <value2>)
    (write (crlf) | ***** output command | <att> | parameter | <att2> | = | <value2> ||)
+   (interrupt)
 }
 
 sp {apply*operator*remove-command

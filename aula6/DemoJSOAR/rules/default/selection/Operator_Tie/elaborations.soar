@@ -32,7 +32,7 @@ sp {selection*elaborate*evaluation*desired
 ###     7.3.3.1 Converting expected-values to numeric preferences
 ###
 
-### If an operators has an expected value, set numeric preference to it
+### If two operators have equal evaluations they are indifferent.
 
 sp {selection*evaluation*expected-values
    :default
@@ -108,9 +108,7 @@ sp {selection*compare*prefer-lower-evaluation
          ^desired <d>)
    (<d> ^better lower)
 -->
-   (<ss> ^operator <o2> < <o1>)
-#      (write (crlf) | prefer lower with | <v> ||)
-}
+   (<ss> ^operator <o2> < <o1>)}
 
 
 ###
