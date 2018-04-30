@@ -1,3 +1,3 @@
 source evaluate-move-numeric-value.soar
-source evaluate-success.soar
+source evaluate-delivered-apply.soar
 source evaluate-no-jewels-enough.soar

@@ -82,11 +82,11 @@ sp {solution*apply*move
    #(write (crlf) | apply move: name = | <entityName> | distance = | <DISTANCE> ||)
 }
 
-sp {solution*apply*move*real*only*once
+sp {solution*apply*actual*move*only*once
    (state <s> 
         ^operator <o>
         ^actions <actions>)
-  -(<actions> ^MOVE)
+  -(<actions> ^<attr> <any>)  # hold the first action only
    (<o> ^name move
         ^parameter <p>)
    (<p> ^ENTITY <entity>

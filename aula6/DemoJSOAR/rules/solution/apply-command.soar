@@ -1,22 +1,25 @@
 sp {apply*operator*create-action-command
-   (state <s> ^operator <o>
+   (state <s> ^name solution
+              ^actions <actions>
               ^io.output-link <out>
               ^apply true)
-   (<o> ^actions <act>)
-   (<act> ^<att> <value>)
+   (<actions> ^<att> <value>)
    (<value> ^<att2> <value2>)
 -->
    (<out> ^<att> <value3>)
    (<value3> ^<att2> <value2>)
+   (write (crlf) | ***** output command | <att> | parameter | <att2> | = | <value2> ||)
 }
 
 sp {apply*operator*remove-command
-   (state <s> ^operator.actions
+   (state <s> ^name solution
+              ^actions <actions>
               ^io.output-link <out>)
    (<out> ^<att> <value>)
    (<value> ^status complete)
 -->
    (<out> ^<att> <value> -)
    (<s> ^apply true -)
-   (write (crlf) | apply actual command: | <att> | value= | <value> ||)
+   #(<s> ^success <d>)
+   (write (crlf) | finished command: | <att> ||)
 }

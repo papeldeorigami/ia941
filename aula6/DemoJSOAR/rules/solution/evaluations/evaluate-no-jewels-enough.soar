@@ -1,0 +1,11 @@
+sp {solution*evaluate*no-jewels-enough
+   (state <s> ^superstate <ss>
+              ^impasse no-change)
+   (<ss> ^name solution
+         ^delivered false)
+-->
+   (write (crlf) | No jewels enough to complete all leaflets! Wander until it appears. |)
+   (<ss> ^wander true)
+   #(halt)
+}
+

@@ -24,7 +24,7 @@ VERSION 4
 21	0	FOPERATOR wander wander.soar 28
 22	0	HLOPERATOR evaluations evaluations.soar evaluations 11 22
 23	22	FOPERATOR evaluate-move-numeric-value evaluate-move-numeric-value.soar 24
-24	22	FOPERATOR evaluate-success evaluate-success.soar 25
+24	22	FOPERATOR evaluate-delivered-apply evaluate-delivered-apply.soar 25
 25	22	FOPERATOR evaluate-no-jewels-enough evaluate-no-jewels-enough.soar 6
 26	0	OPERATOR initialize-solution initialize-solution.soar 26
 END

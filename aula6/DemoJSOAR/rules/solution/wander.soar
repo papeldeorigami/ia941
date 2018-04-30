@@ -1,0 +1,26 @@
+####################################  WANDER  ###################################
+# This operator will make the agent to walk ahead at the enviroment
+# Propose*wander:
+sp {propose*wander
+   (state <s> ^wander true)
+-->
+   (<s> ^operator <o> +)
+   (<o> ^name wander)
+}
+   
+# Apply*wander:
+# If the wander operator is selected, then generate an output command to it 
+sp {apply*wander
+   (state <s> ^operator <o>
+              ^io <io>)
+   (<io> ^output-link <ol>)
+   (<o> ^name wander)
+-->
+   (<s> ^actions <actions>
+        ^wander true -)
+   (<actions> ^MOVE <command>)
+   (<command> ^Vel 0)
+   (<command> ^VelR 2)
+   (<command> ^VelL 0)
+   (write (crlf) | apply wander |)
+}

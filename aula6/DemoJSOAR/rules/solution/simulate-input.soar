@@ -1,12 +1,13 @@
-sp {propose*simulate-input
-   (state <s> ^superstate nil
-             -^name)
-  -(<s> ^io.input-link.CREATURE)
--->
-   (<s> ^operator <o> + =)
-   (<o> ^name simulate-input)
-}
-
+# uncomment this production to simulate some input without the Java program
+#sp {propose*simulate-input
+#   (state <s> ^superstate nil
+#             -^name)
+#  -(<s> ^io.input-link.CREATURE)
+#-->
+#   (<s> ^operator <o> + =)
+#   (<o> ^name simulate-input)
+#}
+#
 sp {apply*simulate-input
    (state <s> ^operator.name simulate-input)
 -->
