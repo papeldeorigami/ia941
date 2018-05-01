@@ -3,6 +3,7 @@ sp {propose*get
               ^desired <desired>
               ^knapsack <knapsack>
               ^memory <memory>
+              ^collectedNames <collectedNames>
               ^distances <distances>
               ^position <position>)
    (<position> ^X <creaturePositionX>)
@@ -19,6 +20,8 @@ sp {propose*get
    # filter colors only that are missing in some leaflet
    (<desired> ^<color> <desiredQuantity>)
    (<knapsack> ^<color> { <quantity> < <desiredQuantity> })
+   # do not get entities again
+  -(<collectedNames> ^NAME <entityName>)
 -->
    (<s> ^operator <o> +)
    (<o> ^name get)
@@ -29,7 +32,8 @@ sp {propose*get
 
 sp {solution*apply*get
    (state <s> ^operator <o>
-              ^io.input-link.CREATURE <creature>
+#              ^io.input-link.CREATURE <creature>
+              ^collectedNames <collectedNames>
               ^collected <collected>
               ^knapsack <knapsack>
               ^memory <memory>
@@ -37,9 +41,9 @@ sp {solution*apply*get
    (<o> ^name get
         ^parameter <p>)
    (<p> ^NAME <entityName>)
-   (<creature> ^SENSOR.VISUAL <visual>)
-   (<visual> ^ENTITY <visualEntity>)
-   (<visualEntity> ^NAME <entityName>)
+#   (<creature> ^SENSOR.VISUAL <visual>)
+#   (<visual> ^ENTITY <visualEntity>)
+#   (<visualEntity> ^NAME <entityName>)
    (<memory> ^ENTITY <memoryEntity>)
    (<memoryEntity> ^NAME <entityName>)
    (<memoryEntity> ^COLOR <color>)
@@ -59,8 +63,9 @@ sp {solution*apply*get
               ^White <dwhite>)
 -->
    (<memory> ^ENTITY <memoryEntity> -)
-   (<visual> ^ENTITY <visualEntity> -)
+   #(<visual> ^ENTITY <visualEntity> -)
    (<s> ^collected <collected> - (+ <collected> 1))
+   (<collectedNames> ^NAME <entityName>)
    (<knapsack> ^<color> <quantity> - (+ <quantity> 1))
    (write (crlf) | apply get: name = | <entityName> | Knapsack was: |)
    (write (crlf) | Red=| <kred> |/| <dred> ||)

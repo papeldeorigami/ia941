@@ -1,6 +1,7 @@
 sp {solution*propose*see
    (state <s> ^name solution
               ^memory <memory>
+              ^collectedNames <collectedNames>
               ^io.input-link.CREATURE <creature>)
    (<creature> ^SENSOR.VISUAL.ENTITY <entity>)
    (<entity> ^TYPE <type> << JEWEL FOOD >>
@@ -9,6 +10,8 @@ sp {solution*propose*see
              ^Y <y>
              ^NAME <name>)
   -(<memory> ^ENTITY.NAME <name>)
+   # do not see entities already gotten
+  -(<collectedNames> ^NAME <entityName>)
 -->
    (<s> ^operator <op> + =)
    (<op> ^name see)

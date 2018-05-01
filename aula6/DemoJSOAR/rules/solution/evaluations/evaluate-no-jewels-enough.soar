@@ -1,11 +1,30 @@
-sp {solution*evaluate*no-jewels-enough
+sp {solution*evaluate*no-jewels-enough*wander
    (state <s> ^superstate <ss>
               ^impasse no-change)
    (<ss> ^name solution
-         ^delivered false)
+         ^delivered false
+        -^wander true
+         ^actions <actions>)
+  -(<actions> ^<any>)
 -->
    (write (crlf) | No jewels enough to complete all leaflets! Wander until it appears. |)
    (<ss> ^wander true)
    #(halt)
 }
+
+sp {solution*evaluate*no-jewels-enough*propose*apply-command
+   (state <s> ^superstate <ss>
+              ^impasse no-change)
+   (<ss> ^name solution
+         ^delivered false
+         ^actions <actions>
+         ^io.output-link <out>)
+  -(<out> ^<any>)
+   (<actions> ^<any>)
+-->
+   (<ss> ^operator <o>)
+   (<o> ^name apply-command)
+   (write (crlf) | No jewels enough to complete all leaflets! Apply the first command. |)
+}
+
 

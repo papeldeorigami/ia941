@@ -28,6 +28,7 @@ import org.jsoar.runtime.ThreadedAgent;
 import org.jsoar.util.commands.SoarCommands;
 import ws3dproxy.CommandExecException;
 import ws3dproxy.CommandUtility;
+import ws3dproxy.model.Bag;
 import ws3dproxy.model.Creature;
 import ws3dproxy.model.Leaflet;
 import ws3dproxy.model.Thing;
@@ -51,6 +52,7 @@ public class SoarBridge
     Identifier creatureSensor;
     Identifier creatureParameters;
     Identifier creatureLeaflets;
+    Identifier creatureKnapsack;
     Identifier creaturePosition;
     Identifier creatureMemory;
     
@@ -145,76 +147,84 @@ public class SoarBridge
     /**
      * Create the WMEs at the InputLink of SOAR
      */
-    private void prepareInputLink() 
-    {
+    private void prepareInputLink() {
         //SymbolFactory sf = agent.getSymbols();
         Creature c = env.getCreature();
         inputLink = agent.getInputOutput().getInputLink();
-        try
-        {
-            if (agent != null)
-            {
-              //SimulationCreature creatureParameter = (SimulationCreature)parameter;
-              // Initialize Creature Entity
-              creature = CreateIdWME(inputLink, "CREATURE");
-              // Initialize Creature Memory
-              creatureMemory = CreateIdWME(creature, "MEMORY");
-              // Set Creature Parameters
-              Calendar lCDateTime = Calendar.getInstance();
-              creatureParameters = CreateIdWME(creature, "PARAMETERS");
-              CreateFloatWME(creatureParameters, "MINFUEL", 400);
-              CreateFloatWME(creatureParameters, "TIMESTAMP", lCDateTime.getTimeInMillis());
-              // Setting creature Position
-              creaturePosition = CreateIdWME(creature, "POSITION");
-              CreateFloatWME(creaturePosition, "X", c.getPosition().getX());
-              CreateFloatWME(creaturePosition, "Y", c.getPosition().getY());
-              // Set Creature LEAFLETS
-              creatureLeaflets = CreateIdWME(creature, "LEAFLETS");
-              for (Leaflet l : c.getLeaflets()) {
-                Identifier leaflet = CreateIdWME(creatureLeaflets, "LEAFLET");
-                CreateStringWME(leaflet, "ID", l.getID().toString());
-                CreateIntegerWME(leaflet, "PAYMENT", l.getPayment());
-                HashMap<String, Integer[]> items = l.getItems();
-                HashMap<String, Integer> colors = new HashMap<String,Integer>();
-                colors.put("Red", 0);
-                colors.put("Green", 0);
-                colors.put("Blue", 0);
-                colors.put("Yellow", 0);
-                colors.put("Magenta", 0);
-                colors.put("White", 0);
-                for (HashMap.Entry<String, Integer[]> entry: items.entrySet()) {
-                    String color = entry.getKey();
-                    Integer needed = entry.getValue()[0];
-                    colors.put(color, needed);
+        try {
+            if (agent != null) {
+                //SimulationCreature creatureParameter = (SimulationCreature)parameter;
+                // Initialize Creature Entity
+                creature = CreateIdWME(inputLink, "CREATURE");
+                // Initialize Creature Memory
+                creatureMemory = CreateIdWME(creature, "MEMORY");
+                // Set Creature Parameters
+                Calendar lCDateTime = Calendar.getInstance();
+                creatureParameters = CreateIdWME(creature, "PARAMETERS");
+                CreateFloatWME(creatureParameters, "MINFUEL", 400);
+                CreateFloatWME(creatureParameters, "TIMESTAMP", lCDateTime.getTimeInMillis());
+                // Setting creature Position
+                creaturePosition = CreateIdWME(creature, "POSITION");
+                CreateFloatWME(creaturePosition, "X", c.getPosition().getX());
+                CreateFloatWME(creaturePosition, "Y", c.getPosition().getY());
+                // Set Creature LEAFLETS
+                creatureLeaflets = CreateIdWME(creature, "LEAFLETS");
+                HashMap<String, Integer> collectedColors = new HashMap<String, Integer>();
+                collectedColors.put("Red", 0);
+                collectedColors.put("Green", 0);
+                collectedColors.put("Blue", 0);
+                collectedColors.put("Yellow", 0);
+                collectedColors.put("Magenta", 0);
+                collectedColors.put("White", 0);
+                for (Leaflet l : c.getLeaflets()) {
+                    Identifier leaflet = CreateIdWME(creatureLeaflets, "LEAFLET");
+                    CreateStringWME(leaflet, "ID", l.getID().toString());
+                    CreateIntegerWME(leaflet, "PAYMENT", l.getPayment());
+                    HashMap<String, Integer[]> items = l.getItems();
+                    HashMap<String, Integer> colors = new HashMap<String, Integer>();
+                    colors.put("Red", 0);
+                    colors.put("Green", 0);
+                    colors.put("Blue", 0);
+                    colors.put("Yellow", 0);
+                    colors.put("Magenta", 0);
+                    colors.put("White", 0);
+                    for (HashMap.Entry<String, Integer[]> entry : items.entrySet()) {
+                        String color = entry.getKey();
+                        Integer needed = entry.getValue()[0];
+                        Integer collected = entry.getValue()[1];
+                        colors.put(color, needed);
+                        collectedColors.merge(color, collected, Integer::sum);
+                    }
+                    for (HashMap.Entry<String, Integer> entry : colors.entrySet()) {
+                        CreateIntegerWME(leaflet, entry.getKey(), entry.getValue());
+                    }
                 }
-                for (HashMap.Entry<String, Integer> entry: colors.entrySet()) {
-                    CreateIntegerWME(leaflet, entry.getKey(), entry.getValue());
+                // Set Creature KNAPSACK (Bag)
+                creatureKnapsack = CreateIdWME(creature, "KNAPSACK");
+                for (HashMap.Entry<String, Integer> entry : collectedColors.entrySet()) {
+                    CreateIntegerWME(creatureKnapsack, entry.getKey(), entry.getValue());
                 }
-              }
-              // Set creature sensors
-              creatureSensor = CreateIdWME(creature, "SENSOR");
-              // Create Fuel Sensors
-              Identifier fuel = CreateIdWME(creatureSensor, "FUEL");
-              CreateFloatWME(fuel, "VALUE",c.getFuel());
-              // Create Visual Sensors
-              Identifier visual = CreateIdWME(creatureSensor, "VISUAL");
-              List<Thing> thingsList = (List<Thing>) c.getThingsInVision();
-              for (Thing t : thingsList) 
-                {
-                 Identifier entity = CreateIdWME(visual, "ENTITY");
-                 CreateFloatWME(entity, "DISTANCE", GetGeometricDistanceToCreature(t.getX1(),t.getY1(),t.getX2(),t.getY2(),c.getPosition().getX(),c.getPosition().getY()));                                                    
-                 CreateFloatWME(entity, "X", t.getX1());
-                 CreateFloatWME(entity, "Y", t.getY1());
-                 CreateFloatWME(entity, "X2", t.getX2());
-                 CreateFloatWME(entity, "Y2", t.getY2());
-                 CreateStringWME(entity, "TYPE", getItemType(t.getCategory()));
-                 CreateStringWME(entity, "NAME", t.getName());
-                 CreateStringWME(entity, "COLOR",Constants.getColorName(t.getMaterial().getColor()));                                                    
+                // Set creature sensors
+                creatureSensor = CreateIdWME(creature, "SENSOR");
+                // Create Fuel Sensors
+                Identifier fuel = CreateIdWME(creatureSensor, "FUEL");
+                CreateFloatWME(fuel, "VALUE", c.getFuel());
+                // Create Visual Sensors
+                Identifier visual = CreateIdWME(creatureSensor, "VISUAL");
+                List<Thing> thingsList = (List<Thing>) c.getThingsInVision();
+                for (Thing t : thingsList) {
+                    Identifier entity = CreateIdWME(visual, "ENTITY");
+                    CreateFloatWME(entity, "DISTANCE", GetGeometricDistanceToCreature(t.getX1(), t.getY1(), t.getX2(), t.getY2(), c.getPosition().getX(), c.getPosition().getY()));
+                    CreateFloatWME(entity, "X", t.getX1());
+                    CreateFloatWME(entity, "Y", t.getY1());
+                    CreateFloatWME(entity, "X2", t.getX2());
+                    CreateFloatWME(entity, "Y2", t.getY2());
+                    CreateStringWME(entity, "TYPE", getItemType(t.getCategory()));
+                    CreateStringWME(entity, "NAME", t.getName());
+                    CreateStringWME(entity, "COLOR", Constants.getColorName(t.getMaterial().getColor()));
                 }
             }
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             logger.severe("Error while Preparing Input Link");
             e.printStackTrace();
         }

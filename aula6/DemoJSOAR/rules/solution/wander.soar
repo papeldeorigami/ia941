@@ -19,6 +19,8 @@ sp {apply*wander
    (<s> ^actions <actions>
         ^wander true -)
    (<actions> ^MOVE <command>)
+   (<command> ^X 0)
+   (<command> ^Y 0)
    (<command> ^Vel 0)
    (<command> ^VelR 2)
    (<command> ^VelL 0)

@@ -2,18 +2,22 @@ sp {propose*initialize-solution
    (state <s>
              ^superstate nil
             -^name
+            -^knapsack
+            -^memory
              ^io.input-link.CREATURE <creature>)
    (<creature> ^POSITION <position>)
+#   (<creature> ^KNAPSACK <knapsack>)
    (<creature> ^LEAFLETS <leaflets>)
-   (<leaflets> ^LEAFLET <l1>)
-   (<leaflets> ^LEAFLET <l2> {<l1> > <l2>})
-   (<leaflets> ^LEAFLET <l3> {<l2> > <l3>})
+   (<leaflets> ^LEAFLET <l1> { <> <l1> <l2> })
+   (<leaflets> ^LEAFLET <l2> { <> <l2> <l3> })
+   (<leaflets> ^LEAFLET <l3> { <> <l1> <l3> })
 -->
-   (<s> ^operator <o> +)
+   (<s> ^operator <o> + =)
    (<o> ^name initialize-solution
         ^leaflet1 <l1>
         ^leaflet2 <l2>
         ^leaflet3 <l3>
+#        ^knapsack <knapsack>
         ^position <position>)
 }
 
@@ -23,6 +27,7 @@ sp {apply*initialize-solution
         ^leaflet1 <l1>
         ^leaflet2 <l2>
         ^leaflet3 <l3>
+#        ^knapsack <creatureKnapsack>
         ^position <p>)
    (<l1> ^Red <Red1>
          ^Green <Green1>
@@ -42,6 +47,12 @@ sp {apply*initialize-solution
          ^Yellow <Yellow3>
          ^Magenta <Magenta3>
          ^White <White3>)
+#   (<creatureKnapsack> ^Red <kred>
+#                       ^Green <kgreen>
+#                       ^Blue <kblue>
+#                       ^Yellow <kyellow>
+#                       ^Magenta <kmagenta>
+#                       ^White <kwhite>)
    (<p> ^X <positionX>
         ^Y <positionY>)
 -->
@@ -51,6 +62,7 @@ sp {apply*initialize-solution
         ^desired <desired>
         ^memory <memory>
         ^distances <distances>
+        ^collectedNames <collectedNames> # a list of all entities names already collected in the planning phase, to ignore from visual input
         ^actions <actions>    # hold the first action to be applied
         ^collected 0          # number of jewels collected
         ^traveledDistance 0   # this will be the numeric-value of success
@@ -66,6 +78,12 @@ sp {apply*initialize-solution
    (<distances> ^<deliverySpot> 99999)
    (<position> ^X <positionX>
                ^Y <positionY>)
+   #   (<knapsack> ^Red <kred>
+#               ^Green <kgreen>
+#               ^Blue <kblue>
+#               ^Yellow <kyellow>
+#               ^Magenta <kmagenta>
+#               ^White <kwhite>)
    (<knapsack> ^Red 0
                ^Green 0
                ^Blue 0
@@ -80,11 +98,18 @@ sp {apply*initialize-solution
                ^Yellow (+ <Yellow1> <Yellow2> <Yellow3>)
                ^Magenta (+ <Magenta1> <Magenta2> <Magenta3>)
                ^White (+ <White1> <White2> <White3>))
-   (<s> ^ENTITY <deliverySpot>)
+   (write (crlf) | Initial State. Leaflets require: |)
    (write (crlf) | Red=(| <Red1> |, | <Red2> |, | <Red3> |)|)
    (write (crlf) | Green=(| <Green1> |, | <Green2> |, | <Green3> |)|)
    (write (crlf) | Blue=(| <Blue1> |, | <Blue2> |, | <Blue3> |)|)
    (write (crlf) | Yellow=(| <Yellow1> |, | <Yellow2> |, | <Yellow3> |)|)
    (write (crlf) | Magenta=(| <Magenta1> |, | <Magenta2> |, | <Magenta3> |)|)
    (write (crlf) | White=(| <White1> |, | <White2> |, | <White3> |)|)
+#   (write (crlf) | Knapsack contains: |)
+#   (write (crlf) | Red=| <kred> ||)
+#   (write (crlf) | Green=| <kgreen> ||)
+#   (write (crlf) | Blue=| <kblue> ||)
+#   (write (crlf) | Yellow=| <kyellow> ||)
+#   (write (crlf) | Magenta=| <kmagenta> ||)
+#   (write (crlf) | White=| <kwhite> ||)
 }
