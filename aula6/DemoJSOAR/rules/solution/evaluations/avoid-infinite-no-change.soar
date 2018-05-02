@@ -8,5 +8,5 @@ sp {avoid*infinite*no*change*loop
 #   (write (crlf) (cmd print --depth 2 I2))
   #(halt)
   (write (crlf) | Avoid infinite loop of no-change state | (cmd print --depth 2 <ss>) ||)
-  (interrupt)
+  (wait 1000)
 }

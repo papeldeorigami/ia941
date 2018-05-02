@@ -9,7 +9,6 @@ sp {solution*evaluate*state*success
    (write (crlf) | ****************************** |)
    (write (crlf) | Total traveledDistance =  | <traveledDistance> ||)
    (write (crlf) | ****************************** |)
-   (<s> ^operator <o> +)
-   (<o> ^name apply-command)
+   (<s> ^applyCommand true)
 #   (halt)
 }

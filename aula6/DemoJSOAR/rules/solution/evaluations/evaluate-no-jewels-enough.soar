@@ -18,13 +18,12 @@ sp {solution*evaluate*no-jewels-enough*propose*apply-command
    (<ss> ^name solution
          ^delivered false
          ^actions <actions>
+        -^apply-command true
          ^io.output-link <out>)
-  -(<out> ^<any>)
-   (<actions> ^<any>)
+  -(<out> ^<anyoutput>)
+   (<actions> ^<anyaction>)
 -->
-   (<ss> ^operator <o>)
-   (<o> ^name apply-command)
+   (<ss> ^applyCommand true)
    (write (crlf) | No jewels enough to complete all leaflets! Apply the first command. |)
+#   (write (crlf) (cmd print --depth 2 <ss>))
 }
-
-

@@ -1,8 +1,23 @@
-sp {apply*operator*command*move
-   (state <s> ^operator.name apply-command
+sp {propose*apply-command
+   (state <s> ^name solution
+              ^applyCommand true)
+-->
+   (<s> ^operator <o> +)
+   (<o> ^name applyCommand)
+   (write (crlf) | ***** propose apply-command |)
+}
+
+sp {apply*command*move*test
+   (state <s> ^operator.name applyCommand)
+-->
+   (write (crlf) | ***** !!!!!!!!!!! output command MOVE TEST!!!|)
+}
+
+sp {apply*command*move
+   (state <s> ^operator.name applyCommand
               ^actions.MOVE <move>
               ^io.output-link <out>)
-  -(<out> ^MOVE)
+  -(<out> ^MOVE <anymoveparams>)
    (<move> ^X <x>
            ^Y <y>
            ^VelL <velL>
@@ -20,8 +35,8 @@ sp {apply*operator*command*move
    (write (crlf) | ***** output command MOVE parameter X=| <x> | Y=| <y> | VelL=| <velL> | VelR=| <velR> | Vel=| <vel> ||)
 }
 
-sp {apply*operator*command*get
-   (state <s> ^operator.name apply-command
+sp {apply*command*get
+   (state <s> ^operator.name applyCommand
               ^actions.GET <get>
               ^io.output-link <out>)
   -(<out> ^GET)
@@ -33,13 +48,14 @@ sp {apply*operator*command*get
    (write (crlf) | ***** output command GET parameter Name=| <name> ||)
 }
 
-sp {apply*operator*remove-command
-   (state <s> ^operator.name apply-command
+sp {apply*command*remove-complete
+   (state <s> ^operator.name applyCommand
               ^actions <actions>
               ^io.output-link <out>)
    (<out> ^<att> <value>)
    (<value> ^status complete)
 -->
+   (<s> ^applyCommand true -)
    (<out> ^<att> <value> -)
    #(<s> ^success <d>)
    (write (crlf) | finished command: | <att> ||)
