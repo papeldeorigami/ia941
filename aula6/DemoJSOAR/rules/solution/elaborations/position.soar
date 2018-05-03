@@ -1,0 +1,6 @@
+sp {elaborate*position
+   (state <s>
+             )
+-->
+   (<s> ^position <position>)
+}

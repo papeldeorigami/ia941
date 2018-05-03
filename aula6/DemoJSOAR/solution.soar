@@ -1,0 +1,3 @@
+pushd solution
+source solution_source.soar
+popd

@@ -1,0 +1,12 @@
+sp {elaborate*desired-count
+   (state <s>
+        ^desired <desired>)
+   (<desired> ^Red <red>
+              ^Green <green>
+              ^Blue <blue>
+              ^Yellow <yellow>
+              ^Magenta <magenta>
+              ^White <white>)
+-->
+   (<s> ^desired-count (+ <red> <green> <blue> <yellow> <magenta> <white>))
+}

@@ -4,6 +4,6 @@ sp {solution*elaborate*problem-space
    (<s> ^problem-space <p>)
    (<p> ^name solution
         ^default-state-copy yes
-        ^one-level-attributes traveledDistance readyToDeliver delivered collected
-        ^two-level-attributes knapsack position distances)
+        ^one-level-attributes v-traveled-distance
+        ^two-level-attributes v-knapsack v-position v-distances v-collected-names)
 }

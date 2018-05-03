@@ -1,13 +1,8 @@
 sp {propose*deliver
    (state <s> ^name solution
-              ^readyToDeliver true
+              ^ready-to-deliver true
               ^delivered false
-              ^deliverySpot <deliverySpot>
-              ^position <position>)
-   (<position> ^X <creaturePositionX>
-               ^Y <creaturePositionY>)
-   (<deliverySpot> ^X <creaturePositionX>
-                   ^Y <creaturePositionY>)
+              ^distance-to-delivery-spot { <distance> < 30 })
 -->
    (<s> ^operator <o> +)
    (<o> ^name deliver)
@@ -17,7 +12,8 @@ sp {propose*deliver
 sp {solution*apply*deliver
    (state <s> ^operator.name deliver)
 -->
-   (<s> ^delivered false -
+   # TODO implement the Java command to deliver leaflet
+   (<s> ^delivered false -        
         ^delivered true)
    (write (crlf) | Delivered! |)
 }

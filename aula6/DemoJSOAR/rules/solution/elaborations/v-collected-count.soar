@@ -1,0 +1,12 @@
+sp {elaborate*collected-count
+   (state <s>
+        ^v-knapsack <v-knapsack>)
+   (<v-knapsack> ^Red <red>
+                 ^Green <green>
+                 ^Blue <blue>
+                 ^Yellow <yellow>
+                 ^Magenta <magenta>
+                 ^White <white>)
+-->
+   (<s> ^v-collected-count (+ <red> <green> <blue> <yellow> <magenta> <white>))
+}

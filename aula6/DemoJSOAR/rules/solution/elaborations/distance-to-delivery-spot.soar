@@ -1,0 +1,14 @@
+sp {elaborate*distance-to-delivery-spot
+   (state <s> ^name solution
+              ^ready-to-deliver true
+              ^delivered false
+              ^delivery-spot <delivery-spot>
+              ^io.input-link.CREATURE.POSITION <position>)   
+   (<position> ^X <x>
+               ^Y <y>)
+   (<delivery-spot> ^X <dsx>
+                    ^Y <dsy>)
+-->
+   (<s> ^distance-to-delivery-spot (sqrt (+ (* (- <dsx> <x>) (- <dsx> <x>)) (* (- <dsy> <y>) (- <dsy> <y>)))))
+
+}

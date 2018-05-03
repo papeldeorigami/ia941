@@ -1,0 +1,7 @@
+sp {elaborate*ready-to-deliver
+   (state <s>
+             ^collected-count <collected-count>
+             ^desired-count <collected-count>)
+-->
+   (<s> ^ready-to-deliver true)
+}

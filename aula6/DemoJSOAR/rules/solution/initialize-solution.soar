@@ -3,10 +3,9 @@ sp {propose*initialize-solution
              ^superstate nil
             -^name
             -^knapsack
-            -^memory
              ^io.input-link.CREATURE <creature>)
    (<creature> ^POSITION <position>)
-#   (<creature> ^KNAPSACK <knapsack>)
+   (<creature> ^KNAPSACK <knapsack>)
    (<creature> ^LEAFLETS <leaflets>)
    (<leaflets> ^LEAFLET <l1> { <> <l1> <l2> })
    (<leaflets> ^LEAFLET <l2> { <> <l2> <l3> })
@@ -17,7 +16,7 @@ sp {propose*initialize-solution
         ^leaflet1 <l1>
         ^leaflet2 <l2>
         ^leaflet3 <l3>
-#        ^knapsack <knapsack>
+        ^knapsack <knapsack>
         ^position <position>)
 }
 
@@ -27,7 +26,7 @@ sp {apply*initialize-solution
         ^leaflet1 <l1>
         ^leaflet2 <l2>
         ^leaflet3 <l3>
-#        ^knapsack <creatureKnapsack>
+        ^knapsack <knapsack>
         ^position <p>)
    (<l1> ^Red <Red1>
          ^Green <Green1>
@@ -47,49 +46,51 @@ sp {apply*initialize-solution
          ^Yellow <Yellow3>
          ^Magenta <Magenta3>
          ^White <White3>)
-#   (<creatureKnapsack> ^Red <kred>
-#                       ^Green <kgreen>
-#                       ^Blue <kblue>
-#                       ^Yellow <kyellow>
-#                       ^Magenta <kmagenta>
-#                       ^White <kwhite>)
+   (<knapsack> ^Red <kred>
+               ^Green <kgreen>
+               ^Blue <kblue>
+               ^Yellow <kyellow>
+               ^Magenta <kmagenta>
+               ^White <kwhite>)
    (<p> ^X <positionX>
         ^Y <positionY>)
 -->
    (<s> ^name solution
-        ^deliverySpot <deliverySpot>
-        ^knapsack <knapsack>
-        ^desired <desired>
-        ^memory <memory>
-        ^distances <distances>
-        ^collectedNames <collectedNames> # a list of all entities names already collected in the planning phase, to ignore from visual input
-        ^actions <actions>    # hold the first action to be applied
-        ^collected 0          # number of jewels collected
-        ^traveledDistance 0   # this will be the numeric-value of success
-        ^readyToDeliver false # to if all leaflets are complete (ready to deliver)
-        ^delivered false      # to control whether leaflets have been exchanged in the deliverySpot
-        ^position <position>)
-   (<deliverySpot> ^X 0 
-                   ^Y 0 
+        
+        # these attributes are available both for deliberation and reactive actions
+        ^delivery-spot <delivery-spot>     # always (0,0)
+        ^knapsack <knapsack>               # read from input
+        ^desired <desired>                 # deired count for each color
+        ^next-move <next-move>             # holds the next actions to be applied
+        ^delivered false                   # to control whether leaflets have been exchanged in the deliverySpot
+        ^memory <memory>       
+        
+        # these "virtual" attributes exist only for deliberation, i.e. they are copied during the selection problem solving
+        ^v-distances <distances>             # distances to each entity from the current virtual position of the creature
+        ^v-knapsack <v-knapsack>             # representation of the knapsack
+        ^v-collected-names <collected-names> # a list of all entities names already collected in the planning phase, to ignore from visual input
+        ^v-traveled-distance 0               # this is the numeric-value for the selection problem
+        ^v-position <position>)              # represents the position of the creature during the planning phase
+   (<deliverySpot> ^X 0
+                   ^Y 0
                    ^NAME deliverySpot
                    ^TYPE deliverySpot
                    ^COLOR none)
-   (<memory> ^ENTITY <deliverySpot>)
-   (<distances> ^<deliverySpot> 99999)
-   (<position> ^X <positionX>
+   (<memory> ^ENTITY <delivery-spot>)
+   (<v-position> ^X <positionX>
                ^Y <positionY>)
-   #   (<knapsack> ^Red <kred>
-#               ^Green <kgreen>
-#               ^Blue <kblue>
-#               ^Yellow <kyellow>
-#               ^Magenta <kmagenta>
-#               ^White <kwhite>)
-   (<knapsack> ^Red 0
-               ^Green 0
-               ^Blue 0
-               ^Yellow 0
-               ^Magenta 0
-               ^White 0)
+   (<knapsack> ^Red <kred>
+               ^Green <kgreen>
+               ^Blue <kblue>
+               ^Yellow <kyellow>
+               ^Magenta <kmagenta>
+               ^White <kwhite>)
+   (<v-knapsack> ^Red <kred>
+                 ^Green <kgreen>
+                 ^Blue <kblue>
+                 ^Yellow <kyellow>
+                 ^Magenta <kmagenta>
+                 ^White <kwhite>)
    (<desired>
                ^better lower # success will be the lowest possible value for the numeric-value (traveledDistance)
                ^Red (+ <Red1> <Red2> <Red3>)
@@ -105,11 +106,11 @@ sp {apply*initialize-solution
    (write (crlf) | Yellow=(| <Yellow1> |, | <Yellow2> |, | <Yellow3> |)|)
    (write (crlf) | Magenta=(| <Magenta1> |, | <Magenta2> |, | <Magenta3> |)|)
    (write (crlf) | White=(| <White1> |, | <White2> |, | <White3> |)|)
-#   (write (crlf) | Knapsack contains: |)
-#   (write (crlf) | Red=| <kred> ||)
-#   (write (crlf) | Green=| <kgreen> ||)
-#   (write (crlf) | Blue=| <kblue> ||)
-#   (write (crlf) | Yellow=| <kyellow> ||)
-#   (write (crlf) | Magenta=| <kmagenta> ||)
-#   (write (crlf) | White=| <kwhite> ||)
+   (write (crlf) | Knapsack contains: |)
+   (write (crlf) | Red=| <kred> ||)
+   (write (crlf) | Green=| <kgreen> ||)
+   (write (crlf) | Blue=| <kblue> ||)
+   (write (crlf) | Yellow=| <kyellow> ||)
+   (write (crlf) | Magenta=| <kmagenta> ||)
+   (write (crlf) | White=| <kwhite> ||)
 }
