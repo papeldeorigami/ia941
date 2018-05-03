@@ -78,8 +78,7 @@ sp {solution*apply*move
    (<distances> ^<entity> <DISTANCE> - ^<entity> 0)
    (<s> ^traveledDistance <traveledDistance> -
         ^traveledDistance (+ <traveledDistance> <DISTANCE>))
-   (write (crlf) | apply move: name = | <entityName> | traveledDistance = | <traveledDistance> | + | <DISTANCE> ||)
-   #(write (crlf) | apply move: name = | <entityName> | distance = | <DISTANCE> ||)
+   (write (crlf) | try move: name = | <entityName> | traveledDistance = | <traveledDistance> | + | <DISTANCE> ||)
 }
 
 sp {solution*apply*actual*move*only*once
@@ -90,6 +89,7 @@ sp {solution*apply*actual*move*only*once
    (<o> ^name move
         ^parameter <p>)
    (<p> ^ENTITY <entity>
+        ^NAME <entityName>
         ^X <x>
         ^Y <y>)
 -->
@@ -99,6 +99,8 @@ sp {solution*apply*actual*move*only*once
    (<command> ^VelL 1)
    (<command> ^X <x>)
    (<command> ^Y <y>)
-   (write (crlf) | will apply actual move to x= | <x> | y= | <y> ||)
+   (write (crlf))
+   (write (crlf) | ***** prepare output move to entity = | <entityName> | x = | <x> | y = | <y> ||)
+   (write (crlf))
    #(write (crlf) | apply move: name = | <entityName> | distance = | <DISTANCE> ||)
 }

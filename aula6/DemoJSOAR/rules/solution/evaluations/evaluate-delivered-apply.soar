@@ -4,11 +4,11 @@ sp {solution*evaluate*state*success
               ^delivered true
               ^traveledDistance <traveledDistance>)
 -->
-#   (<s> ^success <d>)
+   (<s> ^operator <o> +)
+   (<o> ^name applyCommand)
 #   (write (crlf) | ********** Success! ********** |)
    (write (crlf) | ****************************** |)
    (write (crlf) | Total traveledDistance =  | <traveledDistance> ||)
    (write (crlf) | ****************************** |)
-   (<s> ^applyCommand true)
 #   (halt)
 }

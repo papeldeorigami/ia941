@@ -67,7 +67,7 @@ sp {solution*apply*get
    (<s> ^collected <collected> - (+ <collected> 1))
    (<collectedNames> ^NAME <entityName>)
    (<knapsack> ^<color> <quantity> - (+ <quantity> 1))
-   (write (crlf) | apply get: name = | <entityName> | Knapsack was: |)
+   (write (crlf) | get: name = | <entityName> | Knapsack was: |)
    (write (crlf) | Red=| <kred> |/| <dred> ||)
    (write (crlf) | Green=| <kgreen> |/| <dgreen> ||)
    (write (crlf) | Blue=| <kblue> |/| <dblue> ||)
@@ -94,7 +94,9 @@ sp {solution*apply*actual*get*only*once
 -->
    (<actions> ^GET <command>)
    (<command> ^Name <entityName>)
-   (write (crlf) | will apply actual get for entity= | <entityName> ||)
+   (write (crlf))
+   (write (crlf) | ***** prepare output get for entity= | <entityName> ||)
+   (write (crlf))
 }
 
 sp {solution*apply*get*evaluate*readyToDeliver

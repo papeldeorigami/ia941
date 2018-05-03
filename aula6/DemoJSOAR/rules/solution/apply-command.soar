@@ -1,23 +1,16 @@
-sp {propose*apply-command
-   (state <s> ^name solution
-              ^applyCommand true)
+sp {apply*command*continue
+   (state <s> ^io.output-link <out>)
+   (<out> ^<command>)
 -->
-   (<s> ^operator <o> +)
-   (<o> ^name applyCommand)
-   (write (crlf) | ***** propose apply-command |)
-}
-
-sp {apply*command*move*test
-   (state <s> ^operator.name applyCommand)
--->
-   (write (crlf) | ***** !!!!!!!!!!! output command MOVE TEST!!!|)
+   (write (crlf) | Continue command | <command> ||)
+   (interrupt)
 }
 
 sp {apply*command*move
    (state <s> ^operator.name applyCommand
               ^actions.MOVE <move>
               ^io.output-link <out>)
-  -(<out> ^MOVE <anymoveparams>)
+  -(<out> ^MOVE)
    (<move> ^X <x>
            ^Y <y>
            ^VelL <velL>
@@ -27,26 +20,53 @@ sp {apply*command*move
    (<s> ^actions MOVE -)
    (<out> ^MOVE <moveOut>)
    (<moveOut>
+#          ^timestamp 0
           ^X <x>
           ^Y <y>
           ^VelL <velL>
           ^VelR <velR>
           ^Vel <vel>)
    (write (crlf) | ***** output command MOVE parameter X=| <x> | Y=| <y> | VelL=| <velL> | VelR=| <velR> | Vel=| <vel> ||)
+   (interrupt)
 }
 
 sp {apply*command*get
    (state <s> ^operator.name applyCommand
               ^actions.GET <get>
               ^io.output-link <out>)
-  -(<out> ^GET)
    (<get> ^Name <name>)
 -->
    (<s> ^actions GET -)
    (<out> ^GET <getOut>)
    (<getOut> ^Name <name>)
+#             ^timestamp 0)
    (write (crlf) | ***** output command GET parameter Name=| <name> ||)
+   (interrupt)
 }
+
+#sp {apply*command*inc*timestamp
+#   (state <s> ^operator.name applyCommand
+#              ^io.output-link <out>)
+#   (<out> ^<att> <value>)
+#   (<value> ^timestamp { <timestamp> < 30 })
+#-->
+#   (write (crlf) | command | <att> | timestamp: | <timestamp> ||)
+#   (<value> ^timestamp <timestamp> -
+#                     (+ <timestamp> 1))
+#   (write (crlf) (cmd print --depth 2 <out>))
+#   (interrupt)   
+#}
+#
+#sp {apply*command*remove-timeout
+#   (state <s> ^operator.name applyCommand
+#              ^io.output-link <out>)
+#   (<out> ^<att> <value>)
+#   (<value> ^timestamp { <timestamp> >= 30 })
+#-->
+#   (<out> ^<att> <value> -)
+#   (write (crlf) | command timeout: | <att> ||)
+#   (interrupt)
+#}
 
 sp {apply*command*remove-complete
    (state <s> ^operator.name applyCommand
@@ -59,4 +79,5 @@ sp {apply*command*remove-complete
    (<out> ^<att> <value> -)
    #(<s> ^success <d>)
    (write (crlf) | finished command: | <att> ||)
+   (interrupt)
 }
