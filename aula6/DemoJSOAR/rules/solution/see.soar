@@ -1,17 +1,13 @@
 sp {solution*propose*see
    (state <s> ^name solution
-              ^memory <memory>
-              ^collectedNames <collectedNames>
               ^io.input-link.CREATURE <creature>)
    (<creature> ^SENSOR.VISUAL.ENTITY <entity>)
    (<entity> ^TYPE <type> << JEWEL FOOD >>
              ^COLOR <color>
              ^X <x>
              ^Y <y>
-             ^NAME <name>)
-  -(<memory> ^ENTITY.NAME <name>)
-   # do not see entities already gotten
-  -(<collectedNames> ^NAME <entityName>)
+             ^NAME <name>
+             ^DISTANCE <distance>)
 -->
    (<s> ^operator <op> + =)
    (<op> ^name see)
@@ -20,31 +16,46 @@ sp {solution*propose*see
                 ^Type <type>
                 ^X <x>
                 ^Y <y>
-                ^Color <color>)
+                ^Color <color>
+                ^DISTANCE <new>)
 #   (write (crlf) | propose see: name = | <name> | x = | <x> | y = | <y> | color = | <color> ||)
 }
 
-sp {solution*apply*see
+sp {solution*apply*see*new
    (state <s> ^operator <op>
               ^memory <memory>
-              ^distances <distances>
-              ^position <position>)
-   (<position> ^X <px>
-               ^Y <py>)
    (<op> ^name see
          ^parameter <newEntity>)
    (<newEntity> ^X <x>
                 ^Y <y>
                 ^Name <name>
                 ^Type <type>
-                ^Color <color>)
+                ^Color <color>
+                ^DISTANCE <distance>)
+  -(<memory> ^ENTITY.NAME <name>)
 -->
    (<memory> ^ENTITY <entity>)
    (<entity> ^X <x>
              ^Y <y>
              ^NAME <name>
              ^TYPE <type>
-             ^COLOR <color>)
-   (<distances> ^<entity> (sqrt (+ (* (- <px> <x>) (- <px> <x>)) (* (- <py> <y>) (- <py> <y>)))))
-   (write (crlf) | apply see: name = | <name> | x = | <x> | y = | <y> | color = | <color> ||)
+             ^COLOR <color>
+             ^DISTANCE <distance>)
+   (write (crlf) | apply see*new: name = | <name> | x = | <x> | y = | <y> | color = | <color> | distance = | <distance> ||)
+}
+
+sp {solution*apply*see*update-distances
+   (state <s> ^operator <op>
+              ^memory <memory>
+   (<op> ^name see
+         ^parameter <entity>)
+   (<entity> ^Name <name>
+             ^DISTANCE <distance>)
+   (<memory> ^ENTITY <memoryEntity>)
+   (<memoryEntity> ^NAME <name>
+                   ^DISTANCE { <> <oldDistance> <distance> })
+-->
+   (<memoryEntity> ^DISTANCE <oldDistance> -
+                   ^DISTANCE <distance>)
+   (write (crlf) | apply see*update-distances: name = | <name> | distance = | <distance> ||)
 }

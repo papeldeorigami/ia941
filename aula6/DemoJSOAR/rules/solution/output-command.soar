@@ -1,3 +1,12 @@
+sp {propose*output-command*get
+   (state <s> ^actions <actions>
+   (<actions> ^GET)
+-->
+   (<s> ^operator <o> +)
+   (<o> ^name output-command)
+   (write (crlf) | Propose output command: GET |)
+}
+
 sp {evaluate*output-command*continue
    (state <s> ^io.output-link <out>)
    (<out> ^<command>)

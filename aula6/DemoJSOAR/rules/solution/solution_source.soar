@@ -5,17 +5,18 @@ popd
 pushd elaborations
 source elaborations_source.soar
 popd
-source output-command.soar
 source deliver.soar
 source get.soar
 source move.soar
 source old.soar
+source output-command.soar
 source preferences.soar
 pushd preferences
 source preferences_source.soar
 popd
 source see.soar
 source simulate-input.soar
+source v-get.soar
 source wander.soar
 source evaluations.soar
 pushd evaluations

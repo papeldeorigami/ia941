@@ -1,0 +1,15 @@
+sp {elaborate*distances
+   (state <s>
+        ^operator <o>
+        ^memory.ENTITY <entity>
+        ^distances <distances>
+        ^position <position>)
+   (<position> ^X <px>
+               ^Y <py>)
+   (<entity> ^NAME <entityName>
+             ^X <x>
+             ^Y <y>)
+-->
+   (<distances> ^<entity> (sqrt (+ (* (- <px> <x>) (- <px> <x>)) (* (- <py> <y>) (- <py> <y>)))))
+   (write (crlf) | elaborate*v-distances for | <entityName> |: | (cmd print <distances> ^<entity>))
+}

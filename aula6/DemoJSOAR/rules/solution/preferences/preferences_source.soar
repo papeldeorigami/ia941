@@ -1,3 +1,4 @@
 source get-versus-move.soar
+source move-closest.soar
 source see-versus-get.soar
 source see-versus-move.soar
