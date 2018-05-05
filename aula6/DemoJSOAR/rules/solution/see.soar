@@ -17,13 +17,13 @@ sp {solution*propose*see
                 ^X <x>
                 ^Y <y>
                 ^Color <color>
-                ^DISTANCE <new>)
-#   (write (crlf) | propose see: name = | <name> | x = | <x> | y = | <y> | color = | <color> ||)
+                ^DISTANCE <distance>)
+   (write (crlf) | propose see: name = | <name> | x = | <x> | y = | <y> | color = | <color> ||)
 }
 
 sp {solution*apply*see*new
    (state <s> ^operator <op>
-              ^memory <memory>
+              ^memory <memory>)
    (<op> ^name see
          ^parameter <newEntity>)
    (<newEntity> ^X <x>
@@ -44,18 +44,16 @@ sp {solution*apply*see*new
    (write (crlf) | apply see*new: name = | <name> | x = | <x> | y = | <y> | color = | <color> | distance = | <distance> ||)
 }
 
-sp {solution*apply*see*update-distances
+sp {solution*apply*see*update-distance
    (state <s> ^operator <op>
-              ^memory <memory>
+              ^memory <memory>)
    (<op> ^name see
-         ^parameter <entity>)
-   (<entity> ^Name <name>
-             ^DISTANCE <distance>)
+         ^parameter <newEntity>)
+   (<newEntity> ^Name <name>
+                ^DISTANCE <distance>)
    (<memory> ^ENTITY <memoryEntity>)
-   (<memoryEntity> ^NAME <name>
-                   ^DISTANCE { <> <oldDistance> <distance> })
+   (<memoryEntity> ^NAME <name>)
 -->
-   (<memoryEntity> ^DISTANCE <oldDistance> -
-                   ^DISTANCE <distance>)
-   (write (crlf) | apply see*update-distances: name = | <name> | distance = | <distance> ||)
+   (<memoryEntity> ^DISTANCE <distance>)
+   (write (crlf) | apply see*update-distance: name = | <name> | distance = | <distance> ||)
 }

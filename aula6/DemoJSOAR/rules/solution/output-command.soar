@@ -1,5 +1,5 @@
 sp {propose*output-command*get
-   (state <s> ^actions <actions>
+   (state <s> ^actions <actions>)
    (<actions> ^GET)
 -->
    (<s> ^operator <o> +)
@@ -7,11 +7,16 @@ sp {propose*output-command*get
    (write (crlf) | Propose output command: GET |)
 }
 
-sp {evaluate*output-command*continue
-   (state <s> ^io.output-link <out>)
-   (<out> ^<command>)
+sp {apply*output-command*get
+   (state <s> ^operator.name output-command
+              ^actions.GET <get>
+              ^io.output-link <out>)
+   (<get> ^Name <name>)
 -->
-   (write (crlf) | Continue command | <command> ||)
+   (<s> ^actions GET -)
+   (<out> ^GET <getOut>)
+   (<getOut> ^Name <name>)
+   (write (crlf) | ***** output command GET parameter Name=| <name> ||)
    (interrupt)
 }
 
@@ -38,19 +43,13 @@ sp {apply*output-command*move
    (interrupt)
 }
 
-sp {apply*output-command*get
-   (state <s> ^operator.name output-command
-              ^actions.GET <get>
-              ^io.output-link <out>)
-   (<get> ^Name <name>)
+sp {evaluate*output-command*continue
+   (state <s> ^io.output-link <out>)
+   (<out> ^<command>)
 -->
-   (<s> ^actions GET -)
-   (<out> ^GET <getOut>)
-   (<getOut> ^Name <name>)
-   (write (crlf) | ***** output command GET parameter Name=| <name> ||)
+   (write (crlf) | Continue command | <command> ||)
    (interrupt)
 }
-
 
 sp {apply*output-command*remove-complete
    (state <s> ^operator.name output-command

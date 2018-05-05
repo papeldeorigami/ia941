@@ -1,19 +1,19 @@
 sp {solution*propose*move*jewel
    (state <s> ^name solution
-              ^position <position>
               ^memory.ENTITY <entity>
-              ^distances <distances>
-              ^knapsack <knapsack>
-              ^traveledDistance <traveledDistance>
-              ^desired <desired>)
+              ^desired <desired>
+              ^v-position <position>
+              ^v-distances <distances>
+              ^v-knapsack <knapsack>
+              ^v-traveled-distance <traveledDistance>)
    (<position> ^X <x>
                ^Y <y>)
-   (<entity> ^X { <entityPositionX> <> <x> }
-             ^Y { <entityPositionY> <> <y> }
+   (<entity> ^X <entityPositionX>
+             ^Y <entityPositionY>
              ^NAME <entityName>
              ^TYPE JEWEL
              ^COLOR <color>)
-   (<distances> ^<entity> { <DISTANCE> > 30 }) # move only if distance is greater than 30
+   (<distances> ^<entityName> { <DISTANCE> > 30 }) # move only if distance is greater than 30
    # filter colors only that are missing in some leaflet
    (<desired> ^<color> <desiredQuantity>)
    (<knapsack> ^<color> { <quantity> < <desiredQuantity> })
@@ -27,40 +27,14 @@ sp {solution*propose*move*jewel
         ^Y <entityPositionY>
         ^DISTANCE <DISTANCE>)
 #   (write (crlf) | propose move (to jewel): name = | <entityName> | distance = | <DISTANCE> ||)
-}
-   
-sp {solution*propose*move*delivery-spot
-   (state <s> ^name solution
-              ^position <position>
-              ^memory.ENTITY <entity>
-              ^distances <distances>
-              ^deliverySpot <deliverySpot>
-              ^delivered false
-              ^readyToDeliver true)
-   (<distances> ^<entity> { <DISTANCE> > 30 }) # move only if distance is greater than 30
-   (<position> ^X <x>
-               ^Y <y>)
-   (<entity> ^X { <entityPositionX> <> <x> }
-             ^Y { <entityPositionY> <> <y> }
-             ^NAME deliverySpot)
--->
-   (<s> ^operator <o> +)
-   (<o> ^name move
-        ^parameter <p>)
-   (<p> ^ENTITY <entity>
-        ^NAME deliverySpot
-        ^X <entityPositionX>
-        ^Y <entityPositionY>
-        ^DISTANCE <DISTANCE>)
-#   (write (crlf) | propose move (to deliverySpot) |)
-}
+}  
 
 sp {solution*apply*move
    (state <s> 
         ^operator <o>
-        ^position <position>
-        ^distances <distances>
-        ^traveledDistance <traveledDistance>)
+        ^v-position <position>
+        ^v-distances <distances>
+        ^v-traveled-distance <traveledDistance>)
    (<position> ^X <oldX>
                ^Y <oldY>)
    (<o> ^name move
@@ -75,9 +49,9 @@ sp {solution*apply*move
                ^Y <oldY> -
                ^X <x>
                ^Y <y>)
-   (<distances> ^<entity> <DISTANCE> - ^<entity> 0)
-   (<s> ^traveledDistance <traveledDistance> -
-        ^traveledDistance (+ <traveledDistance> <DISTANCE>))
+   (<distances> ^<entityName> <DISTANCE> - ^<entityName> 0)
+   (<s> ^v-traveled-distance <traveledDistance> -
+        ^v-traveled-distance (+ <traveledDistance> <DISTANCE>))
    (write (crlf) | try move: name = | <entityName> | traveledDistance = | <traveledDistance> | + | <DISTANCE> ||)
 }
 

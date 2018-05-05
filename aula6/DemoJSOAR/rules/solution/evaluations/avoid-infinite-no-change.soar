@@ -1,12 +1,13 @@
-sp {avoid*infinite*no*change*loop
-   (state <s> ^impasse no-change              
-              ^superstate <ss>)
-   (<ss> ^actions <actions>)
-  -(<ss> ^name selection)
-  -(<actions> ^<any>)
--->
-#   (write (crlf) (cmd print --depth 2 I2))
-  #(halt)
-  (write (crlf) | Avoid infinite loop of no-change state | (cmd print --depth 2 <ss>) ||)
-  (wait 1000)
-}
+#sp {avoid*infinite*no*change*loop
+#   (state <s> ^impasse no-change              
+#              ^superstate <ss>)
+#   (<ss> ^actions <actions>)
+#  -(<ss> ^name selection)
+#  -(<actions> ^<any>)
+#-->
+##   (write (crlf) (cmd print --depth 2 I2))
+#  #(halt)
+#  (write (crlf) | Avoid infinite loop of no-change state | (cmd print --depth 2 <ss>) ||)
+#  (wait 1000)
+#}
+#

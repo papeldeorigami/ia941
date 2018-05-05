@@ -6,11 +6,11 @@ sp {propose*get
               ^position <position>)
    # find a jewel
    (<memory> ^ENTITY <entity>)
-   (<entity> ^NAME <entityName>)
-   (<entity> ^TYPE JEWEL)
-   (<entity> ^COLOR <color>
-   # get only if distance is less than 30
-   (<entity> ^DISTANCE { <DISTANCE> < 30 })
+   (<entity> ^NAME <entityName>
+    <entity> ^TYPE JEWEL
+    <entity> ^COLOR <color>
+    # get only if distance is less than 30
+    <entity> ^DISTANCE { <DISTANCE> < 30 })
    # filter colors only that are missing in some leaflet
    (<desired> ^<color> <desiredQuantity>)
    (<knapsack> ^<color> { <quantity> < <desiredQuantity> })
@@ -67,26 +67,3 @@ sp {solution*apply*get
    (write (crlf) | White=| <kwhite> |/| <dwhite> ||)
    (write (crlf) | ---> | <color> | is now | (+ <quantity> 1) |/| <dquantity> ||)
 }
-
-sp {solution*apply*actual*get*only*once
-   (state <s> ^operator <o>
-              ^io.input-link.CREATURE <creature>
-              ^actions <actions>
-              ^collected <collected>
-              ^knapsack <knapsack>
-              ^memory <memory>
-              ^desired <desired>)
-  -(<actions> ^<attr> <any>)  # hold the first action only
-   (<o> ^name get
-        ^parameter <p>)
-   (<p> ^NAME <entityName>)
-   (<memory> ^ENTITY <memoryEntity>)
-   (<memoryEntity> ^NAME <entityName>)
--->
-   (<actions> ^GET <command>)
-   (<command> ^Name <entityName>)
-   (write (crlf))
-   (write (crlf) | ***** prepare output GET for entity= | <entityName> ||)
-   (write (crlf))
-}
-

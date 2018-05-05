@@ -6,17 +6,17 @@ sp {propose*v-get
               ^v-collected-names <collectedNames>
               ^v-distances <distances>
               ^v-position <position>)
-   (<position> ^X <creaturePositionX>)
-   (<position> ^Y <creaturePositionY>)
+   (<position> ^X <creaturePositionX>
+               ^Y <creaturePositionY>)
    # find a jewel
    (<memory> ^ENTITY <entity>)
-   (<entity> ^X <entityPositionX>)
-   (<entity> ^Y <entityPositionY>)
-   (<entity> ^NAME <entityName>)
-   (<entity> ^TYPE JEWEL)
-   (<entity> ^COLOR <color>)
+   (<entity> ^X <entityPositionX>
+    <entity> ^Y <entityPositionY>
+    <entity> ^NAME <entityName>
+    <entity> ^TYPE JEWEL
+    <entity> ^COLOR <color>)
    # get only if distance is less than 30
-   (<distances> ^<entity> { <DISTANCE> < 30 })
+   (<distances> ^<entityName> { <DISTANCE> < 30 })
    # filter colors only that are missing in some leaflet
    (<desired> ^<color> <desiredQuantity>)
    (<knapsack> ^<color> { <quantity> < <desiredQuantity> })
@@ -33,7 +33,7 @@ sp {propose*v-get
 sp {solution*apply*v-get
    (state <s> ^operator <o>
               ^v-collected-names <collectedNames>
-              ^v-knapsack <v-knapsack>
+              ^v-knapsack <knapsack>
               ^memory <memory>
               ^desired <desired>)
    # read the jewel name from parameters
@@ -60,7 +60,6 @@ sp {solution*apply*v-get
               ^Magenta <dmagenta>
               ^White <dwhite>)
 -->
-   (<s> ^collected <collected> - (+ <collected> 1))
    (<collectedNames> ^NAME <entityName>)
    (<knapsack> ^<color> <quantity> - (+ <quantity> 1))
    (write (crlf) | get: name = | <entityName> | Knapsack was: |)
@@ -72,36 +71,3 @@ sp {solution*apply*v-get
    (write (crlf) | White=| <kwhite> |/| <dwhite> ||)
    (write (crlf) | ---> | <color> | is now | (+ <quantity> 1) |/| <dquantity> ||)
 }
-
-sp {solution*apply*actual*get*only*once
-   (state <s> ^operator <o>
-              ^io.input-link.CREATURE <creature>
-              ^actions <actions>
-              ^collected <collected>
-              ^knapsack <knapsack>
-              ^memory <memory>
-              ^desired <desired>)
-  -(<actions> ^<attr> <any>)  # hold the first action only
-   (<o> ^name get
-        ^parameter <p>)
-   (<p> ^NAME <entityName>)
-   (<memory> ^ENTITY <memoryEntity>)
-   (<memoryEntity> ^NAME <entityName>)
--->
-   (<actions> ^GET <command>)
-   (<command> ^Name <entityName>)
-   (write (crlf))
-   (write (crlf) | ***** prepare output get for entity= | <entityName> ||)
-   (write (crlf))
-}
-
-sp {solution*apply*get*evaluate*readyToDeliver
-   (state <s> ^operator.name get
-              ^collected 8    # actually 9 is the full knapsack, but we just got the last one, so it is 9 - 1 = 8
-              ^readyToDeliver false)
--->
-   (<s> ^readyToDeliver false -
-        ^readyToDeliver true)
-   (write (crlf) | **** Ready to deliver!|)
-}
-

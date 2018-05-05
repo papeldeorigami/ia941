@@ -10,6 +10,7 @@ sp {elaborate*v-distances
              ^X <x>
              ^Y <y>)
 -->
-   (<v-distances> ^<entity> (sqrt (+ (* (- <px> <x>) (- <px> <x>)) (* (- <py> <y>) (- <py> <y>)))))
-   (write (crlf) | elaborate*v-distances for | <entityName> |: | (cmd print <v-distances> ^<entity>))
+   (<v-distances> ^<entityName> (sqrt (+ (* (- <px> <x>) (- <px> <x>)) (* (- <py> <y>) (- <py> <y>)))))
+   (write (crlf) | elaborate*v-distances for | <entityName> |: |)
+   (write (crlf) (cmd print --depth 2 <v-distances>))
 }

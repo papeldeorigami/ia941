@@ -61,22 +61,22 @@ sp {apply*initialize-solution
         ^delivery-spot <delivery-spot>     # always (0,0)
         ^knapsack <knapsack>               # read from input
         ^desired <desired>                 # deired count for each color
-        ^next-move <next-move>             # holds the next actions to be applied
+        ^actions <actions>                 # holds the actions to be output
         ^delivered false                   # to control whether leaflets have been exchanged in the deliverySpot
-        ^memory <memory>       
+        ^memory <memory>
         
         # these "virtual" attributes exist only for deliberation, i.e. they are copied during the selection problem solving
         ^v-distances <distances>             # distances to each entity from the current virtual position of the creature
         ^v-knapsack <v-knapsack>             # representation of the knapsack
         ^v-collected-names <collected-names> # a list of all entities names already collected in the planning phase, to ignore from visual input
         ^v-traveled-distance 0               # this is the numeric-value for the selection problem
-        ^v-position <position>)              # represents the position of the creature during the planning phase
-   (<deliverySpot> ^X 0
-                   ^Y 0
-                   ^NAME deliverySpot
-                   ^TYPE deliverySpot
-                   ^COLOR none)
-   (<memory> ^ENTITY <delivery-spot>)
+        ^v-position <v-position>)            # represents the position of the creature during the planning phase
+   (<delivery-spot> ^X 0
+                    ^Y 0
+                    ^NAME deliverySpot
+                    ^TYPE deliverySpot
+                    ^COLOR none)
+#   (<memory> ^ENTITY <delivery-spot>)
    (<v-position> ^X <positionX>
                ^Y <positionY>)
    (<knapsack> ^Red <kred>
