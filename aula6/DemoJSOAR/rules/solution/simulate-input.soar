@@ -23,8 +23,8 @@ sp {apply*simulate-input
    (<sensor> ^FUEL <fuel> ^VISUAL <visual>)
    (<fuel> ^VALUE 1000.0)
    (<visual>
-#        ^ENTITY <entity31>
-#        ^ENTITY <entity30>
+        ^ENTITY <entity31>
+        ^ENTITY <entity30>
         ^ENTITY <entity29>
         ^ENTITY <entity28>
         ^ENTITY <entity27>
@@ -40,8 +40,8 @@ sp {apply*simulate-input
         ^ENTITY <entity17> 
         ^ENTITY <entity16> 
         ^ENTITY <entity15>)
-#   (<entity31> ^COLOR White ^DISTANCE 432.22 ^NAME Jewel_1524399791240 ^TYPE JEWEL ^X 233.0 ^|X2| 333.0 ^Y 742.0 ^|Y2| 654.0)
-#   (<entity30> ^COLOR Magenta ^DISTANCE 300.63 ^NAME Jewel_1524399791241 ^TYPE JEWEL ^X 401.0 ^|X2| 432.0 ^Y 632.0 ^|Y2| 634.0)
+   (<entity31> ^COLOR White ^DISTANCE 432.22 ^NAME Jewel_1524399791240 ^TYPE JEWEL ^X 233.0 ^|X2| 333.0 ^Y 742.0 ^|Y2| 654.0)
+   (<entity30> ^COLOR Magenta ^DISTANCE 300.63 ^NAME Jewel_1524399791241 ^TYPE JEWEL ^X 401.0 ^|X2| 432.0 ^Y 632.0 ^|Y2| 634.0)
    (<entity29> ^COLOR Magenta ^DISTANCE 298.32 ^NAME Jewel_1524399791242 ^TYPE JEWEL ^X 508.0 ^|X2| 657.0 ^Y 634.0 ^|Y2| 644.0)
    (<entity28> ^COLOR Yellow ^DISTANCE 155.43 ^NAME Jewel_1524399791243 ^TYPE JEWEL ^X 432.0 ^|X2| 382.0 ^Y 734.0 ^|Y2| 223.0)
    (<entity27> ^COLOR Yellow ^DISTANCE 201.32 ^NAME Jewel_1524399791244 ^TYPE JEWEL ^X 322.0 ^|X2| 594.0 ^Y 574.0 ^|Y2| 544.0)

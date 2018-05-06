@@ -4,22 +4,19 @@ sp {propose*v-get
               ^memory <memory>
               ^v-knapsack <knapsack>
               ^v-collected-names <collectedNames>
-              ^v-distances <distances>
-              ^v-position <position>)
-   (<position> ^X <creaturePositionX>
-               ^Y <creaturePositionY>)
+              ^v-distances <distances>)
    # find a jewel
    (<memory> ^ENTITY <entity>)
    (<entity> ^X <entityPositionX>
-    <entity> ^Y <entityPositionY>
-    <entity> ^NAME <entityName>
-    <entity> ^TYPE JEWEL
-    <entity> ^COLOR <color>)
+             ^Y <entityPositionY>
+             ^NAME <entityName>
+             ^TYPE JEWEL
+             ^COLOR <color>)
    # get only if distance is less than 30
    (<distances> ^<entityName> { <DISTANCE> < 30 })
    # filter colors only that are missing in some leaflet
-   (<desired> ^<color> <desiredQuantity>)
-   (<knapsack> ^<color> { <quantity> < <desiredQuantity> })
+   (<desired> ^<color> <dquantity>)
+   (<knapsack> ^<color> { <quantity> < <dquantity> })
    # do not get doubled entities
   -(<collectedNames> ^NAME <entityName>)
 -->
@@ -27,7 +24,7 @@ sp {propose*v-get
    (<o> ^name v-get)
    (<o> ^parameter <p>)
    (<p> ^NAME <entityName>)
-#   (write (crlf) | propose get: name = | <entityName> | distance = | <DISTANCE> ||)
+   (write (crlf) | ****************** propose get: name = | <entityName> | distance = | <DISTANCE> ||)
 }
 
 sp {solution*apply*v-get
@@ -45,7 +42,7 @@ sp {solution*apply*v-get
    (<memoryEntity> ^NAME <entityName>)
    (<memoryEntity> ^COLOR <color>)
    # lookup the color status in the knapsack and in the desired state
-   (<knapsack> ^<color> <quantity>
+   (<knapsack> ^<color> { <quantity> < <dquantity> }
                ^Red <kred>
                ^Green <kgreen>
                ^Blue <kblue>

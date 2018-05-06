@@ -5,6 +5,7 @@ sp {solution*propose*move*jewel
               ^v-position <position>
               ^v-distances <distances>
               ^v-knapsack <knapsack>
+              ^v-collected-names <collectedNames>
               ^v-traveled-distance <traveledDistance>)
    (<position> ^X <x>
                ^Y <y>)
@@ -17,6 +18,8 @@ sp {solution*propose*move*jewel
    # filter colors only that are missing in some leaflet
    (<desired> ^<color> <desiredQuantity>)
    (<knapsack> ^<color> { <quantity> < <desiredQuantity> })
+   # do not get doubled entities
+  -(<collectedNames> ^NAME <entityName>)
 -->
    (<s> ^operator <o> +)
    (<o> ^name move)
@@ -49,7 +52,7 @@ sp {solution*apply*move
                ^Y <oldY> -
                ^X <x>
                ^Y <y>)
-   (<distances> ^<entityName> <DISTANCE> - ^<entityName> 0)
+   #(<distances> ^<entityName> <DISTANCE> - ^<entityName> 0)
    (<s> ^v-traveled-distance <traveledDistance> -
         ^v-traveled-distance (+ <traveledDistance> <DISTANCE>))
    (write (crlf) | try move: name = | <entityName> | traveledDistance = | <traveledDistance> | + | <DISTANCE> ||)

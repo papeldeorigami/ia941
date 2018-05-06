@@ -1,4 +1,4 @@
-22
+24
 SOAR_ID 0
 SOAR_ID 1
 SOAR_ID 2
@@ -21,7 +21,9 @@ ENUMERATION 18 1 see-versus-move
 SOAR_ID 19
 ENUMERATION 20 1 see-versus-get
 SOAR_ID 21
-23
+ENUMERATION 22 1 all-leaflets-complete
+SOAR_ID 23
+25
 0 io 1
 0 name 7
 0 operator 4
@@ -29,6 +31,7 @@ SOAR_ID 21
 0 operator 17
 0 operator 19
 0 operator 21
+0 operator 23
 0 superstate 6
 0 top-state 0
 0 type 5
@@ -45,3 +48,4 @@ SOAR_ID 21
 17 name 16
 19 name 18
 21 name 20
+23 name 22
