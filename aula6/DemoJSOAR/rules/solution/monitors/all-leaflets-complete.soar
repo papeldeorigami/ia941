@@ -1,7 +1,7 @@
 sp {monitor*all-leaflets-complete
    (state <s> ^desired <desired>
               ^v-knapsack <knapsack>
-              ^traveled-distance <traveled-distance>)
+              ^v-traveled-distance <traveled-distance>)
    (<desired>  ^Red <red>
                ^Green <green>
                ^Blue <blue>

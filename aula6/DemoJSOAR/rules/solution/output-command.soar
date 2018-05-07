@@ -7,6 +7,17 @@ sp {propose*output-command*get
    (write (crlf) | Propose output command: GET |)
 }
 
+sp {apply*output-command*remove-move-for-others
+   (state <s> ^operator.name output-command
+              ^actions <actions>
+              ^io.output-link <out>)
+   (<actions> ^MOVE <move>)
+   (<actions> ^{<other-action> <> MOVE} <other-value>)
+-->
+   (<actions> ^MOVE <move> -)
+   (write (crlf) | Removed the MOVE command to enable | <other-action> ||)
+}
+
 sp {apply*output-command*get
    (state <s> ^operator.name output-command
               ^actions.GET <get>

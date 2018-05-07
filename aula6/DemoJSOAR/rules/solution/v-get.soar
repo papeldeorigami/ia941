@@ -23,24 +23,21 @@ sp {propose*v-get
    (<s> ^operator <o> +)
    (<o> ^name v-get)
    (<o> ^parameter <p>)
-   (<p> ^NAME <entityName>)
-   (write (crlf) | ****************** propose get: name = | <entityName> | distance = | <DISTANCE> ||)
+   (<p> ^NAME <entityName>
+        ^COLOR <color>)
+   (write (crlf) | Propose v-get: name = | <entityName> | distance = | <DISTANCE> ||)
 }
 
 sp {solution*apply*v-get
    (state <s> ^operator <o>
               ^v-collected-names <collectedNames>
               ^v-knapsack <knapsack>
-              ^memory <memory>
               ^desired <desired>)
    # read the jewel name from parameters
    (<o> ^name v-get
         ^parameter <p>)
-   (<p> ^NAME <entityName>)
-   # lookup the entity in the memory
-   (<memory> ^ENTITY <memoryEntity>)
-   (<memoryEntity> ^NAME <entityName>)
-   (<memoryEntity> ^COLOR <color>)
+   (<p> ^NAME <entityName>
+        ^COLOR <color>)
    # lookup the color status in the knapsack and in the desired state
    (<knapsack> ^<color> { <quantity> < <dquantity> }
                ^Red <kred>
@@ -59,7 +56,7 @@ sp {solution*apply*v-get
 -->
    (<collectedNames> ^NAME <entityName>)
    (<knapsack> ^<color> <quantity> - (+ <quantity> 1))
-   (write (crlf) | get: name = | <entityName> | Knapsack was: |)
+   (write (crlf) | Apply v-get: name = | <entityName> | Knapsack was: |)
    (write (crlf) | Red=| <kred> |/| <dred> ||)
    (write (crlf) | Green=| <kgreen> |/| <dgreen> ||)
    (write (crlf) | Blue=| <kblue> |/| <dblue> ||)

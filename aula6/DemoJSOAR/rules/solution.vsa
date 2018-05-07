@@ -16,24 +16,23 @@ VERSION 4
 13	3	FOPERATOR v-distances v-distances.soar 14
 14	0	FOPERATOR deliver deliver.soar 15
 15	0	FOPERATOR get get.soar 16
-16	0	HLFOPERATOR monitors monitors.soar monitors 0 35
-17	16	OPERATOR all-leaflets-complete all-leaflets-complete.soar 36
-18	0	FOPERATOR move move.soar 17
-19	0	FOPERATOR old old.soar 18
-20	0	FOPERATOR output-command output-command.soar 19
-21	0	HLFOPERATOR preferences preferences.soar preferences 0 20
-22	21	FOPERATOR v-get-versus-move v-get-versus-move.soar 21
-23	21	OPERATOR move-closest move-closest.soar 22
-24	21	OPERATOR see-versus-get see-versus-get.soar 23
-25	21	OPERATOR see-versus-move see-versus-move.soar 24
-26	0	FOPERATOR see see.soar 25
-27	0	FOPERATOR simulate-input simulate-input.soar 26
-28	0	FOPERATOR v-get v-get.soar 27
-29	0	FOPERATOR wander wander.soar 28
-30	0	HLOPERATOR evaluations evaluations.soar evaluations 11 29
-31	30	FOPERATOR avoid-infinite-no-change avoid-infinite-no-change.soar 30
-32	30	FOPERATOR evaluate-delivered-apply evaluate-delivered-apply.soar 31
-33	30	FOPERATOR evaluate-move-numeric-value evaluate-move-numeric-value.soar 32
-34	30	FOPERATOR evaluate-no-change evaluate-no-change.soar 33
-35	0	OPERATOR initialize-solution initialize-solution.soar 34
+16	0	HLFOPERATOR monitors monitors.soar monitors 0 17
+17	16	OPERATOR all-leaflets-complete all-leaflets-complete.soar 18
+18	0	FOPERATOR move move.soar 19
+19	0	FOPERATOR old old.soar 20
+20	0	FOPERATOR output-command output-command.soar 21
+21	0	HLFOPERATOR preferences preferences.soar preferences 0 22
+22	21	FOPERATOR v-get-versus-move v-get-versus-move.soar 23
+23	21	OPERATOR move-closest move-closest.soar 24
+24	21	OPERATOR see-versus-get see-versus-get.soar 25
+25	21	OPERATOR see-versus-move see-versus-move.soar 26
+26	0	FOPERATOR see see.soar 27
+27	0	FOPERATOR simulate-input simulate-input.soar 28
+28	0	FOPERATOR v-get v-get.soar 29
+29	0	FOPERATOR wander wander.soar 30
+30	0	HLOPERATOR evaluations evaluations.soar evaluations 11 31
+31	30	FOPERATOR avoid-infinite-no-change avoid-infinite-no-change.soar 32
+32	30	FOPERATOR evaluate-move-numeric-value evaluate-move-numeric-value.soar 33
+33	30	FOPERATOR evaluate-no-change evaluate-no-change.soar 34
+34	0	OPERATOR initialize-solution initialize-solution.soar 35
 END
