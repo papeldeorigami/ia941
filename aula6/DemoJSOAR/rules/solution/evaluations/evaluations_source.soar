@@ -1,3 +1,2 @@
-source avoid-infinite-no-change.soar
 source evaluate-move-numeric-value.soar
 source evaluate-no-change.soar

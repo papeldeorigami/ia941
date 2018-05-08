@@ -19,4 +19,5 @@ sp {monitor*all-leaflets-complete
    (write (crlf) | *** ALL LEAFLETS COMPLETE  *** |)
    (write (crlf) | ****************************** |)
    (write (crlf) | Total traveled-distance =  | <traveled-distance> ||)
+   (<s> ^all-leaflets-complete true)
 }

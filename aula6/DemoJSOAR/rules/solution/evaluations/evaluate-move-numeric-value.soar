@@ -4,6 +4,6 @@ sp {solution*evaluate*numeric-value
    (<o> ^name move
         ^parameter.DISTANCE <DISTANCE>)
 -->
-   (<s> ^numeric-value (+ <traveled-distance> <DISTANCE>))
-   (write (crlf) | numeric-value = | <traveled-distance> | + | <DISTANCE> ||)
+   (<s> ^numeric-value <traveled-distance>)
+   (write (crlf) | numeric-value = | <traveled-distance> ||)
 }

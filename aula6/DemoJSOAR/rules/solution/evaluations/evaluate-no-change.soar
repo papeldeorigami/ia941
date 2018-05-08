@@ -1,3 +1,13 @@
+sp {evaluate*no-change*propose*deliver
+   (state <s> ^superstate <ss>
+              ^impasse no-change
+              ^all-leaflets-complete true)
+-->
+   (<ss> ^operator <o> +)
+   (<o> ^name deliver)
+   (write (crlf) | Propose deliver |)
+}
+
 sp {evaluate*no-change*propose*apply-command
    (state <s> ^superstate <ss>
               ^impasse no-change)
@@ -10,7 +20,7 @@ sp {evaluate*no-change*propose*apply-command
         ^parameter <p>)
    (<p>
         ^actions <actions>)
-   (write (crlf) | Not enough jewels to complete all leaflets! Apply the first command. |)
+   (write (crlf) | Nothing else to plan. Apply the first command. |)
 }
 
 sp {evaluate*no-change*wander
@@ -22,7 +32,7 @@ sp {evaluate*no-change*wander
          ^actions <actions>)
   -(<actions> ^<any>)
 -->
-   (write (crlf) | Not enough jewels to complete all leaflets! Wander until it appears. |)
+   (write (crlf) | Nothing else to plan. Wander. |)
    (<ss> ^wander true)
    #(halt)
 }

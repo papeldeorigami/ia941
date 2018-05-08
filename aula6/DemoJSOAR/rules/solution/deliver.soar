@@ -1,12 +1,11 @@
-sp {propose*deliver
-   (state <s> ^name solution
-              ^ready-to-deliver true
-              ^delivered false
-              ^distance-to-delivery-spot { <distance> < 30 })
+sp {evaluate*no-change*propose*deliver
+   (state <s> ^superstate <ss>
+              ^impasse no-change
+              ^all-leaflets-complete true)
 -->
-   (<s> ^operator <o> +)
+   (<ss> ^operator <o> +)
    (<o> ^name deliver)
-   (write (crlf) | propose deliver |)
+   (write (crlf) | Propose deliver |)
 }
 
 sp {solution*apply*deliver

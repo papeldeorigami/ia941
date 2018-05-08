@@ -1,0 +1,17 @@
+sp {monitor*selected*move
+   (state <s> 
+        ^operator <o>
+        ^actions <actions>
+        ^v-traveled-distance <traveledDistance>
+        ^io.input-link.CREATURE <creature>)
+   (<o> ^name move
+        ^parameter <p>)
+   (<p> ^ENTITY <entity>
+        ^NAME <entityName>
+        ^X <x>
+        ^Y <y>
+        ^DISTANCE <distance>)
+   (<creature> ^SENSOR.VISUAL.ENTITY.NAME <entityName>)
+-->
+   (write (crlf) | --> Selection: move to entity=| <entityName> | x=| <x> | y=| <y> | distance=| <distance> | traveledDistance=| <traveledDistance> ||)
+}

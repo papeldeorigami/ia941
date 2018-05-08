@@ -1,4 +1,6 @@
-source v-get-versus-move.soar
+source get-versus-move.soar
+source get-versus-output-command.soar
+source see-versus-output-command.soar
 source move-closest.soar
 source see-versus-get.soar
 source see-versus-move.soar

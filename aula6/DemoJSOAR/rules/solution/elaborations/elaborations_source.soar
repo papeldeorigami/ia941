@@ -1,4 +1,5 @@
 source _all.soar
+source all-leaflets-complete.soar
 source collected-count.soar
 source desired-count.soar
 source distance-to-delivery-spot.soar

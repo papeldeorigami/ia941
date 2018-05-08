@@ -1,5 +1,5 @@
 # see > get
-sp {move*see*preferences
+sp {see*get*preferences
    (state <s> ^operator <o> +
           <o2> +)
    (<o> ^name see)

@@ -176,12 +176,14 @@ public class SoarBridge
                 collectedColors.put("Yellow", 0);
                 collectedColors.put("Magenta", 0);
                 collectedColors.put("White", 0);
+                int order = 0;
                 for (Leaflet l : c.getLeaflets()) {
                     Identifier leaflet = CreateIdWME(creatureLeaflets, "LEAFLET");
+                    CreateIntegerWME(leaflet, "ORDER", order++);
                     CreateStringWME(leaflet, "ID", l.getID().toString());
                     CreateIntegerWME(leaflet, "PAYMENT", l.getPayment());
                     HashMap<String, Integer[]> items = l.getItems();
-                    HashMap<String, Integer> colors = new HashMap<String, Integer>();
+                    HashMap<String, Integer> colors = new HashMap<>();
                     colors.put("Red", 0);
                     colors.put("Green", 0);
                     colors.put("Blue", 0);

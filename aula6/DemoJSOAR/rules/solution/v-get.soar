@@ -20,12 +20,14 @@ sp {propose*v-get
    # do not get doubled entities
   -(<collectedNames> ^NAME <entityName>)
 -->
-   (<s> ^operator <o> +)
+   (<s> ^operator <o> + =)
    (<o> ^name v-get)
    (<o> ^parameter <p>)
    (<p> ^NAME <entityName>
         ^COLOR <color>)
    (write (crlf) | Propose v-get: name = | <entityName> | distance = | <DISTANCE> ||)
+   (write (crlf) | collectedNames=| <collectedNames> | distances=| <distances> | entity=| <entity> | entityPositionX=| <entityPositionX> | entityPositionY=| <entityPositionY> | color=| <color> | dquantity=| <dquantity> | quantity=| <quantity> ||)
+   (write (crlf) (cmd print --depth 2 <memory>))
 }
 
 sp {solution*apply*v-get

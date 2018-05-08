@@ -19,11 +19,11 @@ sp {propose*get
    (<desired> ^<color> <desiredQuantity>)
    (<knapsack> ^<color> { <quantity> < <desiredQuantity> })
 -->
-   (<s> ^operator <o> +)
-   (<o> ^name get)
-   (<o> ^parameter <p>)
+   (<s> ^operator <o> + =)
+   (<o> ^name get
+        ^parameter <p>)
    (<p> ^NAME <entityName>)
-#   (write (crlf) | propose get: name = | <entityName> | distance = | <DISTANCE> ||)
+   (write (crlf) | propose get: name = | <entityName> | distance = | <DISTANCE> ||)
 }
 
 sp {solution*apply*get
@@ -31,11 +31,16 @@ sp {solution*apply*get
               ^knapsack <knapsack>
               ^memory <memory>
               ^desired <desired>
-              ^actions <actions>)
+              ^actions <actions>
+              ^io.input-link.CREATURE <creature>)
    # read the jewel name from parameters
    (<o> ^name get
         ^parameter <p>)
    (<p> ^NAME <entityName>)
+   # lookup the entity in the visual sensor
+   (<creature> ^SENSOR.VISUAL <visual>)
+   (<visual> ^ENTITY <visualEntity>)
+   (<visualEntity> ^NAME <entityName>)
    # lookup the entity in the memory
    (<memory> ^ENTITY <memoryEntity>)
    (<memoryEntity>
@@ -57,10 +62,13 @@ sp {solution*apply*get
               ^Magenta <dmagenta>
               ^White <dwhite>)
 -->
+   # remove element from the input (temporary)
+   (<visual> ^ENTITY <visualEntity> -)
    # remove element from memory
    (<memory> ^ENTITY <memoryEntity> -)
    # increment the number of jewels of the entity's color in the knapsack
-   (<knapsack> ^<color> <quantity> - (+ <quantity> 1))
+   (<knapsack> ^<color> <quantity> -
+               ^<color> (+ <quantity> 1))
    # prepare the output action
    (<actions> ^GET <command>)
    (<command> ^Name <entityName>)
@@ -73,3 +81,15 @@ sp {solution*apply*get
    (write (crlf) | White=| <kwhite> |/| <dwhite> ||)
    (write (crlf) | ---> | <color> | is now | (+ <quantity> 1) |/| <dquantity> ||)
 }
+
+#sp {solution*apply*get*test
+#   (state <s> ^operator <o>)
+#   # read the jewel name from parameters
+#   (<o> ^name get
+#        ^parameter <p>)
+#   (<p> ^NAME <entityName>)   
+#-->
+#   (write (crlf) | ======= apply get entityName=| <entityName> ||)
+#   (write (crlf) (cmd print --depth 1 <s>))
+#}
+#

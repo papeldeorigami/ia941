@@ -1,0 +1,9 @@
+# get > output-command
+sp {get*output-command*preferences
+   (state <s> ^operator <o> +
+          <o2> +)
+   (<o> ^name get)
+   (<o2> ^name output-command)
+-->
+   (<s> ^operator <o> > <o2>)
+}

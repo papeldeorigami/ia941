@@ -1,11 +1,12 @@
-sp {propose*output-command*get
-   (state <s> ^actions <actions>)
-   (<actions> ^GET)
--->
-   (<s> ^operator <o> +)
-   (<o> ^name output-command)
-   (write (crlf) | Propose output command: GET |)
-}
+#sp {propose*output-command*get
+#   (state <s> ^actions <actions>)
+#   (<actions> ^GET)
+#  -(<s> ^operator.name output-command)
+#-->
+#   (<s> ^operator <o> +)
+#   (<o> ^name output-command)
+#   (write (crlf) | Propose output command: GET |)
+#}
 
 sp {apply*output-command*remove-move-for-others
    (state <s> ^operator.name output-command
@@ -23,6 +24,7 @@ sp {apply*output-command*get
               ^actions.GET <get>
               ^io.output-link <out>)
    (<get> ^Name <name>)
+  -(<out> ^GET)
 -->
    (<s> ^actions GET -)
    (<out> ^GET <getOut>)

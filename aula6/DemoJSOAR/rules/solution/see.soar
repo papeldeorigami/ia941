@@ -3,7 +3,7 @@ sp {solution*propose*see
               ^memory <memory>
               ^io.input-link.CREATURE <creature>)
    (<creature> ^SENSOR.VISUAL.ENTITY <entity>)
-   (<entity> ^TYPE <type> << JEWEL FOOD >>
+   (<entity> ^TYPE <type>
              ^NAME <name>)
   -(<memory> ^ENTITY.NAME <name>)
 -->
@@ -21,7 +21,7 @@ sp {solution*apply*see*new
    (<entity> ^X <x>
              ^Y <y>
              ^NAME <name>
-             ^TYPE <type> << JEWEL FOOD >>
+             ^TYPE <type>
              ^COLOR <color>
              ^DISTANCE <distance>)
   -(<memory> ^ENTITY.NAME <name>)
@@ -45,7 +45,9 @@ sp {solution*apply*see*update-distance
                 ^DISTANCE <distance>)
    (<memory> ^ENTITY <memoryEntity>)
    (<memoryEntity> ^NAME <name>)
+   (<memoryEntity> ^DISTANCE <oldDistance>)
 -->
-   (<memoryEntity> ^DISTANCE <distance>)
+   (<memoryEntity> ^DISTANCE <oldDistance> -
+                   ^DISTANCE <distance>)
    (write (crlf) | apply see*update-distance: name = | <name> | distance = | <distance> ||)
 }

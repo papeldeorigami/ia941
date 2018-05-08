@@ -10,6 +10,9 @@ sp {propose*initialize-solution
    (<leaflets> ^LEAFLET <l1> { <> <l1> <l2> })
    (<leaflets> ^LEAFLET <l2> { <> <l2> <l3> })
    (<leaflets> ^LEAFLET <l3> { <> <l1> <l3> })
+   (<l1> ^ORDER <ord1>)
+   (<l2> ^ORDER { <ord2> < <ord1> })
+   (<l3> ^ORDER { <ord3> < <ord2> })
 -->
    (<s> ^operator <o> + =)
    (<o> ^name initialize-solution

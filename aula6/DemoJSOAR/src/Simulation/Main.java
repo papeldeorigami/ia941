@@ -31,6 +31,8 @@ public class Main
         {
             NativeUtils.loadFileFromJar("/solution.soar");
             String soarRulesPath = "rules/solution.soar";
+            //NativeUtils.loadFileFromJar("/solution/old.soar");
+            //String soarRulesPath = "rules/solution/old.soar";
 
             //Start enviroment data
             Environment e = new Environment(Boolean.TRUE);

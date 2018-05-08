@@ -28,6 +28,7 @@ sp {solution*propose*move*jewel
         ^NAME <entityName>
         ^X <entityPositionX>
         ^Y <entityPositionY>
+        ^COLOR <color>
         ^DISTANCE <DISTANCE>)
 #   (write (crlf) | propose move (to jewel): name = | <entityName> | distance = | <DISTANCE> ||)
 }  
@@ -35,8 +36,11 @@ sp {solution*propose*move*jewel
 sp {solution*apply*move
    (state <s> 
         ^operator <o>
+        ^desired <desired>
         ^v-position <position>
         ^v-distances <distances>
+        ^v-knapsack <knapsack>
+        ^v-collected-names <collectedNames>
         ^v-traveled-distance <traveledDistance>)
    (<position> ^X <oldX>
                ^Y <oldY>)
@@ -44,18 +48,23 @@ sp {solution*apply*move
         ^parameter <p>)
    (<p> ^ENTITY <entity>
         ^NAME <entityName>
-        ^DISTANCE <DISTANCE>
         ^X <x>
-        ^Y <y>)
+        ^Y <y>
+        ^COLOR <color>
+        ^DISTANCE <DISTANCE>)
+   (<knapsack> ^<color> <quantity>)
+   (<desired> ^<color> <dquantity>)
 -->
+   (<collectedNames> ^NAME <entityName>)
    (<position> ^X <oldX> -
                ^Y <oldY> -
                ^X <x>
                ^Y <y>)
-   #(<distances> ^<entityName> <DISTANCE> - ^<entityName> 0)
+   (<knapsack> ^<color> <quantity> - (+ <quantity> 1))
    (<s> ^v-traveled-distance <traveledDistance> -
         ^v-traveled-distance (+ <traveledDistance> <DISTANCE>))
-   (write (crlf) | try move: name = | <entityName> | traveledDistance = | <traveledDistance> | + | <DISTANCE> ||)
+   (write (crlf) | Test move: name = | <entityName> | traveledDistance = | <traveledDistance> | + | <DISTANCE> ||)
+   (write (crlf) | Virtual get | <color> | | (+ <quantity> 1) |/| <dquantity> ||)
 }
 
 sp {solution*apply*actual*move*only*once
