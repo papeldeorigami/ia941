@@ -8,33 +8,34 @@ VERSION 4
 5	3	FOPERATOR all-leaflets-complete all-leaflets-complete.soar 6
 6	3	FOPERATOR collected-count collected-count.soar 7
 7	3	FOPERATOR desired-count desired-count.soar 8
-8	3	FOPERATOR desired-jewels desired-jewels.soar 37
-9	3	FOPERATOR distance-to-delivery-spot distance-to-delivery-spot.soar 9
-10	3	FOPERATOR problem-space problem-space.soar 10
-11	3	FOPERATOR ready-to-deliver ready-to-deliver.soar 11
-12	3	FOPERATOR substate-io substate-io.soar 12
-13	3	FOPERATOR top-state top-state.soar 13
-14	3	FOPERATOR v-collected-count v-collected-count.soar 14
-15	3	FOPERATOR v-distances v-distances.soar 15
-16	0	FOPERATOR deliver deliver.soar 16
-17	0	FOPERATOR get get.soar 17
-18	0	HLFOPERATOR monitors monitors.soar monitors 0 18
-19	18	FOPERATOR selected-move selected-move.soar 19
-20	0	FOPERATOR move move.soar 20
-21	0	FOPERATOR old old.soar 21
-22	0	FOPERATOR output-command output-command.soar 22
-23	0	HLFOPERATOR preferences preferences.soar preferences 0 23
-24	23	FOPERATOR get-versus-move get-versus-move.soar 24
-25	23	FOPERATOR get-versus-output-command get-versus-output-command.soar 25
-26	23	FOPERATOR see-versus-output-command see-versus-output-command.soar 26
-27	23	OPERATOR move-closest move-closest.soar 27
-28	23	OPERATOR see-versus-get see-versus-get.soar 28
-29	23	OPERATOR see-versus-move see-versus-move.soar 29
-30	0	FOPERATOR see see.soar 30
-31	0	FOPERATOR simulate-input simulate-input.soar 31
-32	0	FOPERATOR wander wander.soar 32
-33	0	HLOPERATOR evaluations evaluations.soar evaluations 11 33
-34	33	FOPERATOR evaluate-move-numeric-value evaluate-move-numeric-value.soar 34
-35	33	FOPERATOR evaluate-no-change evaluate-no-change.soar 35
-36	0	OPERATOR read-input read-input.soar 36
+8	3	FOPERATOR desired-jewels desired-jewels.soar 9
+9	3	FOPERATOR distance-to-delivery-spot distance-to-delivery-spot.soar 10
+10	3	FOPERATOR problem-space problem-space.soar 11
+11	3	FOPERATOR ready-to-deliver ready-to-deliver.soar 12
+12	3	FOPERATOR substate-io substate-io.soar 13
+13	3	FOPERATOR top-state top-state.soar 14
+14	3	FOPERATOR v-collected-count v-collected-count.soar 15
+15	3	FOPERATOR v-distances v-distances.soar 16
+16	0	FOPERATOR deliver deliver.soar 17
+17	0	FOPERATOR get get.soar 18
+18	0	HLFOPERATOR monitors monitors.soar monitors 0 19
+19	18	FOPERATOR selected-move selected-move.soar 20
+20	0	FOPERATOR move move.soar 21
+21	0	FOPERATOR old old.soar 22
+22	0	FOPERATOR output-command output-command.soar 23
+23	0	HLFOPERATOR preferences preferences.soar preferences 0 24
+24	23	FOPERATOR get-versus-move get-versus-move.soar 25
+25	23	FOPERATOR get-versus-output-command get-versus-output-command.soar 26
+26	23	FOPERATOR output-command output-command.soar 38
+27	23	FOPERATOR see-versus-output-command see-versus-output-command.soar 27
+28	23	OPERATOR move-closest move-closest.soar 28
+29	23	OPERATOR see-versus-get see-versus-get.soar 29
+30	23	OPERATOR see-versus-move see-versus-move.soar 30
+31	0	FOPERATOR see see.soar 31
+32	0	FOPERATOR simulate-input simulate-input.soar 32
+33	0	FOPERATOR wander wander.soar 33
+34	0	HLOPERATOR evaluations evaluations.soar evaluations 11 34
+35	34	FOPERATOR evaluate-move-numeric-value evaluate-move-numeric-value.soar 35
+36	34	FOPERATOR evaluate-no-change evaluate-no-change.soar 36
+37	0	OPERATOR read-input read-input.soar 37
 END

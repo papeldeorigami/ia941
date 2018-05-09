@@ -1,12 +1,14 @@
-#sp {propose*output-command*get
-#   (state <s> ^actions <actions>)
-#   (<actions> ^GET)
-#  -(<s> ^operator.name output-command)
-#-->
-#   (<s> ^operator <o> +)
-#   (<o> ^name output-command)
-#   (write (crlf) | Propose output command: GET |)
-#}
+sp {propose*output-command
+   (state <s> ^actions <actions>)
+   (<actions> ^<type> <action>)
+-->
+   (<s> ^operator <o> +)
+   (<o> ^name output-command
+        ^parameters <parameters>)
+   (<parameters> ^type <type>
+                 ^action <action>)
+   (write (crlf) | Propose output command: | <type> ||)
+}
 
 #sp {apply*output-command*remove-move-for-others
 #   (state <s> ^operator.name output-command
@@ -19,32 +21,35 @@
 #   (write (crlf) | Removed the MOVE command to enable | <other-action> ||)
 #}
 
-#sp {apply*output-command*get
-#   (state <s> ^operator.name output-command
-#              ^actions.GET <get>
-#              ^io.output-link <out>)
-#   (<get> ^Name <name>)
-#  -(<out> ^GET)
-#-->
-#   (<s> ^actions GET -)
-#   (<out> ^GET <getOut>)
-#   (<getOut> ^Name <name>)
-#   (write (crlf) | ***** output command GET parameter Name=| <name> ||)
-#   (interrupt)
-#}
+sp {apply*output-command*get
+   (state <s> ^operator <o>
+              ^io.output-link <out>)
+   (<o> ^name output-command
+        ^parameters <p>)
+   (<p> ^type GET
+        ^action <action>)
+-->
+   #(<s> ^actions GET -)
+   (<out> ^GET <getOut>)
+   (<getOut> ^Name <name>)
+   (write (crlf) | ***** output command GET parameter Name=| <name> ||)
+   (interrupt)
+}
 
 sp {apply*output-command*move
-   (state <s> ^operator.name output-command
-              ^actions.MOVE <move>
+   (state <s> ^operator <o>
               ^io.output-link <out>)
-  -(<out> ^MOVE)
+   (<o> ^name output-command
+        ^parameters <p>)
+   (<p> ^type MOVE
+        ^action <action>)
    (<move> ^X <x>
            ^Y <y>
            ^VelL <velL>
            ^VelR <velR>
            ^Vel <vel>)
 -->
-   (<s> ^actions MOVE -)
+   #(<s> ^actions MOVE -)
    (<out> ^MOVE <moveOut>)
    (<moveOut>
           ^X <x>
