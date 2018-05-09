@@ -16,6 +16,8 @@ import java.util.logging.Logger;
 import org.jsoar.kernel.Agent;
 import org.jsoar.kernel.Phase;
 import org.jsoar.kernel.RunType;
+import org.jsoar.kernel.io.InputBuilder;
+import org.jsoar.kernel.io.InputWme;
 import org.jsoar.kernel.memory.Wme;
 import org.jsoar.kernel.memory.Wmes;
 import org.jsoar.kernel.symbols.IntegerSymbol;
@@ -28,7 +30,6 @@ import org.jsoar.runtime.ThreadedAgent;
 import org.jsoar.util.commands.SoarCommands;
 import ws3dproxy.CommandExecException;
 import ws3dproxy.CommandUtility;
-import ws3dproxy.model.Bag;
 import ws3dproxy.model.Creature;
 import ws3dproxy.model.Leaflet;
 import ws3dproxy.model.Thing;
@@ -46,16 +47,10 @@ public class SoarBridge
     // SOAR Variables
     Agent agent = null;
     public Identifier inputLink = null;
+    InputBuilder builder = null;
 
-    // Entity Variables
-    Identifier creature;
-    Identifier creatureSensor;
-    Identifier creatureParameters;
-    Identifier creatureLeaflets;
-    Identifier creatureKnapsack;
-    Identifier creaturePosition;
-    Identifier creatureMemory;
-    
+    InputBuilder creature = null;
+
     Environment env;
     public Creature c;
     public String input_link_string = "";
@@ -76,10 +71,8 @@ public class SoarBridge
             ThreadedAgent tag = ThreadedAgent.create();
             agent = tag.getAgent();
             SoarCommands.source(agent.getInterpreter(), path);
-            inputLink = agent.getInputOutput().getInputLink();
-
-            // Initialize entities
-            creature = null;
+            builder = InputBuilder.create(agent.getInputOutput());
+            inputLink = builder.io.getInputLink();
 
             // Debugger line
             if (startSOARDebugger)
@@ -97,26 +90,26 @@ public class SoarBridge
     private Identifier CreateIdWME(Identifier id, String s) {
         SymbolFactory sf = agent.getSymbols();
         Identifier newID = sf.createIdentifier('I');
-        agent.getInputOutput().addInputWme(id, sf.createString(s), newID);
+        builder.io.addInputWme(id, sf.createString(s), newID);
         return(newID);
     }
     
     private void CreateIntegerWME(Identifier id, String s, int value) {
         SymbolFactory sf = agent.getSymbols();
         IntegerSymbol newID = sf.createInteger(value);
-        agent.getInputOutput().addInputWme(id, sf.createString(s), newID);
+        builder.io.addInputWme(id, sf.createString(s), newID);
     }
     
     private void CreateFloatWME(Identifier id, String s, double value) {
         SymbolFactory sf = agent.getSymbols();
         DoubleSymbol newID = sf.createDouble(value);
-        agent.getInputOutput().addInputWme(id, sf.createString(s), newID);
+        builder.io.addInputWme(id, sf.createString(s), newID);
     }
     
     private void CreateStringWME(Identifier id, String s, String value) {
         SymbolFactory sf = agent.getSymbols();
         StringSymbol newID = sf.createString(value);
-        agent.getInputOutput().addInputWme(id, sf.createString(s), newID);
+        builder.io.addInputWme(id, sf.createString(s), newID);
     }
     
     private String getItemType(int categoryType)
@@ -143,32 +136,49 @@ public class SoarBridge
         return itemType;
     }
     
-    
+    /**
+     * Remove all the input link WMEs 
+     */
+    private void clearInputLink() {
+        InputWme inputCreature;
+        inputCreature = builder.getWme("CREATURE");
+        if (inputCreature != null)
+            inputCreature.remove();
+    }
+
     /**
      * Create the WMEs at the InputLink of SOAR
      */
     private void prepareInputLink() {
+        // Entity Variables
+        InputBuilder creatureSensor;
+        InputBuilder creatureParameters;
+        InputBuilder creatureLeaflets;
+        InputBuilder creatureKnapsack;
+        InputBuilder creaturePosition;
+    
         //SymbolFactory sf = agent.getSymbols();
+        // Always remove the current WMEs before updating the input        
+        clearInputLink();
         Creature c = env.getCreature();
-        inputLink = agent.getInputOutput().getInputLink();
         try {
             if (agent != null) {
                 //SimulationCreature creatureParameter = (SimulationCreature)parameter;
                 // Initialize Creature Entity
-                creature = CreateIdWME(inputLink, "CREATURE");
+                creature = builder.push("CREATURE").markWme("CREATURE");
                 // Initialize Creature Memory
-                creatureMemory = CreateIdWME(creature, "MEMORY");
+                creature.push("MEMORY");
                 // Set Creature Parameters
                 Calendar lCDateTime = Calendar.getInstance();
-                creatureParameters = CreateIdWME(creature, "PARAMETERS");
-                CreateFloatWME(creatureParameters, "MINFUEL", 400);
-                CreateFloatWME(creatureParameters, "TIMESTAMP", lCDateTime.getTimeInMillis());
+                creatureParameters = creature.push("PARAMETERS");
+                creatureParameters.add("MINFUEL", 400);
+                creatureParameters.add("TIMESTAMP", lCDateTime.getTimeInMillis());
                 // Setting creature Position
-                creaturePosition = CreateIdWME(creature, "POSITION");
-                CreateFloatWME(creaturePosition, "X", c.getPosition().getX());
-                CreateFloatWME(creaturePosition, "Y", c.getPosition().getY());
+                creaturePosition = creature.push("POSITION");
+                creaturePosition.add("X", c.getPosition().getX());
+                creaturePosition.add("Y", c.getPosition().getY());
                 // Set Creature LEAFLETS
-                creatureLeaflets = CreateIdWME(creature, "LEAFLETS");
+                creatureLeaflets = creature.push("LEAFLETS");
                 HashMap<String, Integer> collectedColors = new HashMap<String, Integer>();
                 collectedColors.put("Red", 0);
                 collectedColors.put("Green", 0);
@@ -178,10 +188,10 @@ public class SoarBridge
                 collectedColors.put("White", 0);
                 int order = 0;
                 for (Leaflet l : c.getLeaflets()) {
-                    Identifier leaflet = CreateIdWME(creatureLeaflets, "LEAFLET");
-                    CreateIntegerWME(leaflet, "ORDER", order++);
-                    CreateStringWME(leaflet, "ID", l.getID().toString());
-                    CreateIntegerWME(leaflet, "PAYMENT", l.getPayment());
+                    InputBuilder leaflet = creatureLeaflets.push("LEAFLET");
+                    leaflet.add("ORDER", order++);
+                    leaflet.add("ID", l.getID().toString());
+                    leaflet.add("PAYMENT", l.getPayment());
                     HashMap<String, Integer[]> items = l.getItems();
                     HashMap<String, Integer> colors = new HashMap<>();
                     colors.put("Red", 0);
@@ -198,32 +208,32 @@ public class SoarBridge
                         collectedColors.merge(color, collected, Integer::sum);
                     }
                     for (HashMap.Entry<String, Integer> entry : colors.entrySet()) {
-                        CreateIntegerWME(leaflet, entry.getKey(), entry.getValue());
+                        leaflet.add(entry.getKey(), entry.getValue());
                     }
                 }
                 // Set Creature KNAPSACK (Bag)
-                creatureKnapsack = CreateIdWME(creature, "KNAPSACK");
+                creatureKnapsack = creature.push("KNAPSACK");
                 for (HashMap.Entry<String, Integer> entry : collectedColors.entrySet()) {
-                    CreateIntegerWME(creatureKnapsack, entry.getKey(), entry.getValue());
+                    creatureKnapsack.add(entry.getKey(), entry.getValue());
                 }
                 // Set creature sensors
-                creatureSensor = CreateIdWME(creature, "SENSOR");
+                creatureSensor = creature.push("SENSOR");
                 // Create Fuel Sensors
-                Identifier fuel = CreateIdWME(creatureSensor, "FUEL");
-                CreateFloatWME(fuel, "VALUE", c.getFuel());
+                InputBuilder fuel = creatureSensor.push("FUEL");
+                fuel.add("VALUE", c.getFuel());
                 // Create Visual Sensors
-                Identifier visual = CreateIdWME(creatureSensor, "VISUAL");
+                InputBuilder visual = creatureSensor.push("VISUAL");
                 List<Thing> thingsList = (List<Thing>) c.getThingsInVision();
                 for (Thing t : thingsList) {
-                    Identifier entity = CreateIdWME(visual, "ENTITY");
-                    CreateFloatWME(entity, "DISTANCE", GetGeometricDistanceToCreature(t.getX1(), t.getY1(), t.getX2(), t.getY2(), c.getPosition().getX(), c.getPosition().getY()));
-                    CreateFloatWME(entity, "X", t.getX1());
-                    CreateFloatWME(entity, "Y", t.getY1());
-                    CreateFloatWME(entity, "X2", t.getX2());
-                    CreateFloatWME(entity, "Y2", t.getY2());
-                    CreateStringWME(entity, "TYPE", getItemType(t.getCategory()));
-                    CreateStringWME(entity, "NAME", t.getName());
-                    CreateStringWME(entity, "COLOR", Constants.getColorName(t.getMaterial().getColor()));
+                    InputBuilder entity = visual.push("ENTITY");
+                    entity.add("DISTANCE", GetGeometricDistanceToCreature(t.getX1(), t.getY1(), t.getX2(), t.getY2(), c.getPosition().getX(), c.getPosition().getY()));
+                    entity.add("X", t.getX1());
+                    entity.add("Y", t.getY1());
+                    entity.add("X2", t.getX2());
+                    entity.add("Y2", t.getY2());
+                    entity.add("TYPE", getItemType(t.getCategory()));
+                    entity.add("NAME", t.getName());
+                    entity.add("COLOR", Constants.getColorName(t.getMaterial().getColor()));
                 }
             }
         } catch (Exception e) {
@@ -397,11 +407,11 @@ public class SoarBridge
         c.updateState();
         prepareInputLink();
         input_link_string = stringInputLink();
-        printInputWMEs();
+        //printInputWMEs();
         runSOAR();
         //stepSOAR();
         output_link_string = stringOutputLink();
-        printOutputWMEs();
+        //printOutputWMEs();
         List<Command> commandList = processOutputLink();
         processCommands(commandList);
         //resetSimulation();
@@ -567,7 +577,7 @@ public class SoarBridge
     }
     
     public void printInputWMEs(){
-        Identifier il = agent.getInputOutput().getInputLink();
+        Identifier il = inputLink;
         System.out.println("Input --->");
         printWME(il);
     }
@@ -603,7 +613,7 @@ public class SoarBridge
     }
     
     public String stringInputLink() {
-        Identifier il = agent.getInputOutput().getInputLink();
+        Identifier il = inputLink;
         String out = stringWME(il);
         return(out);
     }
