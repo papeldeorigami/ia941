@@ -1,8 +1,8 @@
-sp {propose*initialize-solution
+sp {propose*read-input
    (state <s>
-             ^superstate nil
-            -^name
-            -^knapsack
+#             ^superstate nil
+#            -^name
+#            -^knapsack
              ^io.input-link.CREATURE <creature>)
    (<creature> ^POSITION <position>)
    (<creature> ^KNAPSACK <knapsack>)
@@ -15,7 +15,7 @@ sp {propose*initialize-solution
    (<l3> ^ORDER { <ord3> < <ord2> })
 -->
    (<s> ^operator <o> + =)
-   (<o> ^name initialize-solution
+   (<o> ^name read-input
         ^leaflet1 <l1>
         ^leaflet2 <l2>
         ^leaflet3 <l3>
@@ -23,9 +23,10 @@ sp {propose*initialize-solution
         ^position <position>)
 }
 
-sp {apply*initialize-solution
-   (state <s> ^operator <op>)
-   (<op> ^name initialize-solution
+sp {apply*read-input*first-time
+   (state <s> ^operator <op>
+             -^desired)
+   (<op> ^name read-input
         ^leaflet1 <l1>
         ^leaflet2 <l2>
         ^leaflet3 <l3>
@@ -55,10 +56,87 @@ sp {apply*initialize-solution
                ^Yellow <kyellow>
                ^Magenta <kmagenta>
                ^White <kwhite>)
-   (<p> ^X <positionX>
-        ^Y <positionY>)
+   (<p> ^X <px>
+        ^Y <py>)
 -->
    (<s> ^name solution
+
+        # these attributes are available both for deliberation and reactive actions
+        ^visual <visual>                   # the current visual sensor of the creature
+        ^position <position>               # the actual position of the creature
+        ^delivery-spot <delivery-spot>     # always (0,0)
+        ^knapsack <knapsack>               # read from input
+        ^desired <desired>                 # deired count for each color
+        ^actions <actions>                 # holds the actions to be output
+        ^delivered false                   # to control whether leaflets have been exchanged in the deliverySpot
+        ^memory <memory>
+        
+        # these "virtual" attributes exist only for deliberation, i.e. they are copied during the selection problem solving
+        ^v-distances <distances>             # distances to each entity from the current virtual position of the creature
+        ^v-knapsack <v-knapsack>             # representation of the knapsack
+        ^v-collected-names <collected-names> # a list of all entities names already collected in the planning phase, to ignore from visual input
+        ^v-traveled-distance 0               # this is the numeric-value for the selection problem
+        ^v-position <v-position>)            # represents the position of the creature during the planning phase
+   (<delivery-spot> ^X 0
+                    ^Y 0
+                    ^NAME deliverySpot
+                    ^TYPE deliverySpot
+                    ^COLOR none)
+   (<v-position> ^X <px>
+               ^Y <py>)
+   (<knapsack> ^Red <kred>
+               ^Green <kgreen>
+               ^Blue <kblue>
+               ^Yellow <kyellow>
+               ^Magenta <kmagenta>
+               ^White <kwhite>)
+   (<v-knapsack> ^Red <kred>
+                 ^Green <kgreen>
+                 ^Blue <kblue>
+                 ^Yellow <kyellow>
+                 ^Magenta <kmagenta>
+                 ^White <kwhite>)
+   (<desired>
+               ^better lower # success will be the lowest possible value for the numeric-value (traveledDistance)
+               ^Red (+ <Red1> <Red2> <Red3>)
+               ^Green (+ <Green1> <Green2> <Green3>)
+               ^Blue (+ <Blue1> <Blue2> <Blue3>)
+               ^Yellow (+ <Yellow1> <Yellow2> <Yellow3>)
+               ^Magenta (+ <Magenta1> <Magenta2> <Magenta3>)
+               ^White (+ <White1> <White2> <White3>))
+   (write (crlf) | Initial State. Leaflets require: |)
+   (write (crlf) | Red=(| <Red1> |, | <Red2> |, | <Red3> |)|)
+   (write (crlf) | Green=(| <Green1> |, | <Green2> |, | <Green3> |)|)
+   (write (crlf) | Blue=(| <Blue1> |, | <Blue2> |, | <Blue3> |)|)
+   (write (crlf) | Yellow=(| <Yellow1> |, | <Yellow2> |, | <Yellow3> |)|)
+   (write (crlf) | Magenta=(| <Magenta1> |, | <Magenta2> |, | <Magenta3> |)|)
+   (write (crlf) | White=(| <White1> |, | <White2> |, | <White3> |)|)
+   (write (crlf) | Knapsack contains: |)
+   (write (crlf) | Red=| <kred> ||)
+   (write (crlf) | Green=| <kgreen> ||)
+   (write (crlf) | Blue=| <kblue> ||)
+   (write (crlf) | Yellow=| <kyellow> ||)
+   (write (crlf) | Magenta=| <kmagenta> ||)
+   (write (crlf) | White=| <kwhite> ||)
+}
+
+sp {apply*read-input*update*position
+   (state <s> ^operator.name read-input
+              ^io.input-link <input>
+              ^visual <oldVisual>
+              ^position <oldPosition>)
+   (<input> ^CREATURE <creature>)
+   (<creature> ^position <p>)
+   (<p> ^X <px>
+        ^Y <py>)
+   (<p> ^X <px>
+        ^Y <py>)
+-->
+   (<position> ^X <px> -
+               ^X <px>
+        
+        # a representation of the current visual sensor of the creature
+        ^visual <visual>
         
         # these attributes are available both for deliberation and reactive actions
         ^delivery-spot <delivery-spot>     # always (0,0)

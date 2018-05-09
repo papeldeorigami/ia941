@@ -392,16 +392,16 @@ public class SoarBridge
      */
     public void step() throws CommandExecException
     {
-        //if (phase != -1) finish_msteps();
+        if (phase != -1) finish_msteps();
         //resetSimulation();
         c.updateState();
         prepareInputLink();
         input_link_string = stringInputLink();
-        //printInputWMEs();
+        printInputWMEs();
         runSOAR();
         //stepSOAR();
         output_link_string = stringOutputLink();
-        //printOutputWMEs();
+        printOutputWMEs();
         List<Command> commandList = processOutputLink();
         processCommands(commandList);
         //resetSimulation();

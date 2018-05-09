@@ -26,8 +26,8 @@ sp {solution*apply*see*new
              ^DISTANCE <distance>)
   -(<memory> ^ENTITY.NAME <name>)
 -->
-   (<memory> ^ENTITY <entity>)
-   (<entity> ^X <x>
+   (<memory> ^ENTITY <newEntity>)
+   (<newEntity> ^X <x>
              ^Y <y>
              ^NAME <name>
              ^TYPE <type>

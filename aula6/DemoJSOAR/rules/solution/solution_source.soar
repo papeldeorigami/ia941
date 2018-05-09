@@ -25,4 +25,4 @@ source evaluations.soar
 pushd evaluations
 source evaluations_source.soar
 popd
-source initialize-solution.soar
+source read-input.soar

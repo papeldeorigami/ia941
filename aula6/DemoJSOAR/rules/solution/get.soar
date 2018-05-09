@@ -4,8 +4,7 @@ sp {propose*get
               ^knapsack <knapsack>
               ^memory <memory>
               ^io.input-link.CREATURE <creature>)
-   (<creature> ^SENSOR.VISUAL.ENTITY <entity>
-               ^POSITION <position>)
+   (<creature> ^SENSOR.VISUAL.ENTITY <entity>)
    # find a jewel
    (<entity> ^NAME <entityName>
              ^TYPE JEWEL
@@ -14,16 +13,22 @@ sp {propose*get
              ^DISTANCE { <DISTANCE> < 30 })
    # get only if already seen
    (<memory> ^ENTITY <memoryEntity>)
-   (<memoryEntity> ^NAME <entityName>)
+   (<memoryEntity> ^NAME <entityName>
+                  -^collected) # check if not collected before
    # filter colors only that are missing in some leaflet
    (<desired> ^<color> <desiredQuantity>)
    (<knapsack> ^<color> { <quantity> < <desiredQuantity> })
+   # if not getting something already
+  -(<out> ^GET)
 -->
    (<s> ^operator <o> + =)
    (<o> ^name get
-        ^parameter <p>)
-   (<p> ^NAME <entityName>)
+        ^parameter.NAME <entityName>)
    (write (crlf) | propose get: name = | <entityName> | distance = | <DISTANCE> ||)
+#   (write (crlf) | desired=| <desired> | knapsack=| <knapsack> | memory=| <memory> ||)
+#   (write (crlf) | creature=| <creature> | entity=| <entity> | desiredQuantity=| <desiredQuantity> ||)
+#   (write (crlf) | color=| <color> | memoryEntity=| <memoryEntity> | entityName=| <entityName> ||)
+#   (write (crlf) | quantity=| <quantity> ||)
 }
 
 sp {solution*apply*get
@@ -31,7 +36,7 @@ sp {solution*apply*get
               ^knapsack <knapsack>
               ^memory <memory>
               ^desired <desired>
-              ^actions <actions>
+              ^io.output-link <out>
               ^io.input-link.CREATURE <creature>)
    # read the jewel name from parameters
    (<o> ^name get
@@ -45,7 +50,8 @@ sp {solution*apply*get
    (<memory> ^ENTITY <memoryEntity>)
    (<memoryEntity>
              ^NAME <entityName>
-             ^COLOR <color>)
+             ^COLOR <color>
+            -^collected)
    # lookup the color status in the knapsack and in the desired state
    (<knapsack> ^<color> <quantity>
                ^Red <kred>
@@ -61,17 +67,20 @@ sp {solution*apply*get
               ^Yellow <dyellow>
               ^Magenta <dmagenta>
               ^White <dwhite>)
+   # if not getting something already
+  -(<out> ^GET)
 -->
    # remove element from the input (temporary)
    (<visual> ^ENTITY <visualEntity> -)
-   # remove element from memory
-   (<memory> ^ENTITY <memoryEntity> -)
+   # mark element as collected in memory
+   (<memoryEntity> ^collected true)
    # increment the number of jewels of the entity's color in the knapsack
    (<knapsack> ^<color> <quantity> -
                ^<color> (+ <quantity> 1))
    # prepare the output action
-   (<actions> ^GET <command>)
-   (<command> ^Name <entityName>)
+   #(<actions> ^GET <command>)
+   #(<command> ^Name <entityName>)
+   (<out> ^GET.Name <entityName>)
    (write (crlf) | get: name = | <entityName> | Knapsack was: |)
    (write (crlf) | Red=| <kred> |/| <dred> ||)
    (write (crlf) | Green=| <kgreen> |/| <dgreen> ||)

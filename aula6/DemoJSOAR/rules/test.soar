@@ -1,0 +1,36 @@
+sp {monitor*test
+   (state <s> ^io.input-link <input>)
+   (<input> ^CREATURE <creature>)
+   (<creature> ^POSITION <position>)
+   (<position> ^X <px>
+               ^Y <py>)
+-->
+   (write (crlf) | px=| <px> ||)
+}
+
+sp {propose*test
+   (state <s> ^io.input-link <input>)
+-->
+   (<s> ^operator <o> +)
+   (<o> ^name test)
+}
+
+sp {apply*test
+   (state <s> ^operator.name test
+              ^io.input-link <input>
+              ^io.output-link <output>)
+   (<input> ^CREATURE.SENSOR.VISUAL.ENTITY <entity>)
+   (<entity> ^NAME <entityName>
+             ^X <x>
+             ^Y <y>)
+-->
+   (write (crlf) | Apply test | <entityName> ||)
+   (<output> ^GET.Name <entityName>)
+   (<output> ^MOVE <command>)
+   (<command> ^Vel 1)
+   (<command> ^VelR 1)
+   (<command> ^VelL 1)
+   (<command> ^X <x>)
+   (<command> ^Y <y>)
+   (interrupt)
+}
