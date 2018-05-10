@@ -1,9 +1,10 @@
 sp {monitor*selected*move
    (state <s> 
-        ^operator <o>
-        ^actions <actions>
-        ^v-traveled-distance <traveledDistance>
-        ^io.input-link.CREATURE <creature>)
+             ^superstate nil
+             ^operator <o>
+             ^actions <actions>
+             ^v-traveled-distance <traveledDistance>
+             ^io.input-link.CREATURE <creature>)
    (<o> ^name move
         ^parameter <p>)
    (<p> ^ENTITY <entity>

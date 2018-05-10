@@ -1,6 +1,8 @@
 sp {monitor*v-knapsack
-   (state <s> ^v-knapsack <k>
-              ^desired <d>)
+   (state <s> 
+             ^superstate nil
+             ^v-knapsack <k>
+             ^desired <d>)
    (<k> ^Red <kred>
         ^Green <kgreen>
         ^Blue <kblue>

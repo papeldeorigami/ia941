@@ -1,9 +1,0 @@
-# output-command > reset-plan
-sp {output-command*reset-plan*preferences
-   (state <s> ^operator <o> +
-          <o2> +)
-   (<o> ^name output-command)
-   (<o2> ^name reset-plan)
--->
-   (<s> ^operator <o> > <o2>)
-}

@@ -364,8 +364,12 @@ public class SoarBridge
                             if (commandGet != null)
                             {
                                 thingNameToGet = GetParameterValue("Name");
-                                if (thingNameToGet != null) commandGet.setThingName(thingNameToGet);
-                                commandList.add(command);
+                                if (thingNameToGet != null) {
+                                    commandGet.setThingName(thingNameToGet);
+                                    commandList.add(command);
+                                } else {
+                                    logger.severe("Could not read the thing name for command " + commandType);
+                                }
                             }
                             break;
 
@@ -376,8 +380,28 @@ public class SoarBridge
                             if (commandEat != null)
                             {
                                 thingNameToEat = GetParameterValue("Name");
-                                if (thingNameToEat != null) commandEat.setThingName(thingNameToEat);
-                                commandList.add(command);
+                                if (thingNameToEat != null) {
+                                    commandEat.setThingName(thingNameToEat);
+                                    commandList.add(command);
+                                } else {
+                                    logger.severe("Could not read the thing name for command " + commandType);
+                                }
+                            }
+                            break;
+
+                        case HIDE:
+                            String thingName = null;
+                            command = new Command(Command.CommandType.HIDE);
+                            CommandHide commandHide = (CommandHide)command.getCommandArgument();
+                            if (commandHide != null)
+                            {
+                                thingName = GetParameterValue("Name");
+                                if (thingName != null) {
+                                    commandHide.setThingName(thingName);
+                                    commandList.add(command);
+                                } else {
+                                    logger.severe("Could not read the thing name for command " + commandType);
+                                }
                             }
                             break;
 
@@ -469,6 +493,10 @@ public class SoarBridge
                         processEatCommand((CommandEat)command.getCommandArgument());
                     break;
 
+                    case HIDE:
+                        processHideCommand((CommandHide)command.getCommandArgument());
+                    break;
+
                     default:System.out.println("Nenhum comando definido ...");
                         // Do nothing
                     break;
@@ -526,6 +554,22 @@ public class SoarBridge
         if (soarCommandEat != null)
         {
             c.eatIt(soarCommandEat.getThingName());
+        }
+        else
+        {
+            logger.severe("Error processing processMoveCommand");
+        }
+    }
+    
+     /**
+     * Send Hide Command to World Server
+     * @param soarCommandHide Soar Hide Command Structure
+     */
+    private void processHideCommand(CommandHide soarCommandHide) throws CommandExecException
+    {
+        if (soarCommandHide != null)
+        {
+            c.eatIt(soarCommandHide.getThingName());
         }
         else
         {

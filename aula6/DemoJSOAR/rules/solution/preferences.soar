@@ -1,0 +1,36 @@
+sp {see*move*preferences
+   (state <s> ^operator <o> +
+          <o2> +)
+   (<o> ^name see)
+   (<o2> ^name move)
+-->
+   (<s> ^operator <o> > <o2>)
+}
+
+sp {hide*move*preferences
+   (state <s> ^operator <o> +
+          <o2> +)
+   (<o> ^name hide)
+   (<o2> ^name move)
+-->
+   (<s> ^operator <o> > <o2>)
+}
+
+sp {get*move*preferences
+   (state <s> ^operator <o> +
+          <o2> +)
+   (<o> ^name get)
+   (<o2> ^name move)
+-->
+   (<s> ^operator <o> > <o2>)
+}
+
+
+sp {output-command*update-timestamp*preferences
+   (state <s> ^operator <o> +
+          <o2> +)
+   (<o> ^name output-command)
+   (<o2> ^name update-timestamp)
+-->
+   (<s> ^operator <o> > <o2>)
+}

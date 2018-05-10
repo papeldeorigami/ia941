@@ -1,4 +1,5 @@
 source _all.soar
+source all-leaflets-complete.soar
 source collected-count.soar
 source desired-count.soar
 source desired-jewels.soar
@@ -11,4 +12,3 @@ source substate-io.soar
 source top-state.soar
 source v-all-leaflets-complete.soar
 source v-collected-count.soar
-source v-distances.soar

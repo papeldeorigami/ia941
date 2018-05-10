@@ -1,9 +1,0 @@
-# see > output-command
-sp {see*output-command*preferences
-   (state <s> ^operator <o> +
-          <o2> +)
-   (<o> ^name see)
-   (<o2> ^name output-command)
--->
-   (<s> ^operator <o> > <o2>)}
-

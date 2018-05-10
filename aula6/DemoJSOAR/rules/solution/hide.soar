@@ -1,4 +1,4 @@
-sp {propose*get
+sp {propose*hide*exceeding*jewels
    (state <s> ^name solution
               ^desired <desired>
               ^memory <memory>
@@ -16,19 +16,19 @@ sp {propose*get
    (<memory> ^ENTITY <memoryEntity>)
    (<memoryEntity> ^NAME <entityName>
                   -^collected) # check if not collected before
-   # filter colors only that are missing in some leaflet
+   # hide anything that we don't need
    (<desired> ^<color> <desiredQuantity>)
-   (<knapsack> ^<color> { <quantity> < <desiredQuantity> })
-   # if not getting something already
-  -(<actions> ^GET)
+   (<knapsack> ^<color> { <quantity> >= <desiredQuantity> })
+   # if not hiding something already
+  -(<actions> ^HIDE)
 -->
    (<s> ^operator <o> + =)
-   (<o> ^name get
+   (<o> ^name hide
         ^parameter.NAME <entityName>)
-   (write (crlf) | propose get: name = | <entityName> | distance = | <DISTANCE> ||)
+   (write (crlf) | propose hide: name = | <entityName> | distance = | <DISTANCE> ||)
 }
 
-sp {solution*apply*get
+sp {solution*apply*hide
    (state <s> ^operator <o>
               ^memory <memory>
               ^desired <desired>
@@ -37,7 +37,7 @@ sp {solution*apply*get
               ^v-collected-names <v-collected-names>
               ^io.input-link.CREATURE <creature>)
    # read the jewel name from parameters
-   (<o> ^name get
+   (<o> ^name hide
         ^parameter <p>)
    (<p> ^NAME <entityName>)
    # lookup the entity in the visual sensor
@@ -51,35 +51,14 @@ sp {solution*apply*get
              ^NAME <entityName>
              ^COLOR <color>
             -^collected)
-   # lookup the color status in the knapsack and in the desired state
-   (<knapsack> ^<color> <quantity>
-               ^Red <kred>
-               ^Green <kgreen>
-               ^Blue <kblue>
-               ^Yellow <kyellow>
-               ^Magenta <kmagenta>
-               ^White <kwhite>)
-   (<desired> ^<color> <dquantity>
-              ^Red <dred>
-              ^Green <dgreen>
-              ^Blue <dblue>
-              ^Yellow <dyellow>
-              ^Magenta <dmagenta>
-              ^White <dwhite>)
 -->
    # remove element from the input (temporary)
    (<visual> ^ENTITY <visualEntity> -)
    # mark element as collected in memory
    (<memoryEntity> ^collected true)
-   # increment the number of jewels of the entity's color in the knapsack
-   (<knapsack> ^<color> <quantity> -
-               ^<color> (+ <quantity> 1))
-   # rewrite the v-knapsack to ensure consistance
-   (<v-knapsack> ^<color> <quantity> -
-                 ^<color> (+ <quantity> 1))
    # mark the item also as collected in the virtual memory
    (<v-collected-names> ^NAME <entityName>)
    # prepare the output action
-   (<actions> ^GET.Name <entityName>)
-   (write (crlf) | Get: name=| <entityName> | color=| <color> ||)
+   (<actions> ^HIDE.Name <entityName>)
+   (write (crlf) | Hide: name=| <entityName> | color=| <color> ||)
 }

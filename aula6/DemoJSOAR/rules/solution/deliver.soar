@@ -1,18 +1,25 @@
 sp {propose*no-change*deliver
    (state <s> ^top-state <ts>
-              ^impasse no-change
-              ^all-leaflets-complete true)
+              ^impasse no-change)
+   (<ts> ^actions <actions>
+         ^all-leaflets-complete true
+        -^sent-command)
+  -(<actions> ^<any>)
 -->
    (<ts> ^operator <o> +)
    (<o> ^name deliver)
-   (write (crlf) | Propose deliver |)
+   (write (crlf) | >>>>> Propose deliver |)
 }
 
-sp {solution*apply*deliver
-   (state <s> ^operator.name deliver)
+sp {apply*deliver
+   (state <s> ^operator.name deliver
+              ^actions <actions>)
 -->
-   # TODO implement the Java command to deliver leaflet
-   (<s> ^delivered false -        
-        ^delivered true)
-   (write (crlf) | Delivered! |)
+   (<actions> ^MOVE <command>)
+   (<command> ^Vel 1)
+   (<command> ^VelR 1)
+   (<command> ^VelL 1)
+   (<command> ^X 0)
+   (<command> ^Y 0)
+   (write (crlf) | >>>>>> Apply deliver: move to 0,0 |)
 }

@@ -69,6 +69,34 @@ public class Environment
             CommandUtility.sendNewJewel(2,530.0,170.0);
             CommandUtility.sendNewJewel(2,530.0,240.0);
             CommandUtility.sendNewJewel(2,530.0,400.0);
+
+            CommandUtility.sendNewJewel(3,260.0,100.0);
+            CommandUtility.sendNewJewel(3,260.0,220.0);
+            CommandUtility.sendNewJewel(3,260.0,440.0);
+            CommandUtility.sendNewJewel(3,500.0,100.0);
+            CommandUtility.sendNewJewel(3,500.0,220.0);
+            CommandUtility.sendNewJewel(3,480.0,440.0);
+            CommandUtility.sendNewJewel(3,700.0,100.0);
+            CommandUtility.sendNewJewel(3,700.0,220.0);
+            CommandUtility.sendNewJewel(3,700.0,440.0);
+            CommandUtility.sendNewJewel(4,200.0,140.0);
+            CommandUtility.sendNewJewel(4,200.0,340.0);
+            CommandUtility.sendNewJewel(4,200.0,500.0);
+            CommandUtility.sendNewJewel(4,400.0,220.0);
+            CommandUtility.sendNewJewel(4,400.0,340.0);
+            CommandUtility.sendNewJewel(4,400.0,500.0);
+            CommandUtility.sendNewJewel(4,660.0,140.0);
+            CommandUtility.sendNewJewel(4,660.0,340.0);
+            CommandUtility.sendNewJewel(4,660.0,500.0);
+            CommandUtility.sendNewJewel(5,310.0,170.0);
+            CommandUtility.sendNewJewel(5,310.0,240.0);
+            CommandUtility.sendNewJewel(5,310.0,400.0);
+            CommandUtility.sendNewJewel(5,500.0,170.0);
+            CommandUtility.sendNewJewel(5,500.0,240.0);
+            CommandUtility.sendNewJewel(5,500.0,400.0);
+            CommandUtility.sendNewJewel(5,590.0,170.0);
+            CommandUtility.sendNewJewel(5,590.0,240.0);
+            CommandUtility.sendNewJewel(5,590.0,400.0);
         } else {
             w.grow(1);            
         }

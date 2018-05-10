@@ -1,9 +1,0 @@
-# see > get
-sp {see*get*preferences
-   (state <s> ^operator <o> +
-          <o2> +)
-   (<o> ^name see)
-   (<o2> ^name get)
--->
-   (<s> ^operator <o> > <o2>)}
-

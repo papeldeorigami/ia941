@@ -1,3 +1,4 @@
 source selected-move.soar
+source v-distances.soar
 source v-knapsack.soar
 source v-traveled-distance.soar

@@ -1,4 +1,4 @@
-sp {solution*propose*move*jewel
+sp {propose*move*jewel
    (state <s> ^name solution
               ^memory.ENTITY <entity>
               ^desired <desired>
@@ -10,7 +10,8 @@ sp {solution*propose*move*jewel
              ^NAME <entityName>
              ^TYPE JEWEL
              ^COLOR <color>)
-   (<distances> ^<entityName> { <DISTANCE> > 60 }) # move only if distance is high
+   # move only if distance is high
+   (<distances> ^<entityName> { <DISTANCE> > 30 })
    # filter colors only that are missing in some leaflet
    (<desired> ^<color> <desiredQuantity>)
    (<knapsack> ^<color> { <quantity> < <desiredQuantity> })
@@ -26,10 +27,10 @@ sp {solution*propose*move*jewel
         ^Y <entityPositionY>
         ^COLOR <color>
         ^DISTANCE <DISTANCE>)
-   (write (crlf) | propose move (to jewel): name = | <entityName> | distance = | <DISTANCE> ||)
+   (write (crlf) | propose move (to jewel): name=| <entityName> | color=| <color> | distance=| <DISTANCE> ||)
 }  
 
-sp {solution*apply*move
+sp {apply*move
    (state <s> 
         ^operator <o>
         ^desired <desired>
@@ -51,7 +52,7 @@ sp {solution*apply*move
    (<knapsack> ^<color> <quantity>)
    (<desired> ^<color> <dquantity>)
 -->
-   (<collectedNames> ^NAME <entityName>)
+   (<collectedNames> ^<entityName> true)
    (<position> ^X <oldX> -
                ^Y <oldY> -
                ^X <x>
@@ -59,11 +60,33 @@ sp {solution*apply*move
    (<knapsack> ^<color> <quantity> - (+ <quantity> 1))
    (<s> ^v-traveled-distance <traveledDistance> -
         ^v-traveled-distance (+ <traveledDistance> <DISTANCE>))
-   (write (crlf) | Test move: name = | <entityName> | color=| <color> ||)
+   (write (crlf) | Test move: name=| <entityName> | color=| <color> | distance=| <DISTANCE> ||)
    (write (crlf) | Virtual get | <color> | | (+ <quantity> 1) |/| <dquantity> ||)
 }
 
-sp {solution*apply*actual*move*only*once
+sp {apply*move*update*v-distance
+   (state <s>
+        ^operator <o>
+        ^memory.ENTITY <entity>
+        ^v-distances <v-distances>
+        ^v-position <v-position>)
+   (<o> ^name move
+        ^parameter <p>)
+   (<p> ^NAME <entityName>
+        ^X <x>
+        ^Y <y>)
+   (<v-position> ^X <px>
+                 ^Y <py>)
+   (<entity> ^NAME { <otherName> <> <entityName> })
+   (<v-distances> ^<otherName> <oldDistance>)
+-->
+   (<v-distances> ^<otherName> <oldDistance> -
+                  ^<otherName> (sqrt (+ (* (- <px> <x>) (- <px> <x>)) (* (- <py> <y>) (- <py> <y>)))))
+   (write (crlf) | apply*move*update*v-distance for | <otherName> ||)
+#   (write (crlf) (cmd print --depth 2 <v-distances>))
+}
+
+sp {apply*actual*move*only*once
    (state <s> 
         ^operator <o>
         ^actions <actions>)
@@ -82,13 +105,14 @@ sp {solution*apply*actual*move*only*once
    (<command> ^X <x>)
    (<command> ^Y <y>)
    (write (crlf))
-   (write (crlf) | ***** prepare output move to entity = | <entityName> | x = | <x> | y = | <y> ||)
+   (write (crlf) | ***** prepare action move to entity=| <entityName> | x=| <x> | y=| <y> ||)
    (write (crlf))
    #(write (crlf) | apply move: name = | <entityName> | distance = | <DISTANCE> ||)
 }
 
 sp {solution*apply*move*set-planning
    (state <s> ^operator.name move
+              ^actions
              -^planning)
 -->
    (<s> ^planning true)

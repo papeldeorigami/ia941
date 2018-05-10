@@ -1,0 +1,8 @@
+sp {monitor*v-distances
+   (state <s> 
+             ^superstate nil
+             ^v-distances <v-distances>)
+-->
+   (write (crlf) | v-distances: |)
+   (write (crlf) (cmd print --depth 2 <v-distances>))
+}

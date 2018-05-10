@@ -42,7 +42,7 @@ public class Main
             //SoarBridge soarBridge = new SoarBridge(e,soarRulesPath,false);
             MindView mv = new MindView(soarBridge);
             mv.setVisible(true);
-            mv.startDebugState();
+            //mv.startDebugState();
 
             // Run Simulation until some criteria was reached
             Thread.sleep(3000);

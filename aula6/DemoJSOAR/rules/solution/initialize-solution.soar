@@ -1,7 +1,7 @@
 sp {propose*initialize-solution
    (state <s> ^superstate nil
-              ^io.input-link.CREATURE <creature>
-             -^v-position)
+              ^io.input-link.CREATURE <creature>              
+             -^name solution)
 -->
    (<s> ^operator <o> + =)
    (<o> ^name initialize-solution)

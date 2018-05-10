@@ -7,7 +7,7 @@ sp {solution*propose*see
              ^NAME <name>)
   -(<memory> ^ENTITY.NAME <name>)
 -->
-   (<s> ^operator <op> + =)
+   (<s> ^operator <op> +)
    (<op> ^name see)
    (write (crlf) | propose see: name = | <name> ||)
 }
@@ -15,6 +15,7 @@ sp {solution*propose*see
 sp {solution*apply*see*new
    (state <s> ^operator <op>
               ^memory <memory>
+              ^v-distances <v-distances>
               ^io.input-link.CREATURE <creature>)
    (<op> ^name see)
    (<creature> ^SENSOR.VISUAL.ENTITY <entity>)
@@ -33,12 +34,15 @@ sp {solution*apply*see*new
                 ^TYPE <type>
                 ^COLOR <color>
                 ^DISTANCE <distance>)
+   # save the distance for move planning
+   (<v-distances> ^<name> <distance>)
    (write (crlf) | apply see*new: name = | <name> | x = | <x> | y = | <y> | color = | <color> | distance = | <distance> ||)
 }
 
 # update the entity distances in memory with information from the input link
 sp {solution*apply*see*update-distance
    (state <s> ^operator <op>
+              ^v-distances <v-distances>
               ^memory <memory>)
    (<op> ^name see
          ^parameter <newEntity>)
@@ -47,8 +51,11 @@ sp {solution*apply*see*update-distance
    (<memory> ^ENTITY <memoryEntity>)
    (<memoryEntity> ^NAME <name>)
    (<memoryEntity> ^DISTANCE { <oldDistance> <> <distance> })
+   (<v-distances> ^<name> <oldVDistance>)
 -->
    (<memoryEntity> ^DISTANCE <oldDistance> -
                    ^DISTANCE <distance>)
+   (<v-distances> ^<name> <oldVDistance> -
+                  ^<name> <distance>)
    (write (crlf) | apply see*update-distance: name = | <name> | distance = | <distance> ||)
 }

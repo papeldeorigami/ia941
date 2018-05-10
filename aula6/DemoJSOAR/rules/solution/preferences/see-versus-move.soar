@@ -1,9 +1,0 @@
-# see > move
-sp {see*move*preferences
-   (state <s> ^operator <o> +
-          <o2> +)
-   (<o> ^name see)
-   (<o2> ^name move)
--->
-   (<s> ^operator <o> > <o2>)}
-
