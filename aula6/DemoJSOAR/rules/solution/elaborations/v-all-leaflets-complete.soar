@@ -18,5 +18,5 @@ sp {monitor*v-all-leaflets-complete
    (write (crlf) | *** ALL JEWELS FOUND, PLAN IS READY *** |)
    (write (crlf) | *************************************** |)
    (<s> ^v-all-leaflets-complete true)
-#   (interrupt)
+   # (interrupt)
 }

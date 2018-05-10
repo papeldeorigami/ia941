@@ -8,7 +8,6 @@ source elapsed.soar
 source numeric-value.soar
 source problem-space.soar
 source ready-to-deliver.soar
-source substate-io.soar
 source top-state.soar
 source v-all-leaflets-complete.soar
 source v-collected-count.soar

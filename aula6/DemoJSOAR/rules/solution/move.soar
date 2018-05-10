@@ -90,7 +90,7 @@ sp {apply*actual*move*only*once
    (state <s> 
         ^operator <o>
         ^actions <actions>)
-  -(<actions> ^<attr> <any>)  # hold the first action only
+  -(<actions> ^MOVE)  # hold the first action only
    (<o> ^name move
         ^parameter <p>)
    (<p> ^ENTITY <entity>

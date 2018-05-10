@@ -25,6 +25,15 @@ sp {get*move*preferences
    (<s> ^operator <o> > <o2>)
 }
 
+sp {output-command*move*preferences
+   (state <s> ^operator <o> +
+          <o2> +)
+   (<o> ^name output-command)
+   (<o2> ^name move)
+-->
+   (<s> ^operator <o> > <o2>)
+}
+
 sp {remove-output*move*preferences
    (state <s> ^operator <o> +
           <o2> +)
@@ -62,11 +71,3 @@ sp {output-command*update-timestamp*preferences
    (<s> ^operator <o> > <o2>)
 }
 
-sp {output-command*move*preferences
-   (state <s> ^operator <o> +
-          <o2> +)
-   (<o> ^name output-command)
-   (<o2> ^name move)
--->
-   (<s> ^operator <o> > <o2>)
-}

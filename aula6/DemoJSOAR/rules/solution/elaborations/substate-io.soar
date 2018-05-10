@@ -1,4 +1,0 @@
-sp {elaborate*substate*io
-   (state <s> ^superstate.io <io>)
--->
-   (<s> ^io <io>)}
