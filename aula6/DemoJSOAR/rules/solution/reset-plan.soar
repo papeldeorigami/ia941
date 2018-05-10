@@ -1,0 +1,45 @@
+sp {propose*reset-plan
+   (state <s>  ^planning true
+               ^sent-command true)
+-->
+   (<s> ^operator <o> + =)
+   (<o> ^name reset-plan)
+}
+
+sp {apply*reset-plan
+   (state <s> ^operator.name reset-plan
+              ^io.input-link.CREATURE <creature>
+              ^v-position <v-position>
+              ^v-knapsack <v-knapsack>
+              ^v-collected-names <v-collected-names>
+              ^v-traveled-distance <v-traveled-distance>)
+   (<creature> ^KNAPSACK <knapsack>
+               ^POSITION <position>)
+   (<position> ^X <px>
+               ^Y <py>)
+   (<knapsack> ^Red <kred>
+               ^Green <kgreen>
+               ^Blue <kblue>
+               ^Yellow <kyellow>
+               ^Magenta <kmagenta>
+               ^White <kwhite>)
+-->
+   (<s> ^planning true -
+        ^v-position <v-position> -
+        ^v-position <new-v-position>
+        ^v-knapsack <v-knapsack> -
+        ^v-knapsack <new-v-knapsack>
+        ^v-collected-names <v-collected-names> -
+        ^v-collected-names <new-v-collected-names>
+        ^v-traveled-distance <v-traveled-distance> -
+        ^v-traveled-distance 0)
+   (<new-v-position> ^X <px>
+                     ^Y <py>)
+   (<new-v-knapsack> ^Red <kred>
+                     ^Green <kgreen>
+                     ^Blue <kblue>
+                     ^Yellow <kyellow>
+                     ^Magenta <kmagenta>
+                     ^White <kwhite>)
+   (write (crlf) | ---- Reset planning variables |)
+}

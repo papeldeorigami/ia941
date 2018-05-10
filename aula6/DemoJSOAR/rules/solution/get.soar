@@ -2,6 +2,7 @@ sp {propose*get
    (state <s> ^name solution
               ^desired <desired>
               ^memory <memory>
+              ^actions <actions>
               ^io.input-link.CREATURE <creature>)
    (<creature> ^SENSOR.VISUAL.ENTITY <entity>
                ^KNAPSACK <knapsack>)
@@ -9,8 +10,8 @@ sp {propose*get
    (<entity> ^NAME <entityName>
              ^TYPE JEWEL
              ^COLOR <color>
-             # get only if distance is less than 30
-             ^DISTANCE { <DISTANCE> < 30 })
+             # get only if close to the entity
+             ^DISTANCE { <DISTANCE> < 60 })
    # get only if already seen
    (<memory> ^ENTITY <memoryEntity>)
    (<memoryEntity> ^NAME <entityName>
@@ -19,7 +20,7 @@ sp {propose*get
    (<desired> ^<color> <desiredQuantity>)
    (<knapsack> ^<color> { <quantity> < <desiredQuantity> })
    # if not getting something already
-  -(<out> ^GET)
+  -(<actions> ^GET)
 -->
    (<s> ^operator <o> + =)
    (<o> ^name get
@@ -31,7 +32,7 @@ sp {solution*apply*get
    (state <s> ^operator <o>
               ^memory <memory>
               ^desired <desired>
-              ^io.output-link <out>
+              ^actions <actions>
               ^v-knapsack <v-knapsack>
               ^v-collected-names <v-collected-names>
               ^io.input-link.CREATURE <creature>)
@@ -65,8 +66,6 @@ sp {solution*apply*get
               ^Yellow <dyellow>
               ^Magenta <dmagenta>
               ^White <dwhite>)
-   # if not getting something already
-  -(<out> ^GET)
 -->
    # remove element from the input (temporary)
    (<visual> ^ENTITY <visualEntity> -)
@@ -81,8 +80,6 @@ sp {solution*apply*get
    # mark the item also as collected in the virtual memory
    (<v-collected-names> ^NAME <entityName>)
    # prepare the output action
-   #(<actions> ^GET <command>)
-   #(<command> ^Name <entityName>)
-   (<out> ^GET.Name <entityName>)
+   (<actions> ^GET.Name <entityName>)
    (write (crlf) | Get: name=| <entityName> | color=| <color> ||)
 }

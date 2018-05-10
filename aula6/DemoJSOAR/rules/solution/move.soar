@@ -10,7 +10,7 @@ sp {solution*propose*move*jewel
              ^NAME <entityName>
              ^TYPE JEWEL
              ^COLOR <color>)
-   (<distances> ^<entityName> { <DISTANCE> > 30 }) # move only if distance is greater than 30
+   (<distances> ^<entityName> { <DISTANCE> > 60 }) # move only if distance is high
    # filter colors only that are missing in some leaflet
    (<desired> ^<color> <desiredQuantity>)
    (<knapsack> ^<color> { <quantity> < <desiredQuantity> })
@@ -26,7 +26,7 @@ sp {solution*propose*move*jewel
         ^Y <entityPositionY>
         ^COLOR <color>
         ^DISTANCE <DISTANCE>)
-#   (write (crlf) | propose move (to jewel): name = | <entityName> | distance = | <DISTANCE> ||)
+   (write (crlf) | propose move (to jewel): name = | <entityName> | distance = | <DISTANCE> ||)
 }  
 
 sp {solution*apply*move
@@ -85,4 +85,12 @@ sp {solution*apply*actual*move*only*once
    (write (crlf) | ***** prepare output move to entity = | <entityName> | x = | <x> | y = | <y> ||)
    (write (crlf))
    #(write (crlf) | apply move: name = | <entityName> | distance = | <DISTANCE> ||)
+}
+
+sp {solution*apply*move*set-planning
+   (state <s> ^operator.name move
+             -^planning)
+-->
+   (<s> ^planning true)
+#   (write (crlf) | Set planning mode to true |)
 }

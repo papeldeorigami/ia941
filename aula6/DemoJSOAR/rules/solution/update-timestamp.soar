@@ -1,0 +1,19 @@
+sp {propose*update-timestamp
+   (state <s> ^elapsed { <elapsed> > 1 })
+-->
+   (<s> ^operator <o> + <)
+   (<o> ^name update-timestamp)
+   (write (crlf) | propose update timestamp |)
+}
+
+sp {apply*update-timestamp
+   (state <s> ^operator.name update-timestamp
+              ^io.input-link <input>
+              ^timestamp <oldTimestamp>)
+   (<input> ^CREATURE.PARAMETERS.TIMESTAMP <timestamp>)
+-->
+   (<s> ^timestamp <oldTimestamp> -
+        ^timestamp <timestamp>)
+   (write (crlf) | update timestamp=| <timestamp> ||)
+}
+

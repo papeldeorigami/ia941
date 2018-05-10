@@ -1,0 +1,9 @@
+# output-command > remove-output
+sp {output-command*remove-output*preferences
+   (state <s> ^operator <o> +
+          <o2> +)
+   (<o> ^name output-command)
+   (<o2> ^name remove-output)
+-->
+   (<s> ^operator <o> > <o2>)
+}

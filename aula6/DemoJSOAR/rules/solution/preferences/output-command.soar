@@ -1,14 +1,15 @@
-# command get > command move
-sp {output-command*preferences
-   (state <s> ^operator <o> +
-          <o2> +)
-   (<o> ^name output-command
-        ^parameters <p1>)
-   (<o2> ^name output-command
-        ^parameters <p2>)
-   (<p1> ^type GET)
-   (<p2> ^type MOVE)
--->
-   (<s> ^operator <o> > <o2>)
-}
-
+## command get > command move
+#sp {output-command*preferences
+#   (state <s> ^operator <o> +
+#          <o2> +)
+#   (<o> ^name output-command
+#        ^parameters <p1>)
+#   (<o2> ^name output-command
+#        ^parameters <p2>)
+#   (<p1> ^type GET)
+#   (<p2> ^type MOVE)
+#-->
+#   (<s> ^operator <o> > <o2>)
+#}
+#
+#

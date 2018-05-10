@@ -17,11 +17,10 @@ source preferences.soar
 pushd preferences
 source preferences_source.soar
 popd
+source remove-output.soar
+source reset-plan.soar
 source see.soar
 source simulate-input.soar
+source update-timestamp.soar
 source wander.soar
-source evaluations.soar
-pushd evaluations
-source evaluations_source.soar
-popd
 source initialize-solution.soar

@@ -11,7 +11,8 @@ sp {apply*initialize-solution
    (state <s> ^operator.name initialize-solution
               ^io.input-link.CREATURE <creature>)
    (<creature> ^POSITION <p>
-               ^KNAPSACK <k>)
+               ^KNAPSACK <k>
+               ^PARAMETERS.TIMESTAMP <timestamp>)
    (<k> ^Red <kred>
         ^Green <kgreen>
         ^Blue <kblue>
@@ -22,8 +23,8 @@ sp {apply*initialize-solution
         ^Y <py>)
 -->
    (<s> ^name solution
-        
         # these attributes are available both for deliberation and reactive actions
+        ^timestamp <timestamp>             # last timestamp read from the creature
         ^delivery-spot <delivery-spot>     # always (0,0)
         ^actions <actions>                 # holds the actions to be output
         ^memory <memory>                   # a persistant memory of the entities that have been seen

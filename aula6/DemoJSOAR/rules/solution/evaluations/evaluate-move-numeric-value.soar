@@ -1,9 +1,0 @@
-sp {solution*evaluate*numeric-value
-   (state <s> ^tried-tied-operator <o>
-              ^v-traveled-distance <traveled-distance>)
-   (<o> ^name move
-        ^parameter.DISTANCE <DISTANCE>)
--->
-   (<s> ^numeric-value <traveled-distance>)
-   (write (crlf) | numeric-value = | <traveled-distance> ||)
-}

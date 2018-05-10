@@ -1,73 +1,34 @@
-sp {propose*output-command
-   (state <s> ^actions <actions>)
+sp {propose*no-change*output-command
+   (state <s> ^top-state <ts>
+              ^superstate <ss>
+              ^impasse no-change)
+  -(<ss> ^impasse tie)
+   (<ts> -^sent-command
+          ^actions <actions>)
    (<actions> ^<type> <action>)
 -->
-   (<s> ^operator <o> +)
-   (<o> ^name output-command
-        ^parameters <parameters>)
-   (<parameters> ^type <type>
-                 ^action <action>)
-   (write (crlf) | Propose output command: | <type> ||)
-}
-
-sp {apply*output-command*get
-   (state <s> ^operator <o>
-              ^io.output-link <out>)
+   (<ts> ^operator <o> + =)
    (<o> ^name output-command
         ^parameters <p>)
-   (<p> ^type GET
-        ^action <action>)
--->
-   #(<s> ^actions GET -)
-   (<out> ^GET <getOut>)
-   (<getOut> ^Name <name>)
-   (write (crlf) | ***** output command GET parameter Name=| <name> ||)
-   (interrupt)
+   (<p> ^<type> <action>)
+   (write (crlf) | Nothing else to plan. Apply the first command. |)
 }
 
-sp {apply*output-command*move
+sp {apply*output-command
    (state <s> ^operator <o>
-              ^io.output-link <out>)
-   (<o> ^name output-command
-        ^parameters <p>)
-   (<p> ^type MOVE
-        ^action <move>)
-   (<move> ^X <x>
-           ^Y <y>
-           ^VelL <velL>
-           ^VelR <velR>
-           ^Vel <vel>)
--->
-   #(<s> ^actions MOVE -)
-   (<out> ^MOVE <moveOut>)
-   (<moveOut>
-          ^X <x>
-          ^Y <y>
-          ^VelL <velL>
-          ^VelR <velR>
-          ^Vel <vel>)
-   (write (crlf) | ***** output command MOVE parameter X=| <x> | Y=| <y> | VelL=| <velL> | VelR=| <velR> | Vel=| <vel> ||)
-   #(interrupt)
-}
-
-
-sp {evaluate*output-command*continue
-   (state <s> ^operator.name output-command
-              ^io.output-link <out>)
-   (<out> ^<command>)
--->
-   (write (crlf) | Continue command | <command> ||)
-   (interrupt)
-}
-
-sp {apply*output-command*remove-complete
-   (state <s> ^operator.name output-command
+             -^sent-command
               ^actions <actions>
               ^io.output-link <out>)
-   (<out> ^<att> <value>)
-   (<value> ^status complete)
+   (<o> ^name output-command
+        ^parameters <p>)
+   (<p> ^<type> <action>)
+   (<actions> ^<type> <orig-action>)
 -->
-   (<out> ^<att> <value> -)
-   (write (crlf) | finished command: | <att> ||)
-   #(interrupt)
+   (<out> ^<type> <action>)
+   (<actions> ^<type> <orig-action> -)
+   (<s> ^sent-command true)
+   (write (crlf) | ***** output command | <type> ||)
+   #(write (crlf) (cmd print --depth 2 <action>))
+   #(wait 1000)
+   (interrupt)
 }

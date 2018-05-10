@@ -1,9 +1,9 @@
-sp {evaluate*no-change*propose*deliver
-   (state <s> ^superstate <ss>
+sp {propose*no-change*deliver
+   (state <s> ^top-state <ts>
               ^impasse no-change
               ^all-leaflets-complete true)
 -->
-   (<ss> ^operator <o> +)
+   (<ts> ^operator <o> +)
    (<o> ^name deliver)
    (write (crlf) | Propose deliver |)
 }

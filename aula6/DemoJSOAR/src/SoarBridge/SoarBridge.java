@@ -654,4 +654,5 @@ public class SoarBridge
     public Set<Wme> getWorkingMemory() {
         return(agent.getAllWmesInRete());
     }
+
 }

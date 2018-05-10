@@ -1,0 +1,10 @@
+# reset-plan > remove-output
+sp {reset-plan*remove-output*preferences
+   (state <s> ^operator <o> +
+          <o2> +)
+   (<o> ^name reset-plan)
+   (<o2> ^name remove-output)
+-->
+   (<s> ^operator <o> > <o2>)
+}
+

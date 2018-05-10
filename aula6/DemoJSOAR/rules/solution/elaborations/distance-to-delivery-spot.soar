@@ -10,5 +10,4 @@ sp {elaborate*distance-to-delivery-spot
                     ^Y <dsy>)
 -->
    (<s> ^distance-to-delivery-spot (sqrt (+ (* (- <dsx> <x>) (- <dsx> <x>)) (* (- <dsy> <y>) (- <dsy> <y>)))))
-
 }

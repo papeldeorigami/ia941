@@ -1,23 +1,25 @@
-sp {propose*wander
-   (state <s> ^wander true)
+sp {propose*no-change*wander
+   (state <s> ^top-state <ts>
+              ^superstate <ss>
+              ^impasse no-change)
+  -(<ss> ^impasse tie)
+   (<ts> ^actions <actions>
+        -^sent-command)
+  -(<actions> ^<any>)
 -->
-   (<s> ^operator <o> +)
+   (write (crlf) | Nothing else to plan. Wander. |)
+   (<ts> ^operator <o> + <)
    (<o> ^name wander)
+   #(halt)
 }
-   
+
 sp {apply*wander
-   (state <s> ^operator <o>
-              ^io <io>)
-   (<io> ^output-link <ol>)
-   (<o> ^name wander)
+   (state <s> ^operator.name wander
+              ^actions <actions>)
 -->
-   (<s> ^actions <actions>
-        ^wander true -)
    (<actions> ^MOVE <command>)
-   (<command> ^X 0)
-   (<command> ^Y 0)
    (<command> ^Vel 0)
    (<command> ^VelR 2)
    (<command> ^VelL 0)
-   (write (crlf) | apply wander |)
+   (write (crlf) | Apply wander |)
 }

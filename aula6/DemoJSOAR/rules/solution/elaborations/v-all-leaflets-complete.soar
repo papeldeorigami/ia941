@@ -18,4 +18,5 @@ sp {monitor*v-all-leaflets-complete
    (write (crlf) | *** ALL LEAFLETS COMPLETE (virtual) *** |)
    (write (crlf) | *************************************** |)
    (<s> ^all-leaflets-complete true)
+   (interrupt)
 }

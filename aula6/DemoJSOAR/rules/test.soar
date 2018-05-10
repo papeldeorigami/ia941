@@ -81,14 +81,19 @@ sp {elaborate*elapsed
    (write (crlf) | elapsed=| (- <timestamp> <oldTimestamp>) ||)
 }
 
-sp {no-change*propose*update-timestamp
-   (state <s> ^impasse no-change
-              ^superstate <ss>)
-#   (<ss> ^elapsed { <elapsed> > 1 })
+sp {no-change*interrupt
+   (state <s> ^impasse no-change)
 -->
-   (<ss> ^operator <o>)
-   (<o> ^name update-timestamp)
+   (wait 1000)
    (interrupt)
+}
+
+sp {propose*update-timestamp
+   (state <s> ^elapsed { <elapsed> > 1 })
+-->
+   (<s> ^operator <o> + <)
+   (<o> ^name update-timestamp)
+   (write (crlf) | propose update timestamp |)
 }
 
 sp {apply*update-timestamp

@@ -1,0 +1,8 @@
+sp {elaborate*elapsed
+   (state <s> ^io.input-link <input>
+              ^timestamp <oldTimestamp>)
+   (<input> ^CREATURE.PARAMETERS.TIMESTAMP <timestamp>)
+-->
+   (<s> ^elapsed (- <timestamp> <oldTimestamp>))
+   (write (crlf) | elapsed=| (- <timestamp> <oldTimestamp>) ||)
+}
