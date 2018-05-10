@@ -15,7 +15,7 @@ sp {monitor*v-all-leaflets-complete
                ^White <white>)
 -->
    (write (crlf) | *************************************** |)
-   (write (crlf) | *** ALL LEAFLETS COMPLETE (virtual) *** |)
+   (write (crlf) | *** ALL JEWELS FOUND, PLAN IS READY *** |)
    (write (crlf) | *************************************** |)
    (<s> ^v-all-leaflets-complete true)
 #   (interrupt)

@@ -20,4 +20,3 @@ sp {apply*remove-output
    (<output> ^<type> <action> -)
 }
 
-

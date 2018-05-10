@@ -25,12 +25,48 @@ sp {get*move*preferences
    (<s> ^operator <o> > <o2>)
 }
 
+sp {remove-output*move*preferences
+   (state <s> ^operator <o> +
+          <o2> +)
+   (<o> ^name remove-output)
+   (<o2> ^name move)
+-->
+   (<s> ^operator <o> > <o2>)
+}
+
+sp {remove-output*reset-plan*preferences
+   (state <s> ^operator <o> +
+          <o2> +)
+   (<o> ^name remove-output)
+   (<o2> ^name reset-plan)
+-->
+   (<s> ^operator <o> > <o2>)
+}
+
+sp {reset-plan*move*preferences
+   (state <s> ^operator <o> +
+          <o2> +)
+   (<o> ^name reset-plan)
+   (<o2> ^name move)
+-->
+   (<s> ^operator <o> > <o2>)
+}
+
 
 sp {output-command*update-timestamp*preferences
    (state <s> ^operator <o> +
           <o2> +)
    (<o> ^name output-command)
    (<o2> ^name update-timestamp)
+-->
+   (<s> ^operator <o> > <o2>)
+}
+
+sp {output-command*move*preferences
+   (state <s> ^operator <o> +
+          <o2> +)
+   (<o> ^name output-command)
+   (<o2> ^name move)
 -->
    (<s> ^operator <o> > <o2>)
 }

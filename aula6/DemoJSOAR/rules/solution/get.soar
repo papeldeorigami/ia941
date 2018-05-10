@@ -78,7 +78,7 @@ sp {solution*apply*get
    (<v-knapsack> ^<color> <quantity> -
                  ^<color> (+ <quantity> 1))
    # mark the item also as collected in the virtual memory
-   (<v-collected-names> ^NAME <entityName>)
+   (<v-collected-names> ^<entityName> true)
    # prepare the output action
    (<actions> ^GET.Name <entityName>)
    (write (crlf) | Get: name=| <entityName> | color=| <color> ||)

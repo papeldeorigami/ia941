@@ -16,7 +16,7 @@ sp {propose*move*jewel
    (<desired> ^<color> <desiredQuantity>)
    (<knapsack> ^<color> { <quantity> < <desiredQuantity> })
    # do not get doubled entities
-  -(<collectedNames> ^NAME <entityName>)
+  -(<collectedNames> ^<entityName>)
 -->
    (<s> ^operator <o> +)
    (<o> ^name move)
@@ -72,12 +72,12 @@ sp {apply*move*update*v-distance
         ^v-position <v-position>)
    (<o> ^name move
         ^parameter <p>)
-   (<p> ^NAME <entityName>
-        ^X <x>
-        ^Y <y>)
+   (<p> ^NAME <entityName>)
    (<v-position> ^X <px>
                  ^Y <py>)
-   (<entity> ^NAME { <otherName> <> <entityName> })
+   (<entity> ^NAME { <otherName> <> <entityName> }
+             ^X <x>
+             ^Y <y>)
    (<v-distances> ^<otherName> <oldDistance>)
 -->
    (<v-distances> ^<otherName> <oldDistance> -
