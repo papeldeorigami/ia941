@@ -1,12 +1,12 @@
 sp {elaborate*collected-count
    (state <s>
-        ^knapsack <knapsack>)
-   (<knapsack> ^Red <red>
-               ^Green <green>
-               ^Blue <blue>
-               ^Yellow <yellow>
-               ^Magenta <magenta>
-               ^White <white>)
+             ^io.input-link.CREATURE.KNAPSACK <k>)
+   (<k> ^Red <red>
+        ^Green <green>
+        ^Blue <blue>
+        ^Yellow <yellow>
+        ^Magenta <magenta>
+        ^White <white>)
 -->
    (<s> ^collected-count (+ <red> <green> <blue> <yellow> <magenta> <white>))
 }

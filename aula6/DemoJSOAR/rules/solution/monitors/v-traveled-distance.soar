@@ -1,0 +1,5 @@
+sp {monitor*v-traveled-distance
+   (state <s> ^v-traveled-distance <td>)
+-->
+   (write (crlf) | Virtual traveled distance=| <td> ||)
+}

@@ -2,13 +2,9 @@ sp {solution*propose*move*jewel
    (state <s> ^name solution
               ^memory.ENTITY <entity>
               ^desired <desired>
-              ^v-position <position>
               ^v-distances <distances>
               ^v-knapsack <knapsack>
-              ^v-collected-names <collectedNames>
-              ^v-traveled-distance <traveledDistance>)
-   (<position> ^X <x>
-               ^Y <y>)
+              ^v-collected-names <collectedNames>)
    (<entity> ^X <entityPositionX>
              ^Y <entityPositionY>
              ^NAME <entityName>
@@ -63,7 +59,7 @@ sp {solution*apply*move
    (<knapsack> ^<color> <quantity> - (+ <quantity> 1))
    (<s> ^v-traveled-distance <traveledDistance> -
         ^v-traveled-distance (+ <traveledDistance> <DISTANCE>))
-   (write (crlf) | Test move: name = | <entityName> | traveledDistance = | <traveledDistance> | + | <DISTANCE> ||)
+   (write (crlf) | Test move: name = | <entityName> | color=| <color> ||)
    (write (crlf) | Virtual get | <color> | | (+ <quantity> 1) |/| <dquantity> ||)
 }
 

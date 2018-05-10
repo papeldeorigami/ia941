@@ -1,5 +1,5 @@
 source _all.soar
-source all-leaflets-complete.soar
+source v-all-leaflets-complete.soar
 source collected-count.soar
 source desired-count.soar
 source desired-jewels.soar

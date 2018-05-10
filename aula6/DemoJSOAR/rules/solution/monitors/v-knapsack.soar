@@ -1,0 +1,24 @@
+sp {monitor*v-knapsack
+   (state <s> ^v-knapsack <k>
+              ^desired <d>)
+   (<k> ^Red <kred>
+        ^Green <kgreen>
+        ^Blue <kblue>
+        ^Yellow <kyellow>
+        ^Magenta <kmagenta>
+        ^White <kwhite>)
+   (<d> ^Red <dred>
+        ^Green <dgreen>
+        ^Blue <dblue>
+        ^Yellow <dyellow>
+        ^Magenta <dmagenta>
+        ^White <dwhite>)
+-->
+   (write (crlf) | Virtual knapsack: |)
+   (write (crlf) | Red=| <kred> |/| <dred> ||)
+   (write (crlf) | Green=| <kgreen> |/| <dgreen> ||)
+   (write (crlf) | Blue=| <kblue> |/| <dblue> ||)
+   (write (crlf) | Yellow=| <kyellow> |/| <dyellow> ||)
+   (write (crlf) | Magenta=| <kmagenta> |/| <dmagenta> ||)
+   (write (crlf) | White=| <kwhite> |/| <dwhite> ||)
+}

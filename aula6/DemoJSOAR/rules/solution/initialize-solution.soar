@@ -1,0 +1,49 @@
+sp {propose*initialize-solution
+   (state <s> ^superstate nil
+              ^io.input-link.CREATURE <creature>
+             -^v-position)
+-->
+   (<s> ^operator <o> + =)
+   (<o> ^name initialize-solution)
+}
+
+sp {apply*initialize-solution
+   (state <s> ^operator.name initialize-solution
+              ^io.input-link.CREATURE <creature>)
+   (<creature> ^POSITION <p>
+               ^KNAPSACK <k>)
+   (<k> ^Red <kred>
+        ^Green <kgreen>
+        ^Blue <kblue>
+        ^Yellow <kyellow>
+        ^Magenta <kmagenta>
+        ^White <kwhite>)
+   (<p> ^X <px>
+        ^Y <py>)
+-->
+   (<s> ^name solution
+        
+        # these attributes are available both for deliberation and reactive actions
+        ^delivery-spot <delivery-spot>     # always (0,0)
+        ^actions <actions>                 # holds the actions to be output
+        ^memory <memory>                   # a persistant memory of the entities that have been seen
+        
+        # these "virtual" attributes exist only for deliberation, i.e. they are copied during the selection problem solving
+        ^v-distances <distances>             # distances to each entity from the current virtual position of the creature
+        ^v-knapsack <v-knapsack>             # representation of the knapsack
+        ^v-collected-names <collected-names> # a list of all entities names already collected in the planning phase, to ignore from visual input
+        ^v-traveled-distance 0               # this is the numeric-value for the selection problem
+        ^v-position <v-position>)            # represents the position of the creature during the planning phase
+
+   (<v-position> ^X <px>
+                 ^Y <py>)
+   
+   (<v-knapsack> ^Red <kred>
+                 ^Green <kgreen>
+                 ^Blue <kblue>
+                 ^Yellow <kyellow>
+                 ^Magenta <kmagenta>
+                 ^White <kwhite>)
+   
+   (write (crlf) | Initial State |)
+}

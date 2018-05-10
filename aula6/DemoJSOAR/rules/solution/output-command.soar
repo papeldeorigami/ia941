@@ -10,17 +10,6 @@ sp {propose*output-command
    (write (crlf) | Propose output command: | <type> ||)
 }
 
-#sp {apply*output-command*remove-move-for-others
-#   (state <s> ^operator.name output-command
-#              ^actions <actions>
-#              ^io.output-link <out>)
-#   (<actions> ^MOVE <move>)
-#   (<actions> ^{<other-action> <> MOVE} <other-value>)
-#-->
-#   (<actions> ^MOVE <move> -)
-#   (write (crlf) | Removed the MOVE command to enable | <other-action> ||)
-#}
-
 sp {apply*output-command*get
    (state <s> ^operator <o>
               ^io.output-link <out>)
@@ -42,7 +31,7 @@ sp {apply*output-command*move
    (<o> ^name output-command
         ^parameters <p>)
    (<p> ^type MOVE
-        ^action <action>)
+        ^action <move>)
    (<move> ^X <x>
            ^Y <y>
            ^VelL <velL>
@@ -64,25 +53,10 @@ sp {apply*output-command*move
 
 sp {evaluate*output-command*continue
    (state <s> ^operator.name output-command
-              ^io.input-link <input>
               ^io.output-link <out>)
-  -(<input> ^CREATURE)
    (<out> ^<command>)
 -->
    (write (crlf) | Continue command | <command> ||)
-   (interrupt)
-}
-
-sp {evaluate*output-command*remove*input*continue
-   (state <s> ^operator.name output-command
-              ^io.input-link <input>
-              ^io.output-link <out>)
-   (<input> ^CREATURE <creature>)
-   (<out> ^<command>)
--->
-   # delete the input
-   (<input> ^CREATURE <creature> -)
-   (write (crlf) | Delete the input and continue command | <command> ||)
    (interrupt)
 }
 

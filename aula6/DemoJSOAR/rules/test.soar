@@ -43,6 +43,15 @@ sp {apply*test
    (interrupt)
 }
 
+sp {apply*test*add-timestamp
+   (state <s> ^operator.name test
+              ^io.input-link <input>
+             -^timestamp)
+   (<input> ^CREATURE <creature>)
+   (<creature> ^PARAMETERS.TIMESTAMP <timestamp>)
+-->
+   (<s> ^timestamp <timestamp>)
+}
 
 sp {propose*remove-output
    (state <s> ^io.output-link <output>
@@ -63,35 +72,32 @@ sp {apply*remove-output
    (<output> ^MOVE <move> -)
 }
 
-sp {monitor*no-change
-   (state <s> ^impasse no-change)
+sp {elaborate*elapsed
+   (state <s> ^io.input-link <input>
+              ^timestamp <oldTimestamp>)
+   (<input> ^CREATURE.PARAMETERS.TIMESTAMP <timestamp>)
 -->
-   (interrupt)
+   (<s> ^elapsed (- <timestamp> <oldTimestamp>))
+   (write (crlf) | elapsed=| (- <timestamp> <oldTimestamp>) ||)
 }
-sp {apply*test
-   (state <s> ^operator.name test
-              ^io.input-link <input>
-              ^io.output-link <output>
-             -^moving)
-   (<input> ^CREATURE <creature>)
-   (<creature> ^SENSOR.VISUAL.ENTITY <entity>
-               ^PARAMETERS.TIMESTAMP <timestamp>)
-   (<entity> ^NAME <entityName>
-             ^X <x>
-             ^Y <y>
-             ^DISTANCE { <DISTANCE> > 30 })
+
+sp {no-change*propose*update-timestamp
+   (state <s> ^impasse no-change
+              ^superstate <ss>)
+#   (<ss> ^elapsed { <elapsed> > 1 })
 -->
-   (write (crlf) | Apply test: creature | <creature> ||)
-   (<s> ^moving true)
-#  (<input> ^CREATURE <creature> -)
-#   (<output> ^GET.Name <entityName>)
-   (<output> ^MOVE <command>)
-   (<command> ^Vel 1)
-   (<command> ^VelR 1)
-   (<command> ^VelL 1)
-   (<command> ^X <x>)
-   (<command> ^Y <y>)
-   (<s> ^timestamp <timestamp>)
+   (<ss> ^operator <o>)
+   (<o> ^name update-timestamp)
    (interrupt)
 }
 
+sp {apply*update-timestamp
+   (state <s> ^operator.name update-timestamp
+              ^io.input-link <input>
+              ^timestamp <oldTimestamp>)
+   (<input> ^CREATURE.PARAMETERS.TIMESTAMP <timestamp>)
+-->
+   (<s> ^timestamp <oldTimestamp> -
+        ^timestamp <timestamp>)
+   (write (crlf) | update timestamp=| <timestamp> ||)
+}

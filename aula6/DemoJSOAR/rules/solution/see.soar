@@ -28,14 +28,15 @@ sp {solution*apply*see*new
 -->
    (<memory> ^ENTITY <newEntity>)
    (<newEntity> ^X <x>
-             ^Y <y>
-             ^NAME <name>
-             ^TYPE <type>
-             ^COLOR <color>
-             ^DISTANCE <distance>)
+                ^Y <y>
+                ^NAME <name>
+                ^TYPE <type>
+                ^COLOR <color>
+                ^DISTANCE <distance>)
    (write (crlf) | apply see*new: name = | <name> | x = | <x> | y = | <y> | color = | <color> | distance = | <distance> ||)
 }
 
+# update the entity distances in memory with information from the input link
 sp {solution*apply*see*update-distance
    (state <s> ^operator <op>
               ^memory <memory>)
@@ -45,7 +46,7 @@ sp {solution*apply*see*update-distance
                 ^DISTANCE <distance>)
    (<memory> ^ENTITY <memoryEntity>)
    (<memoryEntity> ^NAME <name>)
-   (<memoryEntity> ^DISTANCE <oldDistance>)
+   (<memoryEntity> ^DISTANCE { <oldDistance> <> <distance> })
 -->
    (<memoryEntity> ^DISTANCE <oldDistance> -
                    ^DISTANCE <distance>)

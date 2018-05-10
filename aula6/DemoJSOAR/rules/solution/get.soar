@@ -1,10 +1,10 @@
 sp {propose*get
    (state <s> ^name solution
               ^desired <desired>
-              ^knapsack <knapsack>
               ^memory <memory>
               ^io.input-link.CREATURE <creature>)
-   (<creature> ^SENSOR.VISUAL.ENTITY <entity>)
+   (<creature> ^SENSOR.VISUAL.ENTITY <entity>
+               ^KNAPSACK <knapsack>)
    # find a jewel
    (<entity> ^NAME <entityName>
              ^TYPE JEWEL
@@ -25,25 +25,23 @@ sp {propose*get
    (<o> ^name get
         ^parameter.NAME <entityName>)
    (write (crlf) | propose get: name = | <entityName> | distance = | <DISTANCE> ||)
-#   (write (crlf) | desired=| <desired> | knapsack=| <knapsack> | memory=| <memory> ||)
-#   (write (crlf) | creature=| <creature> | entity=| <entity> | desiredQuantity=| <desiredQuantity> ||)
-#   (write (crlf) | color=| <color> | memoryEntity=| <memoryEntity> | entityName=| <entityName> ||)
-#   (write (crlf) | quantity=| <quantity> ||)
 }
 
 sp {solution*apply*get
    (state <s> ^operator <o>
-              ^knapsack <knapsack>
               ^memory <memory>
               ^desired <desired>
               ^io.output-link <out>
+              ^v-knapsack <v-knapsack>
+              ^v-collected-names <v-collected-names>
               ^io.input-link.CREATURE <creature>)
    # read the jewel name from parameters
    (<o> ^name get
         ^parameter <p>)
    (<p> ^NAME <entityName>)
    # lookup the entity in the visual sensor
-   (<creature> ^SENSOR.VISUAL <visual>)
+   (<creature> ^SENSOR.VISUAL <visual>
+               ^KNAPSACK <knapsack>)
    (<visual> ^ENTITY <visualEntity>)
    (<visualEntity> ^NAME <entityName>)
    # lookup the entity in the memory
@@ -77,28 +75,14 @@ sp {solution*apply*get
    # increment the number of jewels of the entity's color in the knapsack
    (<knapsack> ^<color> <quantity> -
                ^<color> (+ <quantity> 1))
+   # rewrite the v-knapsack to ensure consistance
+   (<v-knapsack> ^<color> <quantity> -
+                 ^<color> (+ <quantity> 1))
+   # mark the item also as collected in the virtual memory
+   (<v-collected-names> ^NAME <entityName>)
    # prepare the output action
    #(<actions> ^GET <command>)
    #(<command> ^Name <entityName>)
    (<out> ^GET.Name <entityName>)
-   (write (crlf) | get: name = | <entityName> | Knapsack was: |)
-   (write (crlf) | Red=| <kred> |/| <dred> ||)
-   (write (crlf) | Green=| <kgreen> |/| <dgreen> ||)
-   (write (crlf) | Blue=| <kblue> |/| <dblue> ||)
-   (write (crlf) | Yellow=| <kyellow> |/| <dyellow> ||)
-   (write (crlf) | Magenta=| <kmagenta> |/| <dmagenta> ||)
-   (write (crlf) | White=| <kwhite> |/| <dwhite> ||)
-   (write (crlf) | ---> | <color> | is now | (+ <quantity> 1) |/| <dquantity> ||)
+   (write (crlf) | Get: name=| <entityName> | color=| <color> ||)
 }
-
-#sp {solution*apply*get*test
-#   (state <s> ^operator <o>)
-#   # read the jewel name from parameters
-#   (<o> ^name get
-#        ^parameter <p>)
-#   (<p> ^NAME <entityName>)   
-#-->
-#   (write (crlf) | ======= apply get entityName=| <entityName> ||)
-#   (write (crlf) (cmd print --depth 1 <s>))
-#}
-#

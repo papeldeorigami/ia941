@@ -1,7 +1,6 @@
-sp {monitor*all-leaflets-complete
+sp {monitor*v-all-leaflets-complete
    (state <s> ^desired <desired>
-              ^v-knapsack <knapsack>
-              ^v-traveled-distance <traveled-distance>)
+              ^v-knapsack <knapsack>)
    (<desired>  ^Red <red>
                ^Green <green>
                ^Blue <blue>
@@ -15,9 +14,8 @@ sp {monitor*all-leaflets-complete
                ^Magenta <magenta>
                ^White <white>)
 -->
-   (write (crlf) | ****************************** |)
-   (write (crlf) | *** ALL LEAFLETS COMPLETE  *** |)
-   (write (crlf) | ****************************** |)
-   (write (crlf) | Total traveled-distance =  | <traveled-distance> ||)
+   (write (crlf) | *************************************** |)
+   (write (crlf) | *** ALL LEAFLETS COMPLETE (virtual) *** |)
+   (write (crlf) | *************************************** |)
    (<s> ^all-leaflets-complete true)
 }

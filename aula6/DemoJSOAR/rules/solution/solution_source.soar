@@ -12,7 +12,6 @@ pushd monitors
 source monitors_source.soar
 popd
 source move.soar
-source old.soar
 source output-command.soar
 source preferences.soar
 pushd preferences
@@ -25,4 +24,4 @@ source evaluations.soar
 pushd evaluations
 source evaluations_source.soar
 popd
-source read-input.soar
+source initialize-solution.soar
