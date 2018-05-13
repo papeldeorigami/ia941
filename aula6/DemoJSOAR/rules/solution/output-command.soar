@@ -2,16 +2,16 @@ sp {propose*no-change*output-command
    (state <s> ^top-state <ts>
               ^superstate <ss>
               ^impasse no-change)
-   (<ss> ^impasse no-change
-         ^superstate <sss>)
-   (<sss> ^impasse no-change)
+  -(<ss> ^impasse tie)
    (<ts> -^sent-command
           ^actions <actions>)
-   (<actions> ^<any>)
+   (<actions> ^<type> <action>)
 -->
-   (write (crlf) | ***** Propose output-command |)
-   (<ts> ^operator <o> +)
-   (<o> ^name output-command)
+   (<ts> ^operator <o> + =)
+   (<o> ^name output-command
+        ^parameters <p>)
+   (<p> ^<type> <action>)
+   (write (crlf) | Nothing else to plan. Apply the first command. |)
 }
 
 sp {apply*output-command
@@ -19,14 +19,16 @@ sp {apply*output-command
              -^sent-command
               ^actions <actions>
               ^io.output-link <out>)
-   (<o> ^name output-command)
-   (<actions> ^<type> <action>)
+   (<o> ^name output-command
+        ^parameters <p>)
+   (<p> ^<type> <action>)
+   (<actions> ^<type> <orig-action>)
 -->
    (<out> ^<type> <action>)
-   (<actions> ^<type> <action> -)
+   (<actions> ^<type> <orig-action> -)
    (<s> ^sent-command true)
-   (write (crlf) | ***** Apply output command: | <type> ||)
+   (write (crlf) | ***** output command | <type> ||)
    #(write (crlf) (cmd print --depth 2 <action>))
+   #(wait 1000)
    (interrupt)
-   #(wait 500)
 }

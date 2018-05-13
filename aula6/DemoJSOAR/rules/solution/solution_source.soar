@@ -7,7 +7,6 @@ source elaborations_source.soar
 popd
 source deliver.soar
 source get.soar
-source hide.soar
 source monitors.soar
 pushd monitors
 source monitors_source.soar
@@ -15,10 +14,14 @@ popd
 source move.soar
 source output-command.soar
 source preferences.soar
+pushd preferences
+source preferences_source.soar
+popd
 source remove-output.soar
 source reset-plan.soar
 source see.soar
 source simulate-input.soar
 source update-timestamp.soar
+source wait.soar
 source wander.soar
 source initialize-solution.soar

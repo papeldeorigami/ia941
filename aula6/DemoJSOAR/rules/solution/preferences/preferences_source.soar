@@ -1,0 +1,10 @@
+source get-versus-move.soar
+source get-versus-output-command.soar
+source output-command-versus-output-command.soar
+source output-command-versus-remove-output.soar
+source output-command-versus-reset-plan.soar
+source remove-output-versus-move.soar
+source reset-plan-versus-remove-output.soar
+source see-versus-output-command.soar
+source see-versus-get.soar
+source see-versus-move.soar

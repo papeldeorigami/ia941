@@ -1,7 +1,7 @@
 sp {propose*update-timestamp
    (state <s> ^elapsed { <elapsed> > 1 })
 -->
-   (<s> ^operator <o> +)
+   (<s> ^operator <o> + <)
    (<o> ^name update-timestamp)
    (write (crlf) | propose update timestamp |)
 }

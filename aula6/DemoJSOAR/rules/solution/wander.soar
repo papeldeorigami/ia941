@@ -2,16 +2,13 @@ sp {propose*no-change*wander
    (state <s> ^top-state <ts>
               ^superstate <ss>
               ^impasse no-change)
-   (<ss> ^impasse no-change
-         ^superstate <sss>)
-   (<sss> ^impasse no-change)
+  -(<ss> ^impasse tie)
    (<ts> ^actions <actions>
-        -^all-leaflets-complete true
         -^sent-command)
   -(<actions> ^<any>)
 -->
-   (write (crlf) | ******* Nothing else to plan. Wander. |)
-   (<ts> ^operator <o> +)
+   (write (crlf) | Nothing else to plan. Wander. |)
+   (<ts> ^operator <o> + <)
    (<o> ^name wander)
    #(halt)
 }

@@ -1,10 +1,9 @@
 sp {monitor*selected*move
    (state <s> 
-             #^superstate nil
-             ^operator <o>
-             ^actions <actions>  # test for the actions wme just to ensure that we are not in the selection phase
-             ^v-traveled-distance <traveledDistance>
-             ^io.input-link.CREATURE <creature>)
+        ^operator <o>
+        ^actions <actions>
+        ^v-traveled-distance <traveledDistance>
+        ^io.input-link.CREATURE <creature>)
    (<o> ^name move
         ^parameter <p>)
    (<p> ^ENTITY <entity>

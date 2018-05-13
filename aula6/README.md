@@ -190,3 +190,36 @@ sp {moveFood*moveDeliverySpot*preferences
 
 O programa desenvolvido utiliza raciocinio deliberativo para atingir o objetivo de trocar leaflets por pontos.
 Uma melhoria possível seria priorizar jóias dos leaflets na busca, considerando ainda a pontuação de cada leaflet.
+
+
+Foram definidos os seguintes operadores principais, com suas respectivas elaboracoes e subestados:
+
+- Planejar
+    - girar 360 graus no inicio para certificar-se de ter visto todas as joias
+    - salvar em memoria todas as joias vistas
+    - propor comando move para todas as joias faltantes (joia faltante é alguma joia que ajude a preencher um leaflet)
+    - utilizar o selection problem (que vem na pasta default do soar) para determinar o melhor movimento
+    - o melhor movimento é o primeiro movimento que irá levar ao menor caminho para completar todos os leaflets
+    - se nenhuma jóia faltante estiver presente, ficar girando (wander) para tentar enxergar novas jóias
+    - priorizar leaflets de maior valor
+    - mover em direcao ao delivery spot se já tiver pelo menos um leaflet completo
+
+- Trocar leaflets
+
+- mover em direcao a um objeto (target)
+   - a posicao pode ser uma joia, uma comida ou o delivery spot
+   - o objeto target é determinado no planejamento
+   - reativamente desviar ou esconder obstaculos pelo caminho
+   - detectar se chegou perto do objeto, o suficiente para pegar (se for joia) ou comer (se for comida)
+   - colocar comando move no output, interromper execucao para que o java processe o mesmo, e depois remover
+   - voltar para o estado de planejamento se enxergar uma joia nova, que seja necessaria para algum leaflet
+
+
+
+Problema: o selection problem sai do impasse com um movimento de menor distancia, mas não leva em consideração os próximos movimentos
+Causa:
+- o impasse só pode ser resolvido com os operadores propostos
+- cada operador contém apenas um destino (uma joia)
+Possiveis solucoes:
+- propor operadores com todas as sequencias possiveis para pegar as joias faltantes (nao sei fazer isso)
+- criar um operador para cada joia, gerar impasse para cada proxima joia, salvar o numeric-value como resultado do calculo até a última jóia. A dificuldade aqui é gerar os impasses em cascata, isto é, para cada estado, gerar um subestado de impasse sem sair do primeiro impasse, ainda não sei fazer isso.
