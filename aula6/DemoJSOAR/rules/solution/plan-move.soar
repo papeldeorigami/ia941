@@ -1,0 +1,63 @@
+sp {propose*plan-move
+   (state <s> ^name plan
+              ^memory.ENTITY <entity>
+              ^desired <desired>
+              ^v-distances <distances>
+              ^v-knapsack <knapsack>
+              ^planning true
+              ^v-collected-names <collectedNames>)
+   (<entity> ^X <entityPositionX>
+             ^Y <entityPositionY>
+             ^NAME <entityName>
+             ^TYPE JEWEL
+             ^COLOR <color>)
+   (<distances> ^<entityName> { <DISTANCE> > 60 }) # move only if distance is high
+   # filter colors only that are missing in some leaflet
+   (<desired> ^<color> <desiredQuantity>)
+   (<knapsack> ^<color> { <quantity> < <desiredQuantity> })
+   # do not get doubled entities
+  -(<collectedNames> ^NAME <entityName>)
+-->
+   (<s> ^operator <o> +)
+   (<o> ^name plan-move)
+   (<o> ^parameter <p>)
+   (<p> ^NAME <entityName>
+        ^X <entityPositionX>
+        ^Y <entityPositionY>
+        ^COLOR <color>
+        ^DISTANCE <DISTANCE>)
+   (write (crlf) | propose plan-move (to jewel): name = | <entityName> | distance = | <DISTANCE> ||)
+}  
+
+sp {apply*plan-move
+   (state <s> 
+        ^operator <o>
+        ^desired <desired>
+        ^v-position <position>
+        ^v-distances <distances>
+        ^v-knapsack <knapsack>
+        ^v-collected-names <collectedNames>
+        ^v-traveled-distance <traveledDistance>)
+   (<position> ^X <oldX>
+               ^Y <oldY>)
+   (<o> ^name plan-move
+        ^parameter <p>)
+   (<p> ^NAME <entityName>
+        ^X <x>
+        ^Y <y>
+        ^COLOR <color>
+        ^DISTANCE <DISTANCE>)
+   (<knapsack> ^<color> <quantity>)
+   (<desired> ^<color> <dquantity>)
+-->
+   (<collectedNames> ^NAME <entityName>)
+   (<position> ^X <oldX> -
+               ^Y <oldY> -
+               ^X <x>
+               ^Y <y>)
+   (<knapsack> ^<color> <quantity> - (+ <quantity> 1))
+   (<s> ^v-traveled-distance <traveledDistance> -
+        ^v-traveled-distance (+ <traveledDistance> <DISTANCE>))
+   (write (crlf) | Plan move: name = | <entityName> | color=| <color> ||)
+   (write (crlf) | Virtual get | <color> | | (+ <quantity> 1) |/| <dquantity> ||)
+}

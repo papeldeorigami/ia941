@@ -192,28 +192,36 @@ O programa desenvolvido utiliza raciocinio deliberativo para atingir o objetivo 
 Uma melhoria possível seria priorizar jóias dos leaflets na busca, considerando ainda a pontuação de cada leaflet.
 
 
-Foram definidos os seguintes operadores principais, com suas respectivas elaboracoes e subestados:
+Foram definidos os seguintes operadores principais, com suas respectivas elaborações e sub-estados:
 
-- Planejar
-    - girar 360 graus no inicio para certificar-se de ter visto todas as joias
-    - salvar em memoria todas as joias vistas
-    - propor comando move para todas as joias faltantes (joia faltante é alguma joia que ajude a preencher um leaflet)
+- plan (Planejar)
+    - se algum leaflet estiver completo, mover para o delivery spot
+    - propor comando move para todas as joias em memoria que ajudem a completar os leaflets
     - utilizar o selection problem (que vem na pasta default do soar) para determinar o melhor movimento
     - o melhor movimento é o primeiro movimento que irá levar ao menor caminho para completar todos os leaflets
-    - se nenhuma jóia faltante estiver presente, ficar girando (wander) para tentar enxergar novas jóias
     - priorizar leaflets de maior valor
-    - mover em direcao ao delivery spot se já tiver pelo menos um leaflet completo
+    - se nenhuma jóia faltante estiver presente, e nenhum leaflet não estiver completo, mudar para o estado rotate360
 
-- Trocar leaflets
+- rotate360: girar 360 graus no inicio para certificar-se de ter visto todas as joias
 
-- mover em direcao a um objeto (target)
-   - a posicao pode ser uma joia, uma comida ou o delivery spot
-   - o objeto target é determinado no planejamento
-   - reativamente desviar ou esconder obstaculos pelo caminho
-   - detectar se chegou perto do objeto, o suficiente para pegar (se for joia) ou comer (se for comida)
-   - colocar comando move no output, interromper execucao para que o java processe o mesmo, e depois remover
-   - voltar para o estado de planejamento se enxergar uma joia nova, que seja necessaria para algum leaflet
+- deliver (Trocar leaflets)
+    - se estiver na posição do delivery spot (0,0), trocar todos os leaflets completos
+    - se não tiver mais nenhum leaflet para trocar, mas tiver algum incompleto ainda, voltar para rotate360
 
+- move (mover em direcao a um objeto, target)
+    - a posicao pode ser uma joia, uma comida ou o delivery spot
+    - o objeto target é determinado no planejamento
+    - reativamente desviar ou esconder obstaculos pelo caminho
+    - detectar se chegou perto do objeto, o suficiente para pegar (se for joia) ou comer (se for comida)
+    - colocar comando move no output, interromper execucao para que o java processe o mesmo, e depois remover
+    - voltar para o estado de planejamento se enxergar uma joia nova, que seja necessaria para algum leaflet
+
+Operadores propostos em qualquer estado:
+- see: salvar em memoria qualquer novo objeto visto
+- get: sempre que encontrar alguma joia próxima, que sirva para completar algum leaflet, pegar
+- hide: sempre que encontrar alguma jóia próxima, que não seja necessária para algum leaflet, esconder
+- eat: sempre que encontrar comida proxima, comer
+- wait: proposto sempre que parar em um loop de state no-change, onde nenhum outro operador tenha sido proposto (geralmente é algum bug, alguma situação imprevista)
 
 
 Problema: o selection problem sai do impasse com um movimento de menor distancia, mas não leva em consideração os próximos movimentos
@@ -221,5 +229,5 @@ Causa:
 - o impasse só pode ser resolvido com os operadores propostos
 - cada operador contém apenas um destino (uma joia)
 Possiveis solucoes:
-- propor operadores com todas as sequencias possiveis para pegar as joias faltantes (nao sei fazer isso)
-- criar um operador para cada joia, gerar impasse para cada proxima joia, salvar o numeric-value como resultado do calculo até a última jóia. A dificuldade aqui é gerar os impasses em cascata, isto é, para cada estado, gerar um subestado de impasse sem sair do primeiro impasse, ainda não sei fazer isso.
+1. propor operadores com todas as sequencias possiveis para pegar as joias faltantes; não parece haver suporte no SOAR para manipulação desse tipo de lista
+2. criar um operador para cada joia, gerar impasse para cada proxima joia, salvar o numeric-value como resultado do calculo até a última jóia. A dificuldade aqui é gerar os impasses em cascata, isto é, para cada estado, gerar um subestado de impasse sem sair do primeiro impasse, ainda não sei fazer isso.

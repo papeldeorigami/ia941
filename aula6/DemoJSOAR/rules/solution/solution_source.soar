@@ -7,6 +7,8 @@ source elaborations_source.soar
 popd
 source deliver.soar
 source get.soar
+source plan-move.soar
+source start-plan.soar
 source monitors.soar
 pushd monitors
 source monitors_source.soar

@@ -1,0 +1,74 @@
+sp {propose*start-plan-step1
+   (state <s> ^name plan
+             -^v-distances)
+-->
+   (<s> ^operator <o> + =)
+   (<o> ^name start-plan-step1)
+}
+
+sp {propose*start-plan-step2
+   (state <s> ^name plan
+              ^v-distances
+             -^planning true)
+-->
+   (<s> ^operator <o> + =)
+   (<o> ^name start-plan-step2)
+}
+
+sp {apply*start-plan-step1
+   (state <s> ^operator.name start-plan-step1
+              ^io.input-link.CREATURE <creature>)
+   (<creature> ^POSITION <p>
+               ^KNAPSACK <k>)
+   (<k> ^Red <kred>
+        ^Green <kgreen>
+        ^Blue <kblue>
+        ^Yellow <kyellow>
+        ^Magenta <kmagenta>
+        ^White <kwhite>)
+   (<p> ^X <px>
+        ^Y <py>)
+-->
+   (<s>        
+        # these "virtual" attributes exist only for deliberation, i.e. they are copied during the selection problem solving
+        ^v-distances <v-distances>           # distance to each jewel by name
+        ^v-knapsack <v-knapsack>             # representation of the knapsack
+        ^v-collected-names <collected-names> # a list of all entities names already collected in the planning phase, to ignore from visual input
+        ^v-traveled-distance 0               # this is the numeric-value for the selection problem
+        ^v-position <v-position>)            # represents the position of the creature during the planning phase
+
+   (<v-position> ^X <px>
+                 ^Y <py>)
+   
+   (<v-knapsack> ^Red <kred>
+                 ^Green <kgreen>
+                 ^Blue <kblue>
+                 ^Yellow <kyellow>
+                 ^Magenta <kmagenta>
+                 ^White <kwhite>)
+   
+   (write (crlf) | Initialize plan |)
+}
+
+sp {apply*start-plan-step2*start
+   (state <s> ^operator.name start-plan-step2
+             -^planning true)
+-->
+   (<s> ^planning true)
+   (write (crlf) | Start planning |)
+}
+
+sp {apply*start-plan-step2*v-distances
+   (state <s> ^operator.name start-plan-step2
+              ^memory.ENTITY <entity>
+              ^v-distances <v-distances>)
+   (<entity> ^NAME <entityName>
+             ^TYPE JEWEL
+             ^DISTANCE <distance>)
+  -(<v-distances> ^<entityName>)
+-->
+   (<v-distances> ^<entityName> <distance>)
+   
+   (write (crlf) | v-distance to entity | <entityName> | = | <distance> ||)
+}
+

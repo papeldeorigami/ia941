@@ -1,0 +1,14 @@
+sp {elaborate*v-distances*first
+   (state <s> ^name plan
+              ^memory.ENTITY <entity>
+              ^v-distances <v-distances>)
+   (<entity> ^NAME <entityName>
+             ^TYPE JEWEL
+             ^DISTANCE <distance>)
+  -(<v-distances> ^<entityName>)
+-->
+   (<v-distances> ^<entityName> <distance>)
+   
+   (write (crlf) | elaborate v-distance to entityName | <entityName> | = | <distance> ||)
+}
+

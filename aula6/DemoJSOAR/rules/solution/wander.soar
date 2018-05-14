@@ -1,9 +1,11 @@
 sp {propose*no-change*wander
-   (state <s> ^top-state <ts>
-              ^superstate <ss>
-              ^impasse no-change)
+   (state <s>
+             ^top-state <ts>
+             ^superstate <ss>
+             ^impasse no-change)
   -(<ss> ^impasse tie)
    (<ts> ^actions <actions>
+         ^name move
         -^sent-command)
   -(<actions> ^<any>)
 -->

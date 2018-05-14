@@ -1,14 +1,11 @@
 source _all.soar
 source collected-count.soar
 source desired-count.soar
-source desired-jewels.soar
 source distance-to-delivery-spot.soar
 source elapsed.soar
 source numeric-value.soar
 source problem-space.soar
 source ready-to-deliver.soar
-source substate-io.soar
 source top-state.soar
 source v-all-leaflets-complete.soar
 source v-collected-count.soar
-source v-distances.soar

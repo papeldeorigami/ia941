@@ -187,6 +187,7 @@ public class SoarBridge
                 collectedColors.put("Magenta", 0);
                 collectedColors.put("White", 0);
                 int order = 0;
+                int totalCollected = 0;
                 for (Leaflet l : c.getLeaflets()) {
                     InputBuilder leaflet = creatureLeaflets.push("LEAFLET");
                     leaflet.add("ORDER", order++);
@@ -206,9 +207,15 @@ public class SoarBridge
                         Integer collected = entry.getValue()[1];
                         colors.put(color, needed);
                         collectedColors.merge(color, collected, Integer::sum);
+                        totalCollected += collected;
                     }
                     for (HashMap.Entry<String, Integer> entry : colors.entrySet()) {
                         leaflet.add(entry.getKey(), entry.getValue());
+                    }
+                    if (totalCollected >= 9) {
+                        leaflet.add("COMPLETE", "true");
+                    } else {
+                        leaflet.add("COMPLETE", "false");
                     }
                 }
                 // Set Creature KNAPSACK (Bag)

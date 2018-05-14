@@ -1,8 +1,8 @@
 sp {solution*elaborate*problem-space
-   (state <s> ^name solution)
+   (state <s> ^name plan)
 -->
    (<s> ^problem-space <p>)
-   (<p> ^name solution
+   (<p> ^name plan-move
         ^default-state-copy yes
         ^one-level-attributes v-traveled-distance
         ^two-level-attributes v-knapsack v-position v-distances v-collected-names)
