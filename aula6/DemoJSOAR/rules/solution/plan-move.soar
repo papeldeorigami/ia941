@@ -1,3 +1,12 @@
+sp {monitor*plan-move
+   (state <s> ^name selection)
+-->
+   (write (crlf) | *************************************** |)
+   (write (crlf) | *********** Tie is resolved! ********** |)
+   (write (crlf) | *************************************** |)
+   (write (crlf) (cmd print --depth 2 <s>))
+}
+
 sp {propose*plan-move
    (state <s> ^name plan
               ^memory.ENTITY <entity>
@@ -11,7 +20,7 @@ sp {propose*plan-move
              ^NAME <entityName>
              ^TYPE JEWEL
              ^COLOR <color>)
-   (<distances> ^<entityName> { <DISTANCE> > 60 }) # move only if distance is high
+   (<distances> ^<entityName> <DISTANCE>) # in the plan, move even if distance is zero (to force computation of closest jewels)
    # filter colors only that are missing in some leaflet
    (<desired> ^<color> <desiredQuantity>)
    (<knapsack> ^<color> { <quantity> < <desiredQuantity> })

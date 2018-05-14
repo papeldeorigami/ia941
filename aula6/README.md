@@ -230,4 +230,4 @@ Causa:
 - cada operador contém apenas um destino (uma joia)
 Possiveis solucoes:
 1. propor operadores com todas as sequencias possiveis para pegar as joias faltantes; não parece haver suporte no SOAR para manipulação desse tipo de lista
-2. criar um operador para cada joia, gerar impasse para cada proxima joia, salvar o numeric-value como resultado do calculo até a última jóia. A dificuldade aqui é gerar os impasses em cascata, isto é, para cada estado, gerar um subestado de impasse sem sair do primeiro impasse, ainda não sei fazer isso.
+2. criar um operador para cada joia, gerar impasse para cada proxima joia, salvar o numeric-value como resultado do calculo até a última jóia. A dificuldade aqui é gerar os impasses em cascata, isto é, para cada estado, gerar um subestado de impasse sem sair do primeiro impasse e avaliar o numeric-value sendo a distancia total percorrida. Não se encontrou uma forma de implementar isto no tempo proposto para a atividade.
