@@ -1,36 +1,29 @@
-sp {monitor*plan-move
-   (state <s> ^name selection)
--->
-   (write (crlf) | *************************************** |)
-   (write (crlf) | *********** Tie is resolved! ********** |)
-   (write (crlf) | *************************************** |)
-   (write (crlf) (cmd print --depth 2 <s>))
-}
-
 sp {propose*plan-move
-   (state <s> ^name plan
-              ^memory.ENTITY <entity>
-              ^desired <desired>
-              ^v-distances <distances>
-              ^v-knapsack <knapsack>
-              ^planning true
-              ^v-collected-names <collectedNames>)
-   (<entity> ^X <entityPositionX>
-             ^Y <entityPositionY>
-             ^NAME <entityName>
-             ^TYPE JEWEL
-             ^COLOR <color>)
-   (<distances> ^<entityName> <DISTANCE>) # in the plan, move even if distance is zero (to force computation of closest jewels)
-   # filter colors only that are missing in some leaflet
+   (state <s> ^impasse no-change
+              ^superstate <ss>
+              ^topstate <ts>)
+   (<ss> ^operator <o>)
+   (<ts> ^memory.ENTITY <entity>)  # look for entities in memory that are still required
+   (<o> ^entity <operatorEntity>
+        ^collected-names <collected-names>
+        ^traveled-distance <traveled-distance>
+        ^distances <distances>)
+   (<entity> ^NAME { <entityName> <> <operatorEntityName> })
+   (<operatorEntity> ^NAME <operatorEntityName>)
+   (<position> ^X <px>
+               ^Y <py>)
+   
    (<desired> ^<color> <desiredQuantity>)
    (<knapsack> ^<color> { <quantity> < <desiredQuantity> })
-   # do not get doubled entities
-  -(<collectedNames> ^NAME <entityName>)
+   
+   
+  -(<collected-names> ^<entityName>)
 -->
    (<s> ^operator <o> +)
    (<o> ^name plan-move)
    (<o> ^parameter <p>)
-   (<p> ^NAME <entityName>
+   (<collectedNames> ^<entityName> true)
+   (<p> ^entity <entity>
         ^X <entityPositionX>
         ^Y <entityPositionY>
         ^COLOR <color>
@@ -38,35 +31,68 @@ sp {propose*plan-move
    (write (crlf) | propose plan-move (to jewel): name = | <entityName> | distance = | <DISTANCE> ||)
 }  
 
-sp {apply*plan-move
-   (state <s> 
-        ^operator <o>
-        ^desired <desired>
-        ^v-position <position>
-        ^v-distances <distances>
-        ^v-knapsack <knapsack>
-        ^v-collected-names <collectedNames>
-        ^v-traveled-distance <traveledDistance>)
-   (<position> ^X <oldX>
-               ^Y <oldY>)
-   (<o> ^name plan-move
-        ^parameter <p>)
-   (<p> ^NAME <entityName>
-        ^X <x>
-        ^Y <y>
-        ^COLOR <color>
-        ^DISTANCE <DISTANCE>)
-   (<knapsack> ^<color> <quantity>)
-   (<desired> ^<color> <dquantity>)
--->
-   (<collectedNames> ^NAME <entityName>)
-   (<position> ^X <oldX> -
-               ^Y <oldY> -
-               ^X <x>
-               ^Y <y>)
-   (<knapsack> ^<color> <quantity> - (+ <quantity> 1))
-   (<s> ^v-traveled-distance <traveledDistance> -
-        ^v-traveled-distance (+ <traveledDistance> <DISTANCE>))
-   (write (crlf) | Plan move: name = | <entityName> | color=| <color> ||)
-   (write (crlf) | Virtual get | <color> | | (+ <quantity> 1) |/| <dquantity> ||)
-}
+
+#sp {propose*plan-move
+#   (state <s> ^name plan
+#              ^memory.ENTITY <entity>
+#              ^desired <desired>
+#              ^v-distances <distances>
+#              ^v-knapsack <knapsack>
+#              ^planning true
+#              ^v-collected-names <collectedNames>)
+#   (<entity> ^X <entityPositionX>
+#             ^Y <entityPositionY>
+#             ^NAME <entityName>
+#             ^TYPE JEWEL
+#             ^COLOR <color>)
+#   (<distances> ^<entityName> <DISTANCE>) # in the plan, move even if distance is zero (to force computation of closest jewels)
+#   # filter colors only that are missing in some leaflet
+#   (<desired> ^<color> <desiredQuantity>)
+#   (<knapsack> ^<color> { <quantity> < <desiredQuantity> })
+#   # do not get doubled entities
+#  -(<collectedNames> ^NAME <entityName>)
+#-->
+#   (<s> ^operator <o> +)
+#   (<o> ^name plan-move)
+#   (<o> ^parameter <p>)
+#   (<p> ^NAME <entityName>
+#        ^X <entityPositionX>
+#        ^Y <entityPositionY>
+#        ^COLOR <color>
+#        ^DISTANCE <DISTANCE>)
+#   (write (crlf) | propose plan-move (to jewel): name = | <entityName> | distance = | <DISTANCE> ||)
+#}  
+#
+#sp {apply*plan-move
+#   (state <s> 
+#        ^operator <o>
+#        ^desired <desired>
+#        ^v-position <position>
+#        ^v-distances <distances>
+#        ^v-knapsack <knapsack>
+#        ^v-collected-names <collectedNames>
+#        ^v-traveled-distance <traveledDistance>)
+#   (<position> ^X <oldX>
+#               ^Y <oldY>)
+#   (<o> ^name plan-move
+#        ^parameter <p>)
+#   (<p> ^NAME <entityName>
+#        ^X <x>
+#        ^Y <y>
+#        ^COLOR <color>
+#        ^DISTANCE <DISTANCE>)
+#   (<knapsack> ^<color> <quantity>)
+#   (<desired> ^<color> <dquantity>)
+#-->
+#   (<collectedNames> ^NAME <entityName>)
+#   (<position> ^X <oldX> -
+#               ^Y <oldY> -
+#               ^X <x>
+#               ^Y <y>)
+#   (<knapsack> ^<color> <quantity> - (+ <quantity> 1))
+#   (<s> ^v-traveled-distance <traveledDistance> -
+#        ^v-traveled-distance (+ <traveledDistance> <DISTANCE>))
+#   (write (crlf) | Plan move: name = | <entityName> | color=| <color> ||)
+#   (write (crlf) | Virtual get | <color> | | (+ <quantity> 1) |/| <dquantity> ||)
+#}
+#

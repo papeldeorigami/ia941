@@ -17,19 +17,19 @@ VERSION 4
 14	3	FOPERATOR v-collected-count v-collected-count.soar 15
 15	0	FOPERATOR deliver deliver.soar 16
 16	0	FOPERATOR get get.soar 17
-17	0	HLFOPERATOR monitors monitors.soar monitors 0 20
-18	17	FOPERATOR selected-move selected-move.soar 21
-19	17	FOPERATOR v-knapsack v-knapsack.soar 22
-20	17	FOPERATOR v-traveled-distance v-traveled-distance.soar 23
-21	0	FOPERATOR move move.soar 24
-22	0	FOPERATOR output-command output-command.soar 25
-23	0	FOPERATOR plan-move plan-move.soar 18
-24	0	HLFOPERATOR preferences preferences.soar preferences 0 26
-25	0	FOPERATOR remove-output remove-output.soar 27
-26	0	FOPERATOR reset-plan reset-plan.soar 28
-27	0	FOPERATOR see see.soar 29
-28	0	FOPERATOR simulate-input simulate-input.soar 30
-29	0	FOPERATOR start-plan start-plan.soar 19
+17	0	HLFOPERATOR monitors monitors.soar monitors 0 18
+18	17	FOPERATOR selected-move selected-move.soar 19
+19	17	FOPERATOR v-knapsack v-knapsack.soar 20
+20	17	FOPERATOR v-traveled-distance v-traveled-distance.soar 21
+21	0	FOPERATOR move move.soar 22
+22	0	FOPERATOR output-command output-command.soar 23
+23	0	FOPERATOR plan-move plan-move.soar 24
+24	0	HLFOPERATOR preferences preferences.soar preferences 0 25
+25	0	FOPERATOR remove-output remove-output.soar 26
+26	0	FOPERATOR reset-plan reset-plan.soar 27
+27	0	FOPERATOR see see.soar 28
+28	0	FOPERATOR simulate-input simulate-input.soar 29
+29	0	FOPERATOR start-plan start-plan.soar 30
 30	0	FOPERATOR update-timestamp update-timestamp.soar 31
 31	0	FOPERATOR wait wait.soar 32
 32	0	FOPERATOR wander wander.soar 33
