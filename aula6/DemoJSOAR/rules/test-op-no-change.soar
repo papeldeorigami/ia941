@@ -27,7 +27,8 @@ sp {propose*init
 sp {apply*init
    (state <s> ^operator.name init)
 -->
-   (<s> ^list <list> 
+   (<s> ^name solution
+        ^list <list> 
         ^init true 
         ^desired <d>)
    (<list> ^value 1 ^value 2 ^value 3)
@@ -37,8 +38,7 @@ sp {apply*init
 
 sp {propose*move
    (state <s> ^init true
-              ^list <list>
-              ^superstate nil)
+              ^list <list>)
 -->
    (<s> ^operator <o> +)
    (<o> ^name move
@@ -62,28 +62,31 @@ sp {propose*move*plan
    (<p> ^list-copy <list>)
    (<list> ^value <value>)
 -->
-   (<s> ^operator <o> +)
-   (<o> ^name move-plan
-        ^parameter <p>)
-   (<p> ^value <value>)
+   (<s> ^operator <op> +)
+   (<op> ^name move-plan
+        ^parameter <param>)
+   (<param> ^value <value>)
+   (write (crlf) | Propose move to | <value> ||)
 }
 
-#sp {elaborate*problem-space
-#   (state <s> ^init true)
-#-->
-#   (<s> ^problem-space <p>)
-#   (<p> ^name move-plan-selection
-#        ^default-state-copy yes
-#        ^two-level-attributes list)
-#}
+sp {elaborate*problem-space
+   (state <s> ^name solution)
+-->
+   (<s> ^problem-space <p>)
+   (<p> ^name solution
+        ^default-state-copy yes
+        ^two-level-attributes list)
+}
 
 sp {apply*move*plan
-   (state <s> ^operator <o>
-              ^superstate <ss>)
+   (state <s> ^operator <o>)
+#              ^top-state <ts>)
+#              ^list <list>)
    (<o> ^name move-plan
         ^parameter.value <value>)
 -->
-   (<ss> ^target <value>)
+   (<s> ^target <value>)
+#   (<s> ^numeric-value <value>)
    (write (crlf) | Apply move plan to value: | <value> ||)
 }
 
