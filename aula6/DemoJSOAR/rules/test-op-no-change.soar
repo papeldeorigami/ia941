@@ -16,6 +16,12 @@ sp {elaborate*state*top-state
    (<s> ^top-state <ts>)
 }
 
+sp {elaborate*state*name
+   (state <s> ^superstate.operator.name <name>)
+-->
+   (<s> ^name <name>)
+}
+
 sp {propose*init
    (state <s> ^superstate nil
              -^init)
@@ -30,14 +36,17 @@ sp {apply*init
    (<s> ^name solution
         ^list <list> 
         ^init true 
+        ^answer <answer>
         ^desired <d>)
-   (<list> ^value 1 ^value 2 ^value 3)
-   (<d> ^better low)
+   (<list> ^direction 1 ^direction 2 ^direction 3)
+   (<d> ^answer.direction 3)
+   (<answer> ^direction none)
    (write (crlf) | Init |)
 }
 
 sp {propose*move
-   (state <s> ^init true
+   (state <s> ^superstate nil
+              ^init true
               ^list <list>)
 -->
    (<s> ^operator <o> +)
@@ -46,11 +55,22 @@ sp {propose*move
    (<p> ^list-copy (deep-copy <list>))
 }
 
+sp {elaborate*move*impasse
+   (state <s> ^impasse no-change
+              ^superstate <ss>)
+   (<ss> ^answer <answer>
+         ^desired <desired>)
+-->
+   (<s> ^answer <answer>
+        ^desired <desired>)
+}
+
 sp {apply*move
    (state <s> ^operator.name move
               ^target <target>)
 -->
    (write (crlf) | Move: | <target> ||)
+   (halt)
 }
 
 sp {propose*move*plan
@@ -60,33 +80,69 @@ sp {propose*move*plan
    (<o> ^name move
         ^parameter <p>)
    (<p> ^list-copy <list>)
-   (<list> ^value <value>)
+   (<list> ^direction <direction>)
 -->
    (<s> ^operator <op> +)
    (<op> ^name move-plan
         ^parameter <param>)
-   (<param> ^value <value>)
-   (write (crlf) | Propose move to | <value> ||)
+   (<param> ^direction <direction>)
+   (write (crlf) | Propose move to | <direction> ||)
+}
+
+#sp {propose*move*plan
+#   (state <s> ^list <list>)
+#   (<list> ^direction <direction>)
+#-->
+#   (<s> ^operator <op> +)
+#   (<op> ^name move-plan
+#         ^parameter <param>)
+#   (<param> ^direction <direction>)
+#   (write (crlf) | Propose move to | <direction> ||)
+#}
+
+sp {apply*move*plan
+   (state <s> ^operator <o>
+              ^answer <answer>)
+   (<answer> ^direction <old-direction>)
+   (<o> ^name move-plan
+        ^parameter.direction <direction>)
+-->
+   (<answer> ^direction <old-direction> -
+             ^direction <direction>)
+#   (<s> ^numeric-value <direction>)
+   (write (crlf) | Apply move plan to direction: | <direction> ||)
 }
 
 sp {elaborate*problem-space
-   (state <s> ^name solution)
+   (state <s> ^name move)
 -->
    (<s> ^problem-space <p>)
-   (<p> ^name solution
+   (<p> ^name move-plan
         ^default-state-copy yes
-        ^two-level-attributes list)
+        ^two-level-attributes answer)
 }
 
-sp {apply*move*plan
-   (state <s> ^operator <o>)
-#              ^top-state <ts>)
-#              ^list <list>)
-   (<o> ^name move-plan
-        ^parameter.value <value>)
+sp {evaluate*state*success
+   (state <s> ^desired <d>
+              ^problem-space.name move-plan
+              ^tried-tied-operator
+              ^answer.direction <direction>
+              ^top-state <ts>)
+   (<d> ^answer.direction <direction>)
 -->
-   (<s> ^target <value>)
-#   (<s> ^numeric-value <value>)
-   (write (crlf) | Apply move plan to value: | <value> ||)
+   (<s> ^success <d>)
+   (<ts> ^target <direction>)
+   (write (crlf) | ========= Success! ========== |)
+}
+
+sp {evaluate*state*failure
+   (state <s> ^desired <d>
+              ^problem-space.name move-plan
+              ^tried-tied-operator
+              ^answer.direction <direction>)
+  -(<d> ^answer.direction <direction>)
+-->
+   (<s> ^failure <d>)
+   (write (crlf) | xxxxxxxxx  Failure! xxxxxxxxxxx |)
 }
 
