@@ -34,97 +34,139 @@ sp {apply*init
    (state <s> ^operator.name init)
 -->
    (<s> ^name solution
-        ^list <list> 
+        ^memory <memory> 
         ^init true 
         ^answer <answer>
         ^desired <d>)
-   (<list> ^direction 1 ^direction 2 ^direction 3)
-   (<d> ^answer.direction 3)
-   (<answer> ^direction none)
+   (<memory> ^jewel <j1> ^jewel <j2> ^jewel <j3>)
+   (<j1> ^name jewel1 ^direction 1 ^points 1)
+   (<j2> ^name jewel2 ^direction 2 ^points 2)
+   (<j3> ^name jewel3 ^direction 3 ^points 3)
+   (<d> ^answer.sum 5)
+   (<answer> ^sum 0)
    (write (crlf) | Init |)
 }
 
 sp {propose*move
    (state <s> ^superstate nil
-              ^init true
-              ^list <list>)
+              ^init true)
 -->
    (<s> ^operator <o> +)
    (<o> ^name move
         ^parameter <p>)
-   (<p> ^list-copy (deep-copy <list>))
+   (<p> ^try-path true)
 }
 
-sp {elaborate*move*impasse
-   (state <s> ^impasse no-change
-              ^superstate <ss>)
-   (<ss> ^answer <answer>
-         ^desired <desired>)
--->
-   (<s> ^answer <answer>
-        ^desired <desired>)
-}
+#sp {elaborate*move*impasse
+#   (state <s> ^impasse no-change
+#              ^superstate <ss>)
+#   (<ss> ^answer <answer>
+#         ^desired <desired>)
+#-->
+#   (<s> ^answer <answer>
+#        ^desired <desired>)
+#}
 
 sp {apply*move
    (state <s> ^operator.name move
-              ^target <target>)
+              ^target <target>
+              ^answer.sum <sum>)
 -->
-   (write (crlf) | Move: | <target> ||)
+   (write (crlf) | Move: | <target> | with points | <sum> ||)
    (halt)
 }
 
-sp {propose*move*plan
+sp {propose*try-path
    (state <s> ^impasse no-change
+              ^memory <memory>
+             -^collected-jewels <name>
               ^superstate <ss>)
    (<ss> ^operator <o>)
-   (<o> ^name move
-        ^parameter <p>)
-   (<p> ^list-copy <list>)
-   (<list> ^direction <direction>)
+   (<o> ^parameter <p>)
+   (<p> ^try-path true)
+   (<memory> ^jewel <jewel>)
+   (<jewel> ^name <name>
+            ^direction <direction>)
 -->
    (<s> ^operator <op> +)
-   (<op> ^name move-plan
+   (<op> ^name try-path
         ^parameter <param>)
-   (<param> ^direction <direction>)
-   (write (crlf) | Propose move to | <direction> ||)
+   (<param> ^jewel <jewel>
+            ^try-path true)
+   (write (crlf) | Propose try path | <direction> ||)
 }
 
-#sp {propose*move*plan
-#   (state <s> ^list <list>)
-#   (<list> ^direction <direction>)
+#sp {propose*try-path
+#   (state <s> ^memory <memory>)
+#   (<memory> ^direction <direction>)
 #-->
 #   (<s> ^operator <op> +)
-#   (<op> ^name move-plan
+#   (<op> ^name try-path
 #         ^parameter <param>)
 #   (<param> ^direction <direction>)
 #   (write (crlf) | Propose move to | <direction> ||)
 #}
 
-sp {apply*move*plan
+sp {apply*try-path
    (state <s> ^operator <o>
               ^answer <answer>)
-   (<answer> ^direction <old-direction>)
-   (<o> ^name move-plan
-        ^parameter.direction <direction>)
+   (<answer> ^sum <old-sum>)
+   (<o> ^name try-path
+        ^parameter.jewel <jewel>)
+   (<jewel> ^direction <direction>
+            ^points <points>
+            ^name <name>)
 -->
-   (<answer> ^direction <old-direction> -
-             ^direction <direction>)
+   (<answer> ^sum <old-sum> -
+             ^sum (+ <old-sum> <points>))
+   (<s> ^collected-jewels <name>)
 #   (<s> ^numeric-value <direction>)
-   (write (crlf) | Apply move plan to direction: | <direction> ||)
+   (write (crlf) | Apply try path to direction: | <direction> ||)
 }
 
-sp {elaborate*problem-space
+# (S13 ^answer N2 ^attribute operator ^choices none ^collected-jewels jewel1
+#       ^default-operator-copy yes ^default-state-copy yes ^desired D1
+#       ^duplicate-of S3 ^duplicates D4 ^epmem E9 ^impasse no-change
+#       ^look-ahead-operator C16 ^name move ^name evaluate-operator
+#       ^problem-space P7 ^quiescence t ^reward-link R19 ^smem S14
+#       ^superstate S5 ^top-state S1 ^tried-tied-operator C16 ^type state)
+
+#(S15 ^attribute state ^choices none ^epmem E10 ^impasse no-change
+#       ^quiescence t ^reward-link R22 ^smem S16 ^superstate S13 ^type state)
+
+sp {elaborate*path*impasse
+   (state <s> ^impasse no-change
+              ^superstate <ss>)
+   (<ss> ^answer <answer>
+         ^desired <desired>
+         ^memory <memory>)
+-->
+   (<s> ^answer <answer>
+        ^desired <desired>
+        ^memory <memory>)
+}
+
+sp {elaborate*path*impasse*collected-jewels
+   (state <s> ^impasse no-change
+              ^superstate <ss>)
+#             -^collected-jewels <name>)
+   (<ss> ^collected-jewels <name>)
+-->
+   (<s> ^collected-jewels <name>)
+}
+
+sp {elaborate*problem-space*move
    (state <s> ^name move)
 -->
    (<s> ^problem-space <p>)
-   (<p> ^name move-plan
+   (<p> ^name try-path
         ^default-state-copy yes
         ^two-level-attributes answer)
 }
 
 sp {evaluate*state*success
    (state <s> ^desired <d>
-              ^problem-space.name move-plan
+              ^problem-space.name try-path
               ^tried-tied-operator
               ^answer.direction <direction>
               ^top-state <ts>)
@@ -137,7 +179,7 @@ sp {evaluate*state*success
 
 sp {evaluate*state*failure
    (state <s> ^desired <d>
-              ^problem-space.name move-plan
+              ^problem-space.name try-path
               ^tried-tied-operator
               ^answer.direction <direction>)
   -(<d> ^answer.direction <direction>)
