@@ -37,7 +37,8 @@ sp {apply*init
         ^memory <memory> 
         ^init true 
         ^answer <answer>
-        ^desired <d>)
+        ^desired <d>
+        ^collected-jewels <collected-jewels>)
    (<memory> ^jewel <j1> ^jewel <j2> ^jewel <j3>)
    (<j1> ^name jewel1 ^direction 1 ^points 1)
    (<j2> ^name jewel2 ^direction 2 ^points 2)
@@ -79,14 +80,12 @@ sp {apply*move
 sp {propose*try-path
    (state <s> ^impasse no-change
               ^memory <memory>
-             -^collected-jewels <name>
-              ^superstate <ss>)
-   (<ss> ^operator <o>)
-   (<o> ^parameter <p>)
-   (<p> ^try-path true)
+              ^collected-jewels <collected-jewels>
+             -^success)
    (<memory> ^jewel <jewel>)
    (<jewel> ^name <name>
             ^direction <direction>)
+  -(<collected-jewels> ^jewel-name <name>)
 -->
    (<s> ^operator <op> +)
    (<op> ^name try-path
@@ -96,20 +95,10 @@ sp {propose*try-path
    (write (crlf) | Propose try path | <direction> ||)
 }
 
-#sp {propose*try-path
-#   (state <s> ^memory <memory>)
-#   (<memory> ^direction <direction>)
-#-->
-#   (<s> ^operator <op> +)
-#   (<op> ^name try-path
-#         ^parameter <param>)
-#   (<param> ^direction <direction>)
-#   (write (crlf) | Propose move to | <direction> ||)
-#}
-
 sp {apply*try-path
    (state <s> ^operator <o>
-              ^answer <answer>)
+              ^answer <answer>
+              ^collected-jewels <collected-jewels>)
    (<answer> ^sum <old-sum>)
    (<o> ^name try-path
         ^parameter.jewel <jewel>)
@@ -119,58 +108,70 @@ sp {apply*try-path
 -->
    (<answer> ^sum <old-sum> -
              ^sum (+ <old-sum> <points>))
-   (<s> ^collected-jewels <name>)
+   (<collected-jewels> ^jewel-name <name>)
 #   (<s> ^numeric-value <direction>)
    (write (crlf) | Apply try path to direction: | <direction> ||)
 }
 
-# (S13 ^answer N2 ^attribute operator ^choices none ^collected-jewels jewel1
-#       ^default-operator-copy yes ^default-state-copy yes ^desired D1
-#       ^duplicate-of S3 ^duplicates D4 ^epmem E9 ^impasse no-change
-#       ^look-ahead-operator C16 ^name move ^name evaluate-operator
-#       ^problem-space P7 ^quiescence t ^reward-link R19 ^smem S14
-#       ^superstate S5 ^top-state S1 ^tried-tied-operator C16 ^type state)
+sp {elaborate*move*select-path
+   (state <s> ^name move)
+-->
+   (<s> ^select-path true)
+}
 
-#(S15 ^attribute state ^choices none ^epmem E10 ^impasse no-change
-#       ^quiescence t ^reward-link R22 ^smem S16 ^superstate S13 ^type state)
-
-sp {elaborate*path*impasse
+sp {elaborate*tried-tied-operator*select-path
    (state <s> ^impasse no-change
+              ^tried-tie-operator)
+-->
+   (<s> ^select-path true)
+}
+
+sp {elaborate*select-path*desired*memory
+   (state <s> ^select-path
               ^superstate <ss>)
-   (<ss> ^answer <answer>
-         ^desired <desired>
+   (<ss> ^desired <desired>
          ^memory <memory>)
 -->
-   (<s> ^answer <answer>
-        ^desired <desired>
+   (<s> ^desired <desired>
         ^memory <memory>)
 }
 
-sp {elaborate*path*impasse*collected-jewels
-   (state <s> ^impasse no-change
+sp {elaborate*select-path*answer
+   (state <s> ^select-path
+             -^tried-tie-operator
+              ^superstate <ss>
+              ^top-state <ts>)
+  -(<ss> ^impasse tie)
+   (<ts> ^answer <answer>)
+-->
+   (<s> ^answer <answer>)
+}
+
+sp {elaborate*select-path*collected-jewels
+   (state <s> ^select-path
+             -^tried-tie-operator
               ^superstate <ss>)
-#             -^collected-jewels <name>)
    (<ss> ^collected-jewels <name>)
 -->
    (<s> ^collected-jewels <name>)
 }
 
-sp {elaborate*problem-space*move
-   (state <s> ^name move)
+sp {elaborate*select-path*problem-space
+   (state <s> ^select-path)
 -->
    (<s> ^problem-space <p>)
-   (<p> ^name try-path
+   (<p> ^name select-path
         ^default-state-copy yes
-        ^two-level-attributes answer)
+        ^two-level-attributes answer collected-jewels)
 }
 
 sp {evaluate*state*success
    (state <s> ^desired <d>
-              ^problem-space.name try-path
-              ^tried-tied-operator
-              ^answer.direction <direction>
+              ^problem-space.name select-path
+              #^tried-tied-operator
+              ^answer.sum <sum>
               ^top-state <ts>)
-   (<d> ^answer.direction <direction>)
+   (<d> ^answer.sum <sum>)
 -->
    (<s> ^success <d>)
    (<ts> ^target <direction>)
@@ -179,12 +180,13 @@ sp {evaluate*state*success
 
 sp {evaluate*state*failure
    (state <s> ^desired <d>
-              ^problem-space.name try-path
+              ^problem-space.name select-path
               ^tried-tied-operator
-              ^answer.direction <direction>)
-  -(<d> ^answer.direction <direction>)
+              ^answer <answer>)
+   (<answer> ^sum <sum>)
+  -(<d> ^answer.sum <sum>)
 -->
-   (<s> ^failure <d>)
+   #(<s> ^failure <d>)
    (write (crlf) | xxxxxxxxx  Failure! xxxxxxxxxxx |)
 }
 
