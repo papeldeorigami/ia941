@@ -20,7 +20,9 @@ namespace ClarionApp
     {
         DO_NOTHING,
         ROTATE_CLOCKWISE,
-        GO_AHEAD
+        GO_AHEAD,
+		EAT_FOOD,
+		SACK_JEWEL,
     }
 
     public class ClarionAgent
@@ -34,6 +36,15 @@ namespace ClarionApp
         /// Constant that represents that there is at least one wall ahead
         /// </summary>
         private String DIMENSION_WALL_AHEAD = "WallAhead";
+		/// <summary>
+		/// Constant that represents that there is at least one food ahead
+		/// </summary>
+		private String DIMENSION_FOOD_AHEAD = "FoodAhead";
+		/// <summary>
+		/// Constant that represents that there is at least one jewel ahead
+		/// </summary>
+		private String DIMENSION_JEWEL_AHEAD = "JewelAhead";
+
 		double prad = 0;
         #endregion
 
@@ -41,6 +52,8 @@ namespace ClarionApp
 		public MindViewer mind;
 		String creatureId = String.Empty;
 		String creatureName = String.Empty;
+		String foodName = String.Empty;
+		String jewelName = String.Empty;
         #region Simulation
         /// <summary>
         /// If this value is greater than zero, the agent will have a finite number of cognitive cycle. Otherwise, it will have infinite cycles.
@@ -73,6 +86,14 @@ namespace ClarionApp
         /// Perception input to indicates a wall ahead
         /// </summary>
 		private DimensionValuePair inputWallAhead;
+		/// <summary>
+		/// Perception input to indicates food ahead
+		/// </summary>
+		private DimensionValuePair inputFoodAhead;
+		/// <summary>
+		/// Perception input to indicates jewel ahead
+		/// </summary>
+		private DimensionValuePair inputJewelAhead;
         #endregion
 
         #region Action Output
@@ -84,6 +105,14 @@ namespace ClarionApp
         /// Output action that makes the agent go ahead
         /// </summary>
 		private ExternalActionChunk outputGoAhead;
+		/// <summary>
+		/// Output action that makes the agent eat food
+		/// </summary>
+		private ExternalActionChunk outputEatFood;
+		/// <summary>
+		/// Output action that makes the agent sack a jewel
+		/// </summary>
+		private ExternalActionChunk outputSackJewel;
         #endregion
 
         #endregion
@@ -101,10 +130,14 @@ namespace ClarionApp
 
             // Initialize Input Information
             inputWallAhead = World.NewDimensionValuePair(SENSOR_VISUAL_DIMENSION, DIMENSION_WALL_AHEAD);
+			inputFoodAhead = World.NewDimensionValuePair(SENSOR_VISUAL_DIMENSION, DIMENSION_FOOD_AHEAD);
+			inputJewelAhead = World.NewDimensionValuePair(SENSOR_VISUAL_DIMENSION, DIMENSION_JEWEL_AHEAD);
 
             // Initialize Output actions
             outputRotateClockwise = World.NewExternalActionChunk(CreatureActions.ROTATE_CLOCKWISE.ToString());
             outputGoAhead = World.NewExternalActionChunk(CreatureActions.GO_AHEAD.ToString());
+			outputEatFood = World.NewExternalActionChunk(CreatureActions.EAT_FOOD.ToString());
+			outputSackJewel = World.NewExternalActionChunk(CreatureActions.SACK_JEWEL.ToString());
 
             //Create thread to simulation
             runThread = new Thread(CognitiveCycle);
@@ -177,6 +210,14 @@ namespace ClarionApp
 				case CreatureActions.GO_AHEAD:
 					worldServer.SendSetAngle(creatureId, 1, 1, prad);
 					break;
+				case CreatureActions.EAT_FOOD:
+					if (!String.IsNullOrEmpty(foodName))
+						worldServer.SendEatIt (creatureId, foodName);
+					break;
+				case CreatureActions.SACK_JEWEL:
+					if (!String.IsNullOrEmpty(jewelName))
+						worldServer.SendSackIt (creatureId, jewelName);
+					break;
 				default:
 					break;
 				}
@@ -205,19 +246,33 @@ namespace ClarionApp
         /// </summary>
         private void SetupACS()
         {
-            // Create Rule to avoid collision with wall
+            // Create Rule to avoid colision with wall
             SupportCalculator avoidCollisionWallSupportCalculator = FixedRuleToAvoidCollisionWall;
             FixedRule ruleAvoidCollisionWall = AgentInitializer.InitializeActionRule(CurrentAgent, FixedRule.Factory, outputRotateClockwise, avoidCollisionWallSupportCalculator);
 
             // Commit this rule to Agent (in the ACS)
             CurrentAgent.Commit(ruleAvoidCollisionWall);
 
-            // Create Colission To Go Ahead
+            // Create Rule To Go Ahead
             SupportCalculator goAheadSupportCalculator = FixedRuleToGoAhead;
             FixedRule ruleGoAhead = AgentInitializer.InitializeActionRule(CurrentAgent, FixedRule.Factory, outputGoAhead, goAheadSupportCalculator);
-            
+
+			// Commit this rule to Agent (in the ACS)
+			CurrentAgent.Commit(ruleGoAhead);
+
+			// Create Rule to Eat Food
+			SupportCalculator eatFoodSupportCalculator = FixedRuleToEatFood;
+			FixedRule ruleEatFood = AgentInitializer.InitializeActionRule(CurrentAgent, FixedRule.Factory, outputEatFood, eatFoodSupportCalculator);
+
             // Commit this rule to Agent (in the ACS)
-            CurrentAgent.Commit(ruleGoAhead);
+			CurrentAgent.Commit(ruleEatFood);
+
+			// Create Rule to Collect (Sack) Jewel
+			SupportCalculator sackJewelSupportCalculator = FixedRuleToSackJewel;
+			FixedRule ruleSackJewel = AgentInitializer.InitializeActionRule(CurrentAgent, FixedRule.Factory, outputSackJewel, sackJewelSupportCalculator);
+
+			// Commit this rule to Agent (in the ACS)
+			CurrentAgent.Commit(ruleSackJewel);
 
             // Disable Rule Refinement
             CurrentAgent.ACS.Parameters.PERFORM_RER_REFINEMENT = false;
@@ -245,10 +300,27 @@ namespace ClarionApp
             // New sensory information
             SensoryInformation si = World.NewSensoryInformation(CurrentAgent);
 
-            // Detect if we have a wall ahead
-            Boolean wallAhead = listOfThings.Where(item => (item.CategoryId == Thing.CATEGORY_BRICK && item.DistanceToCreature <= 61)).Any();
-            double wallAheadActivationValue = wallAhead ? CurrentAgent.Parameters.MAX_ACTIVATION : CurrentAgent.Parameters.MIN_ACTIVATION;
-            si.Add(inputWallAhead, wallAheadActivationValue);
+			// Detect if we have jewel ahead
+			IEnumerable<Thing> jewels = listOfThings.Where(item => (item.CategoryId == Thing.CATEGORY_JEWEL && item.DistanceToCreature <= 61));
+			Boolean jewelAhead = jewels.Any();
+			if (jewelAhead)
+				jewelName = jewels.First().Name;
+			double jewelAheadActivationValue = jewelAhead ? CurrentAgent.Parameters.MAX_ACTIVATION : CurrentAgent.Parameters.MIN_ACTIVATION;
+			si.Add(inputJewelAhead, jewelAheadActivationValue);
+
+			// Detect if we have food ahead
+			IEnumerable<Thing> foods = listOfThings.Where(item => ((item.CategoryId == Thing.CATEGORY_NPFOOD || item.CategoryId == Thing.categoryPFOOD) && item.DistanceToCreature <= 61));
+			Boolean foodAhead = foods.Any();
+			if (foodAhead)
+				foodName = foods.First().Name;
+			double foodAheadActivationValue = foodAhead ? CurrentAgent.Parameters.MAX_ACTIVATION : CurrentAgent.Parameters.MIN_ACTIVATION;
+			si.Add(inputFoodAhead, foodAheadActivationValue);
+
+			// Detect if we have a wall ahead
+			Boolean wallAhead = listOfThings.Where(item => (item.CategoryId == Thing.CATEGORY_BRICK && item.DistanceToCreature <= 61)).Any();
+			double wallAheadActivationValue = wallAhead ? CurrentAgent.Parameters.MAX_ACTIVATION : CurrentAgent.Parameters.MIN_ACTIVATION;
+			si.Add(inputWallAhead, wallAheadActivationValue);
+
 			//Console.WriteLine(sensorialInformation);
 			Creature c = (Creature) listOfThings.Where(item => (item.CategoryId == Thing.CATEGORY_CREATURE)).First();
 			int n = 0;
@@ -272,7 +344,19 @@ namespace ClarionApp
             // Here we will make the logic to go ahead
             return ((currentInput.Contains(inputWallAhead, CurrentAgent.Parameters.MIN_ACTIVATION))) ? 1.0 : 0.0;
         }
-        #endregion
+
+		private double FixedRuleToEatFood(ActivationCollection currentInput, Rule target)
+		{
+			// Here we will make the logic to eat food
+			return ((currentInput.Contains(inputFoodAhead, CurrentAgent.Parameters.MAX_ACTIVATION))) ? 1.0 : 0.0;
+		}
+
+		private double FixedRuleToSackJewel(ActivationCollection currentInput, Rule target)
+		{
+			// Here we will make the logic to sack jewel
+			return ((currentInput.Contains(inputJewelAhead, CurrentAgent.Parameters.MAX_ACTIVATION))) ? 1.0 : 0.0;
+		}
+		#endregion
 
         #region Run Thread Method
         private void CognitiveCycle(object obj)
