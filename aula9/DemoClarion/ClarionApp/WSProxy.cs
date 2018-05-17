@@ -534,6 +534,54 @@ namespace ClarionApp
         }
 
 		/// <summary>
+		/// Send Deliver Command
+		/// </summary>
+		/// <param name="creatureId">The creature ID</param>
+		/// <param name="leafletId">The leaflet to be delivered</param>
+		/// <exception cref="WorldServerConnectionError">Connection Exception</exception>
+		/// <exception cref="WorldServerReadError">Read Exception</exception>
+		/// <exception cref="WorldServerSendError">Send Exception</exception>
+		/// <returns>The messages received from World Server</returns>
+		public string SendDeliverIt(string creatureId, String leafletId)
+		{
+			String response = String.Empty;
+
+			try
+			{
+				// Prepare the message
+				StringBuilder builder = new StringBuilder();
+				builder.Append("deliver ");
+				builder.Append(creatureId);
+				builder.Append(" ");
+				builder.Append(leafletId);
+
+				// Send Message
+				SendMessage(builder.ToString());
+
+				// Read the response
+				response = ReadMessage();
+			}
+			catch (WorldServerConnectionError connEx)
+			{
+				throw connEx;
+			}
+			catch (WorldServerSendError sendEx)
+			{
+				throw sendEx;
+			}
+			catch (WorldServerReadError readEx)
+			{
+				throw readEx;
+			}
+			catch (Exception e)
+			{
+				throw new WorldServerSendError("Error while sending message", e);
+			}
+
+			return response;
+		}
+
+		/// <summary>
 		/// Send CreateLeaflet Command
 		/// </summary>
 		/// <exception cref="WorldServerConnectionError">Connection Exception</exception>

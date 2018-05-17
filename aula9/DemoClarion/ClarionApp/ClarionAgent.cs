@@ -21,8 +21,11 @@ namespace ClarionApp
         DO_NOTHING,
         ROTATE_CLOCKWISE,
         GO_AHEAD,
+		GO_TO,
 		EAT_FOOD,
 		SACK_JEWEL,
+		DELIVER_LEAFLET,
+		STOP
     }
 
     public class ClarionAgent
@@ -44,6 +47,10 @@ namespace ClarionApp
 		/// Constant that represents that there is at least one jewel ahead
 		/// </summary>
 		private String DIMENSION_JEWEL_AHEAD = "JewelAhead";
+		/// <summary>
+		/// Constant that represents that some leaflet is ready to be delivered
+		/// </summary>
+		private String DIMENSION_DELIVER_LEAFLET = "DeliverLeaflet";
 
 		double prad = 0;
         #endregion
@@ -54,7 +61,12 @@ namespace ClarionApp
 		String creatureName = String.Empty;
 		String foodName = String.Empty;
 		String jewelName = String.Empty;
-        #region Simulation
+		String leafletId = String.Empty;
+		Thing closestFood = null;
+		Thing closestJewel = null;
+		Dictionary<string, bool> deliveredLeaflets = new Dictionary<string, bool>();
+		bool stopped = false;
+		#region Simulation
         /// <summary>
         /// If this value is greater than zero, the agent will have a finite number of cognitive cycle. Otherwise, it will have infinite cycles.
         /// </summary>
@@ -94,6 +106,10 @@ namespace ClarionApp
 		/// Perception input to indicates jewel ahead
 		/// </summary>
 		private DimensionValuePair inputJewelAhead;
+		/// <summary>
+		/// Perception input to indicate ready to deliver a leaflet
+		/// </summary>
+		private DimensionValuePair inputDeliverLeaflet;
         #endregion
 
         #region Action Output
@@ -113,6 +129,18 @@ namespace ClarionApp
 		/// Output action that makes the agent sack a jewel
 		/// </summary>
 		private ExternalActionChunk outputSackJewel;
+		/// <summary>
+		/// Output action to deliver a leaflet
+		/// </summary>
+		private ExternalActionChunk outputDeliverLeaflet;
+		/// <summary>
+		/// Output action to stop the agent
+		/// </summary>
+		private ExternalActionChunk outputStop;
+		/// <summary>
+		/// Output action to go to a target position
+		/// </summary>
+		private ExternalActionChunk outputGoTo;
         #endregion
 
         #endregion
@@ -132,12 +160,16 @@ namespace ClarionApp
             inputWallAhead = World.NewDimensionValuePair(SENSOR_VISUAL_DIMENSION, DIMENSION_WALL_AHEAD);
 			inputFoodAhead = World.NewDimensionValuePair(SENSOR_VISUAL_DIMENSION, DIMENSION_FOOD_AHEAD);
 			inputJewelAhead = World.NewDimensionValuePair(SENSOR_VISUAL_DIMENSION, DIMENSION_JEWEL_AHEAD);
+			inputDeliverLeaflet = World.NewDimensionValuePair(SENSOR_VISUAL_DIMENSION, DIMENSION_DELIVER_LEAFLET);
 
             // Initialize Output actions
             outputRotateClockwise = World.NewExternalActionChunk(CreatureActions.ROTATE_CLOCKWISE.ToString());
             outputGoAhead = World.NewExternalActionChunk(CreatureActions.GO_AHEAD.ToString());
+			outputGoTo = World.NewExternalActionChunk(CreatureActions.GO_TO.ToString());
 			outputEatFood = World.NewExternalActionChunk(CreatureActions.EAT_FOOD.ToString());
 			outputSackJewel = World.NewExternalActionChunk(CreatureActions.SACK_JEWEL.ToString());
+			outputDeliverLeaflet = World.NewExternalActionChunk(CreatureActions.DELIVER_LEAFLET.ToString());
+			outputStop = World.NewExternalActionChunk(CreatureActions.STOP.ToString());
 
             //Create thread to simulation
             runThread = new Thread(CognitiveCycle);
@@ -207,16 +239,29 @@ namespace ClarionApp
 				case CreatureActions.ROTATE_CLOCKWISE:
 					worldServer.SendSetAngle(creatureId, 2, -2, 2);
 					break;
+				case CreatureActions.GO_TO:					
+					worldServer.SendSetGoTo(creatureId, 1, 1, gotoX, gotoY);
+					break;
 				case CreatureActions.GO_AHEAD:
 					worldServer.SendSetAngle(creatureId, 1, 1, prad);
 					break;
 				case CreatureActions.EAT_FOOD:
-					if (!String.IsNullOrEmpty(foodName))
-						worldServer.SendEatIt (creatureId, foodName);
+					worldServer.SendEatIt (creatureId, foodName);
+					Console.WriteLine("Eat food " + foodName);
 					break;
 				case CreatureActions.SACK_JEWEL:
-					if (!String.IsNullOrEmpty(jewelName))
-						worldServer.SendSackIt (creatureId, jewelName);
+					worldServer.SendSackIt (creatureId, jewelName);
+					Console.WriteLine("Sack jewel " + jewelName);
+					break;
+				case CreatureActions.DELIVER_LEAFLET:
+					worldServer.SendDeliverIt (creatureId, leafletId);
+					Console.WriteLine ("Delivered " + leafletId);
+					deliveredLeaflets[leafletId] = true;
+					break;
+				case CreatureActions.STOP:
+					worldServer.SendStopCreature (creatureId);
+					Console.WriteLine ("Stop the creature");
+					stopped = true;
 					break;
 				default:
 					break;
@@ -246,7 +291,14 @@ namespace ClarionApp
         /// </summary>
         private void SetupACS()
         {
-            // Create Rule to avoid colision with wall
+			// Create Rule To Stop when all leaflets have been delivered (success)
+			SupportCalculator stopWhenFinishedSupportCalculator = FixedRuleToStopWhenFinished;
+			FixedRule ruleStopWhenFinished = AgentInitializer.InitializeActionRule(CurrentAgent, FixedRule.Factory, outputStop, stopWhenFinishedSupportCalculator);
+
+			// Commit this rule to Agent (in the ACS)
+			CurrentAgent.Commit(ruleStopWhenFinished);
+
+			// Create Rule to avoid colision with wall
             SupportCalculator avoidCollisionWallSupportCalculator = FixedRuleToAvoidCollisionWall;
             FixedRule ruleAvoidCollisionWall = AgentInitializer.InitializeActionRule(CurrentAgent, FixedRule.Factory, outputRotateClockwise, avoidCollisionWallSupportCalculator);
 
@@ -274,6 +326,13 @@ namespace ClarionApp
 			// Commit this rule to Agent (in the ACS)
 			CurrentAgent.Commit(ruleSackJewel);
 
+			// Create Rule to Deliver a Leaflet
+			SupportCalculator deliverLeafletSupportCalculator = FixedRuleToDeliverLeaflet;
+			FixedRule ruleDeliverLeaflet = AgentInitializer.InitializeActionRule(CurrentAgent, FixedRule.Factory, outputDeliverLeaflet, deliverLeafletSupportCalculator);
+
+			// Commit this rule to Agent (in the ACS)
+			CurrentAgent.Commit(ruleDeliverLeaflet);
+
             // Disable Rule Refinement
             CurrentAgent.ACS.Parameters.PERFORM_RER_REFINEMENT = false;
 
@@ -290,6 +349,22 @@ namespace ClarionApp
             CurrentAgent.ACS.Parameters.FIXED_RER_LEVEL_SELECTION_MEASURE = 0;
         }
 
+		// helper routine just to check if some leaflet has already been delivered
+		private bool checkDelivered(string leafletId) {
+			bool value = false;
+			if (!deliveredLeaflets.TryGetValue(leafletId, out value))
+				return false;
+			return value;
+		}
+
+		// helper routine to check if all the three leaflets have been delivered
+		private bool checkThreeLeafletsDelivered() {
+			return (deliveredLeaflets.Where(item => item.Value).Count() == 3);
+		}
+
+		private bool leafletNeedsJewel(Leaflet l, Thing jewel) {
+		}
+
         /// <summary>
         /// Make the agent perception. In other words, translate the information that came from sensors to a new type that the agent can understand
         /// </summary>
@@ -301,10 +376,10 @@ namespace ClarionApp
             SensoryInformation si = World.NewSensoryInformation(CurrentAgent);
 
 			// Detect if we have jewel ahead
-			IEnumerable<Thing> jewels = listOfThings.Where(item => (item.CategoryId == Thing.CATEGORY_JEWEL && item.DistanceToCreature <= 61));
-			Boolean jewelAhead = jewels.Any();
+			IEnumerable<Thing> jewelsAhead = listOfThings.Where(item => (item.CategoryId == Thing.CATEGORY_JEWEL && item.DistanceToCreature <= 61));
+			Boolean jewelAhead = jewelsAhead.Any();
 			if (jewelAhead)
-				jewelName = jewels.First().Name;
+				jewelName = jewelsAhead.First().Name;
 			double jewelAheadActivationValue = jewelAhead ? CurrentAgent.Parameters.MAX_ACTIVATION : CurrentAgent.Parameters.MIN_ACTIVATION;
 			si.Add(inputJewelAhead, jewelAheadActivationValue);
 
@@ -324,10 +399,27 @@ namespace ClarionApp
 			//Console.WriteLine(sensorialInformation);
 			Creature c = (Creature) listOfThings.Where(item => (item.CategoryId == Thing.CATEGORY_CREATURE)).First();
 			int n = 0;
+			bool deliver = false;
 			foreach(Leaflet l in c.getLeaflets()) {
+				// Detect if some leaflet is complete
+				//l.situation
 				mind.updateLeaflet(n,l);
+				if (l.situation) {
+					// avoid delivering it twice
+					if (!checkDelivered (l.leafletID.ToString ())) {
+						leafletId = l.leafletID.ToString ();
+						deliver = true;
+					}
+				} else {
+					// lookup the closest jewel that we need to fill a leaflet
+					// TODO wip
+					IEnumerable<Thing> nextJewelsFromLeaflets = listOfThings.Where(item => (item.CategoryId == Thing.CATEGORY_JEWEL && item.DistanceToCreature > 60 && leafletNeedsJewel(l, item)));
+
+				}
 				n++;
 			}
+			double deliverActivationValue = deliver ? CurrentAgent.Parameters.MAX_ACTIVATION : CurrentAgent.Parameters.MIN_ACTIVATION;
+			si.Add(inputDeliverLeaflet, deliverActivationValue);
             return si;
         }
         #endregion
@@ -339,10 +431,16 @@ namespace ClarionApp
             return ((currentInput.Contains(inputWallAhead, CurrentAgent.Parameters.MAX_ACTIVATION))) ? 1.0 : 0.0;
         }
 
-        private double FixedRuleToGoAhead(ActivationCollection currentInput, Rule target)
+		private double FixedRuleToStopWhenFinished(ActivationCollection currentInput, Rule target)
+		{
+			// See partial match threshold to verify what are the rules available for action selection
+			return (checkThreeLeafletsDelivered() && !stopped) ? 1.0 : 0.0;
+		}
+
+		private double FixedRuleToGoAhead(ActivationCollection currentInput, Rule target)
         {
             // Here we will make the logic to go ahead
-            return ((currentInput.Contains(inputWallAhead, CurrentAgent.Parameters.MIN_ACTIVATION))) ? 1.0 : 0.0;
+			return ((currentInput.Contains(inputWallAhead, CurrentAgent.Parameters.MIN_ACTIVATION)) && !checkThreeLeafletsDelivered()) ? 1.0 : 0.0;
         }
 
 		private double FixedRuleToEatFood(ActivationCollection currentInput, Rule target)
@@ -355,6 +453,12 @@ namespace ClarionApp
 		{
 			// Here we will make the logic to sack jewel
 			return ((currentInput.Contains(inputJewelAhead, CurrentAgent.Parameters.MAX_ACTIVATION))) ? 1.0 : 0.0;
+		}
+
+		private double FixedRuleToDeliverLeaflet(ActivationCollection currentInput, Rule target)
+		{
+			// Here we will make the logic to deliver a leaflet
+			return ((currentInput.Contains(inputDeliverLeaflet, CurrentAgent.Parameters.MAX_ACTIVATION))) ? 1.0 : 0.0;
 		}
 		#endregion
 
