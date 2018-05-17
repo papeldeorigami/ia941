@@ -21,7 +21,8 @@ namespace ClarionApp
         DO_NOTHING,
         ROTATE_CLOCKWISE,
         GO_AHEAD,
-		GO_TO,
+		GO_TO_CLOSEST_JEWEL,
+		GO_TO_CLOSEST_FOOD,
 		EAT_FOOD,
 		SACK_JEWEL,
 		DELIVER_LEAFLET,
@@ -47,6 +48,14 @@ namespace ClarionApp
 		/// Constant that represents that there is at least one jewel ahead
 		/// </summary>
 		private String DIMENSION_JEWEL_AHEAD = "JewelAhead";
+		/// <summary>
+		/// Constant that represents that there is some necessary jewel visible at some distance
+		/// </summary>
+		private String DIMENSION_DISTANT_JEWEL = "DistantJewel";
+		/// <summary>
+		/// Constant that represents that there is food visible at some distance
+		/// </summary>
+		private String DIMENSION_DISTANT_FOOD = "DistantFood";
 		/// <summary>
 		/// Constant that represents that some leaflet is ready to be delivered
 		/// </summary>
@@ -99,13 +108,21 @@ namespace ClarionApp
         /// </summary>
 		private DimensionValuePair inputWallAhead;
 		/// <summary>
-		/// Perception input to indicates food ahead
+		/// Perception input to indicates food ahead (close enough to get)
 		/// </summary>
 		private DimensionValuePair inputFoodAhead;
 		/// <summary>
-		/// Perception input to indicates jewel ahead
+		/// Perception input to indicates jewel ahead (close enough to get)
 		/// </summary>
 		private DimensionValuePair inputJewelAhead;
+		/// <summary>
+		/// Perception input to indicates a necessary jewel is visible at some distance
+		/// </summary>
+		private DimensionValuePair inputDistantJewel;
+		/// <summary>
+		/// Perception input to indicates a necessary food is visible at some distance
+		/// </summary>
+		private DimensionValuePair inputDistantFood;
 		/// <summary>
 		/// Perception input to indicate ready to deliver a leaflet
 		/// </summary>
@@ -120,7 +137,7 @@ namespace ClarionApp
         /// <summary>
         /// Output action that makes the agent go ahead
         /// </summary>
-		private ExternalActionChunk outputGoAhead;
+		//private ExternalActionChunk outputGoAhead;
 		/// <summary>
 		/// Output action that makes the agent eat food
 		/// </summary>
@@ -138,9 +155,13 @@ namespace ClarionApp
 		/// </summary>
 		private ExternalActionChunk outputStop;
 		/// <summary>
-		/// Output action to go to a target position
+		/// Output action to go to a jewel
 		/// </summary>
-		private ExternalActionChunk outputGoTo;
+		private ExternalActionChunk outputGoToClosestJewel;
+		/// <summary>
+		/// Output action to go to a food
+		/// </summary>
+		private ExternalActionChunk outputGoToClosestFood;
         #endregion
 
         #endregion
@@ -160,12 +181,15 @@ namespace ClarionApp
             inputWallAhead = World.NewDimensionValuePair(SENSOR_VISUAL_DIMENSION, DIMENSION_WALL_AHEAD);
 			inputFoodAhead = World.NewDimensionValuePair(SENSOR_VISUAL_DIMENSION, DIMENSION_FOOD_AHEAD);
 			inputJewelAhead = World.NewDimensionValuePair(SENSOR_VISUAL_DIMENSION, DIMENSION_JEWEL_AHEAD);
+			inputDistantJewel = World.NewDimensionValuePair(SENSOR_VISUAL_DIMENSION, DIMENSION_DISTANT_JEWEL);
+			inputDistantFood = World.NewDimensionValuePair(SENSOR_VISUAL_DIMENSION, DIMENSION_DISTANT_FOOD);
 			inputDeliverLeaflet = World.NewDimensionValuePair(SENSOR_VISUAL_DIMENSION, DIMENSION_DELIVER_LEAFLET);
 
             // Initialize Output actions
             outputRotateClockwise = World.NewExternalActionChunk(CreatureActions.ROTATE_CLOCKWISE.ToString());
-            outputGoAhead = World.NewExternalActionChunk(CreatureActions.GO_AHEAD.ToString());
-			outputGoTo = World.NewExternalActionChunk(CreatureActions.GO_TO.ToString());
+            //outputGoAhead = World.NewExternalActionChunk(CreatureActions.GO_AHEAD.ToString());
+			outputGoToClosestJewel = World.NewExternalActionChunk(CreatureActions.GO_TO_CLOSEST_JEWEL.ToString());
+			outputGoToClosestFood = World.NewExternalActionChunk(CreatureActions.GO_TO_CLOSEST_FOOD.ToString());
 			outputEatFood = World.NewExternalActionChunk(CreatureActions.EAT_FOOD.ToString());
 			outputSackJewel = World.NewExternalActionChunk(CreatureActions.SACK_JEWEL.ToString());
 			outputDeliverLeaflet = World.NewExternalActionChunk(CreatureActions.DELIVER_LEAFLET.ToString());
@@ -239,8 +263,11 @@ namespace ClarionApp
 				case CreatureActions.ROTATE_CLOCKWISE:
 					worldServer.SendSetAngle(creatureId, 2, -2, 2);
 					break;
-				case CreatureActions.GO_TO:					
-					worldServer.SendSetGoTo(creatureId, 1, 1, gotoX, gotoY);
+				case CreatureActions.GO_TO_CLOSEST_JEWEL:
+					worldServer.SendSetGoTo(creatureId, 1, 1, closestJewel.comX, closestJewel.comY);
+					break;
+				case CreatureActions.GO_TO_CLOSEST_FOOD:
+					worldServer.SendSetGoTo(creatureId, 1, 1, closestFood.comX, closestFood.comY);
 					break;
 				case CreatureActions.GO_AHEAD:
 					worldServer.SendSetAngle(creatureId, 1, 1, prad);
@@ -306,11 +333,25 @@ namespace ClarionApp
             CurrentAgent.Commit(ruleAvoidCollisionWall);
 
             // Create Rule To Go Ahead
-            SupportCalculator goAheadSupportCalculator = FixedRuleToGoAhead;
-            FixedRule ruleGoAhead = AgentInitializer.InitializeActionRule(CurrentAgent, FixedRule.Factory, outputGoAhead, goAheadSupportCalculator);
+            //SupportCalculator goAheadSupportCalculator = FixedRuleToGoAhead;
+            //FixedRule ruleGoAhead = AgentInitializer.InitializeActionRule(CurrentAgent, FixedRule.Factory, outputGoAhead, goAheadSupportCalculator);
 
 			// Commit this rule to Agent (in the ACS)
-			CurrentAgent.Commit(ruleGoAhead);
+			//CurrentAgent.Commit(ruleGoAhead);
+
+			// Create Rule To Go To Closest Jewel
+			SupportCalculator goToClosestJewelSupportCalculator = FixedRuleToGoToClosestJewel;
+			FixedRule ruleGoToClosestJewel = AgentInitializer.InitializeActionRule(CurrentAgent, FixedRule.Factory, outputGoToClosestJewel, goToClosestJewelSupportCalculator);
+
+			// Commit this rule to Agent (in the ACS)
+			CurrentAgent.Commit(ruleGoToClosestJewel);
+
+			// Create Rule To Go To Closest Jewel
+			SupportCalculator goToClosestFoodSupportCalculator = FixedRuleToGoToClosestFood;
+			FixedRule ruleGoToClosestFood = AgentInitializer.InitializeActionRule(CurrentAgent, FixedRule.Factory, outputGoToClosestFood, goToClosestFoodSupportCalculator);
+
+			// Commit this rule to Agent (in the ACS)
+			CurrentAgent.Commit(ruleGoToClosestFood);
 
 			// Create Rule to Eat Food
 			SupportCalculator eatFoodSupportCalculator = FixedRuleToEatFood;
@@ -363,6 +404,10 @@ namespace ClarionApp
 		}
 
 		private bool leafletNeedsJewel(Leaflet l, Thing jewel) {
+			LeafletItem li = l.items.Where(item => (item.itemKey == jewel.Material.Color)).FirstOrDefault();
+			if (li == null)
+				return false;
+			return (li.collected < li.totalNumber);
 		}
 
         /// <summary>
@@ -384,17 +429,25 @@ namespace ClarionApp
 			si.Add(inputJewelAhead, jewelAheadActivationValue);
 
 			// Detect if we have food ahead
-			IEnumerable<Thing> foods = listOfThings.Where(item => ((item.CategoryId == Thing.CATEGORY_NPFOOD || item.CategoryId == Thing.categoryPFOOD) && item.DistanceToCreature <= 61));
+			IEnumerable<Thing> foods = listOfThings.Where(item => ((item.CategoryId == Thing.CATEGORY_NPFOOD || item.CategoryId == Thing.CATEGORY_PFOOD) && item.DistanceToCreature <= 61));
 			Boolean foodAhead = foods.Any();
 			if (foodAhead)
 				foodName = foods.First().Name;
 			double foodAheadActivationValue = foodAhead ? CurrentAgent.Parameters.MAX_ACTIVATION : CurrentAgent.Parameters.MIN_ACTIVATION;
 			si.Add(inputFoodAhead, foodAheadActivationValue);
 
+			// save the closest food just in case the creature needs it
+			IEnumerable<Thing> distantFoods = listOfThings.Where(item => ((item.CategoryId == Thing.CATEGORY_NPFOOD || item.CategoryId == Thing.CATEGORY_PFOOD) && item.DistanceToCreature > 61));
+			if (distantFoods.Count() > 0) {
+				closestFood = distantFoods.OrderBy(item => item.DistanceToCreature).First();
+			}
+
 			// Detect if we have a wall ahead
 			Boolean wallAhead = listOfThings.Where(item => (item.CategoryId == Thing.CATEGORY_BRICK && item.DistanceToCreature <= 61)).Any();
 			double wallAheadActivationValue = wallAhead ? CurrentAgent.Parameters.MAX_ACTIVATION : CurrentAgent.Parameters.MIN_ACTIVATION;
 			si.Add(inputWallAhead, wallAheadActivationValue);
+
+			closestJewel = null;
 
 			//Console.WriteLine(sensorialInformation);
 			Creature c = (Creature) listOfThings.Where(item => (item.CategoryId == Thing.CATEGORY_CREATURE)).First();
@@ -404,23 +457,35 @@ namespace ClarionApp
 				// Detect if some leaflet is complete
 				//l.situation
 				mind.updateLeaflet(n,l);
+				// check if we have all jewels from the leaflet (situation = true)
 				if (l.situation) {
 					// avoid delivering it twice
-					if (!checkDelivered (l.leafletID.ToString ())) {
+					if (!checkDelivered(l.leafletID.ToString ())) {
 						leafletId = l.leafletID.ToString ();
 						deliver = true;
 					}
 				} else {
 					// lookup the closest jewel that we need to fill a leaflet
-					// TODO wip
-					IEnumerable<Thing> nextJewelsFromLeaflets = listOfThings.Where(item => (item.CategoryId == Thing.CATEGORY_JEWEL && item.DistanceToCreature > 60 && leafletNeedsJewel(l, item)));
-
+					IEnumerable<Thing> distantJewels = listOfThings.Where(item => (item.CategoryId == Thing.CATEGORY_JEWEL && item.DistanceToCreature > 61 && leafletNeedsJewel(l, item)));
+					if (distantJewels.Count() > 0) {
+						closestJewel = distantJewels.OrderBy(item => item.DistanceToCreature).First();
+					}
 				}
 				n++;
 			}
 			double deliverActivationValue = deliver ? CurrentAgent.Parameters.MAX_ACTIVATION : CurrentAgent.Parameters.MIN_ACTIVATION;
 			si.Add(inputDeliverLeaflet, deliverActivationValue);
-            return si;
+
+			// Detect if we have food and we need it
+			bool needAndHaveFood = (closestFood != null) && (c.Fuel < 400);
+			double distantFoodActivationValue = (needAndHaveFood) ? CurrentAgent.Parameters.MAX_ACTIVATION : CurrentAgent.Parameters.MIN_ACTIVATION;
+			si.Add(inputDistantFood, distantFoodActivationValue);
+
+			// Detect if we have seen some jewel that we need
+			double distantJewelActivationValue = (closestJewel != null) ? CurrentAgent.Parameters.MAX_ACTIVATION : CurrentAgent.Parameters.MIN_ACTIVATION;
+			si.Add(inputDistantJewel, distantJewelActivationValue);
+
+			return si;
         }
         #endregion
 
@@ -442,6 +507,18 @@ namespace ClarionApp
             // Here we will make the logic to go ahead
 			return ((currentInput.Contains(inputWallAhead, CurrentAgent.Parameters.MIN_ACTIVATION)) && !checkThreeLeafletsDelivered()) ? 1.0 : 0.0;
         }
+
+		private double FixedRuleToGoToClosestJewel(ActivationCollection currentInput, Rule target)
+		{
+			// Here we will make the logic to go to jewel
+			return ((currentInput.Contains(inputDistantJewel, CurrentAgent.Parameters.MIN_ACTIVATION))) ? 1.0 : 0.0;
+		}
+
+		private double FixedRuleToGoToClosestFood(ActivationCollection currentInput, Rule target)
+		{
+			// Here we will make the logic to go to food
+			return ((currentInput.Contains(inputDistantFood, CurrentAgent.Parameters.MIN_ACTIVATION))) ? 1.0 : 0.0;
+		}
 
 		private double FixedRuleToEatFood(ActivationCollection currentInput, Rule target)
 		{

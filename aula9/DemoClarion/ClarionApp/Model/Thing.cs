@@ -10,7 +10,7 @@ namespace ClarionApp.Model
         public const int CATEGORY_CREATURE = 0;
         public const int CATEGORY_BRICK = 1;
         public const int CATEGORY_FOOD = 2;
-        public const int categoryPFOOD = 21;
+        public const int CATEGORY_PFOOD = 21;
         public const int CATEGORY_NPFOOD = 22;
         public const int CATEGORY_JEWEL = 3;
         public const int CATEGORY_DeliverySPOT = 4;
