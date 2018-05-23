@@ -261,15 +261,19 @@ namespace ClarionApp
 					// Do nothing as the own value says
 					break;
 				case CreatureActions.ROTATE_CLOCKWISE:
+					Console.WriteLine ("Rotate clockwise");
 					worldServer.SendSetAngle(creatureId, 2, -2, 2);
 					break;
 				case CreatureActions.GO_TO_CLOSEST_JEWEL:
+					Console.WriteLine ("Move to closest jewel required in a leaflet: " + closestJewel.Name);
 					worldServer.SendSetGoTo(creatureId, 1, 1, closestJewel.comX, closestJewel.comY);
 					break;
 				case CreatureActions.GO_TO_CLOSEST_FOOD:
+					Console.WriteLine ("Move to closest food: " + closestFood.Name);
 					worldServer.SendSetGoTo(creatureId, 1, 1, closestFood.comX, closestFood.comY);
 					break;
 				case CreatureActions.GO_AHEAD:
+					Console.WriteLine ("Go ahead");
 					worldServer.SendSetAngle(creatureId, 1, 1, prad);
 					break;
 				case CreatureActions.EAT_FOOD:
@@ -383,7 +387,8 @@ namespace ClarionApp
             // The action selection will be fixed (not variable) i.e. only the statement defined above.
             CurrentAgent.ACS.Parameters.LEVEL_SELECTION_OPTION = ActionCenteredSubsystem.LevelSelectionOptions.FIXED;
 
-            // Define Probabilistic values
+			// Define Probabilistic values
+			CurrentAgent.ACS.Parameters.VARIABLE_FR_BETA = 
             CurrentAgent.ACS.Parameters.FIXED_FR_LEVEL_SELECTION_MEASURE = 1;
             CurrentAgent.ACS.Parameters.FIXED_IRL_LEVEL_SELECTION_MEASURE = 0;
             CurrentAgent.ACS.Parameters.FIXED_BL_LEVEL_SELECTION_MEASURE = 0;
@@ -499,7 +504,7 @@ namespace ClarionApp
 		private double FixedRuleToStopWhenFinished(ActivationCollection currentInput, Rule target)
 		{
 			// See partial match threshold to verify what are the rules available for action selection
-			return (checkThreeLeafletsDelivered() && !stopped) ? 1.0 : 0.0;
+			return (checkThreeLeafletsDelivered() && !stopped) ? 1.9 : 0.0;
 		}
 
 		private double FixedRuleToGoAhead(ActivationCollection currentInput, Rule target)
@@ -511,31 +516,31 @@ namespace ClarionApp
 		private double FixedRuleToGoToClosestJewel(ActivationCollection currentInput, Rule target)
 		{
 			// Here we will make the logic to go to jewel
-			return ((currentInput.Contains(inputDistantJewel, CurrentAgent.Parameters.MIN_ACTIVATION))) ? 1.0 : 0.0;
+			return ((currentInput.Contains(inputDistantJewel, CurrentAgent.Parameters.MAX_ACTIVATION))) ? 1.4 : 0.0;
 		}
 
 		private double FixedRuleToGoToClosestFood(ActivationCollection currentInput, Rule target)
 		{
 			// Here we will make the logic to go to food
-			return ((currentInput.Contains(inputDistantFood, CurrentAgent.Parameters.MIN_ACTIVATION))) ? 1.0 : 0.0;
+			return ((currentInput.Contains(inputDistantFood, CurrentAgent.Parameters.MAX_ACTIVATION))) ? 1.5 : 0.0;
 		}
 
 		private double FixedRuleToEatFood(ActivationCollection currentInput, Rule target)
 		{
 			// Here we will make the logic to eat food
-			return ((currentInput.Contains(inputFoodAhead, CurrentAgent.Parameters.MAX_ACTIVATION))) ? 1.0 : 0.0;
+			return ((currentInput.Contains(inputFoodAhead, CurrentAgent.Parameters.MAX_ACTIVATION))) ? 1.7 : 0.0;
 		}
 
 		private double FixedRuleToSackJewel(ActivationCollection currentInput, Rule target)
 		{
 			// Here we will make the logic to sack jewel
-			return ((currentInput.Contains(inputJewelAhead, CurrentAgent.Parameters.MAX_ACTIVATION))) ? 1.0 : 0.0;
+			return ((currentInput.Contains(inputJewelAhead, CurrentAgent.Parameters.MAX_ACTIVATION))) ? 1.6 : 0.0;
 		}
 
 		private double FixedRuleToDeliverLeaflet(ActivationCollection currentInput, Rule target)
 		{
 			// Here we will make the logic to deliver a leaflet
-			return ((currentInput.Contains(inputDeliverLeaflet, CurrentAgent.Parameters.MAX_ACTIVATION))) ? 1.0 : 0.0;
+			return ((currentInput.Contains(inputDeliverLeaflet, CurrentAgent.Parameters.MAX_ACTIVATION))) ? 1.8 : 0.0;
 		}
 		#endregion
 

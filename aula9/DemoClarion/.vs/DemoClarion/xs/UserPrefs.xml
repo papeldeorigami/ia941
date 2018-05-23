@@ -1,16 +1,18 @@
-﻿<Properties StartupItem="ClarionApp/ClarionApp.csproj">
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Release|x86" />
+﻿<Properties StartupConfiguration="{C103EE32-51CA-49DA-94AD-999A10BB4308}|Default">
+  <MonoDevelop.Ide.ItemProperties.ClarionApp PreferredExecutionTarget="MonoDevelop.Default" />
   <MonoDevelop.Ide.Workbench ActiveDocument="ClarionApp/ClarionAgent.cs">
     <Files>
-      <File FileName="ClarionApp/ClarionAgent.cs" Line="366" Column="4" />
-      <File FileName="ClarionApp/MainClass.cs" Line="77" Column="1" />
+      <File FileName="ClarionApp/ClarionAgent.cs" Line="300" Column="1" />
+      <File FileName="ClarionApp/MainClass.cs" Line="75" Column="26" />
       <File FileName="ClarionApp/WSProxy.cs" Line="146" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Release|x86" />
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore>
       <Breakpoint file="/home/rgudwin/Local/Cursos/IA941/DemoClarion/ClarionApp/gtk-gui/ClarionSimulation.Mind.cs" line="9" column="1" />
     </BreakpointStore>
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+  <MultiItemStartupConfigurations />
 </Properties>
