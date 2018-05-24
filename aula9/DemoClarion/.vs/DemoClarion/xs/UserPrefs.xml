@@ -2,7 +2,7 @@
   <MonoDevelop.Ide.ItemProperties.ClarionApp PreferredExecutionTarget="MonoDevelop.Default" />
   <MonoDevelop.Ide.Workbench ActiveDocument="ClarionApp/ClarionAgent.cs">
     <Files>
-      <File FileName="ClarionApp/ClarionAgent.cs" Line="300" Column="1" />
+      <File FileName="ClarionApp/ClarionAgent.cs" Line="547" Column="1" />
       <File FileName="ClarionApp/MainClass.cs" Line="75" Column="26" />
       <File FileName="ClarionApp/WSProxy.cs" Line="146" Column="1" />
     </Files>

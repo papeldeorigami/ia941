@@ -59,7 +59,7 @@ namespace ClarionApp
 		/// <summary>
 		/// Constant that represents that some leaflet is ready to be delivered
 		/// </summary>
-		private String DIMENSION_DELIVER_LEAFLET = "DeliverLeaflet";
+		//private String DIMENSION_DELIVER_LEAFLET = "DeliverLeaflet";
 
 		double prad = 0;
         #endregion
@@ -126,7 +126,7 @@ namespace ClarionApp
 		/// <summary>
 		/// Perception input to indicate ready to deliver a leaflet
 		/// </summary>
-		private DimensionValuePair inputDeliverLeaflet;
+		//private DimensionValuePair inputDeliverLeaflet;
         #endregion
 
         #region Action Output
@@ -183,7 +183,7 @@ namespace ClarionApp
 			inputJewelAhead = World.NewDimensionValuePair(SENSOR_VISUAL_DIMENSION, DIMENSION_JEWEL_AHEAD);
 			inputDistantJewel = World.NewDimensionValuePair(SENSOR_VISUAL_DIMENSION, DIMENSION_DISTANT_JEWEL);
 			inputDistantFood = World.NewDimensionValuePair(SENSOR_VISUAL_DIMENSION, DIMENSION_DISTANT_FOOD);
-			inputDeliverLeaflet = World.NewDimensionValuePair(SENSOR_VISUAL_DIMENSION, DIMENSION_DELIVER_LEAFLET);
+			//inputDeliverLeaflet = World.NewDimensionValuePair(SENSOR_VISUAL_DIMENSION, DIMENSION_DELIVER_LEAFLET);
 
             // Initialize Output actions
             outputRotateClockwise = World.NewExternalActionChunk(CreatureActions.ROTATE_CLOCKWISE.ToString());
@@ -291,7 +291,7 @@ namespace ClarionApp
 					break;
 				case CreatureActions.STOP:
 					worldServer.SendStopCreature (creatureId);
-					Console.WriteLine ("Stop the creature");
+					Console.WriteLine ("Success! All leaflets delivered. Stop the creature.");
 					stopped = true;
 					break;
 				default:
@@ -372,11 +372,11 @@ namespace ClarionApp
 			CurrentAgent.Commit(ruleSackJewel);
 
 			// Create Rule to Deliver a Leaflet
-			SupportCalculator deliverLeafletSupportCalculator = FixedRuleToDeliverLeaflet;
-			FixedRule ruleDeliverLeaflet = AgentInitializer.InitializeActionRule(CurrentAgent, FixedRule.Factory, outputDeliverLeaflet, deliverLeafletSupportCalculator);
+			//SupportCalculator deliverLeafletSupportCalculator = FixedRuleToDeliverLeaflet;
+			//FixedRule ruleDeliverLeaflet = AgentInitializer.InitializeActionRule(CurrentAgent, FixedRule.Factory, outputDeliverLeaflet, deliverLeafletSupportCalculator);
 
 			// Commit this rule to Agent (in the ACS)
-			CurrentAgent.Commit(ruleDeliverLeaflet);
+			//CurrentAgent.Commit(ruleDeliverLeaflet);
 
             // Disable Rule Refinement
             CurrentAgent.ACS.Parameters.PERFORM_RER_REFINEMENT = false;
@@ -388,7 +388,6 @@ namespace ClarionApp
             CurrentAgent.ACS.Parameters.LEVEL_SELECTION_OPTION = ActionCenteredSubsystem.LevelSelectionOptions.FIXED;
 
 			// Define Probabilistic values
-			CurrentAgent.ACS.Parameters.VARIABLE_FR_BETA = 
             CurrentAgent.ACS.Parameters.FIXED_FR_LEVEL_SELECTION_MEASURE = 1;
             CurrentAgent.ACS.Parameters.FIXED_IRL_LEVEL_SELECTION_MEASURE = 0;
             CurrentAgent.ACS.Parameters.FIXED_BL_LEVEL_SELECTION_MEASURE = 0;
@@ -430,16 +429,12 @@ namespace ClarionApp
 			Boolean jewelAhead = jewelsAhead.Any();
 			if (jewelAhead)
 				jewelName = jewelsAhead.First().Name;
-			double jewelAheadActivationValue = jewelAhead ? CurrentAgent.Parameters.MAX_ACTIVATION : CurrentAgent.Parameters.MIN_ACTIVATION;
-			si.Add(inputJewelAhead, jewelAheadActivationValue);
 
 			// Detect if we have food ahead
-			IEnumerable<Thing> foods = listOfThings.Where(item => ((item.CategoryId == Thing.CATEGORY_NPFOOD || item.CategoryId == Thing.CATEGORY_PFOOD) && item.DistanceToCreature <= 61));
+			IEnumerable<Thing> foods = listOfThings.Where(item => ((item.CategoryId == Thing.CATEGORY_FOOD || item.CategoryId == Thing.CATEGORY_NPFOOD || item.CategoryId == Thing.CATEGORY_PFOOD) && item.DistanceToCreature <= 61));
 			Boolean foodAhead = foods.Any();
 			if (foodAhead)
 				foodName = foods.First().Name;
-			double foodAheadActivationValue = foodAhead ? CurrentAgent.Parameters.MAX_ACTIVATION : CurrentAgent.Parameters.MIN_ACTIVATION;
-			si.Add(inputFoodAhead, foodAheadActivationValue);
 
 			// save the closest food just in case the creature needs it
 			IEnumerable<Thing> distantFoods = listOfThings.Where(item => ((item.CategoryId == Thing.CATEGORY_NPFOOD || item.CategoryId == Thing.CATEGORY_PFOOD) && item.DistanceToCreature > 61));
@@ -449,8 +444,6 @@ namespace ClarionApp
 
 			// Detect if we have a wall ahead
 			Boolean wallAhead = listOfThings.Where(item => (item.CategoryId == Thing.CATEGORY_BRICK && item.DistanceToCreature <= 61)).Any();
-			double wallAheadActivationValue = wallAhead ? CurrentAgent.Parameters.MAX_ACTIVATION : CurrentAgent.Parameters.MIN_ACTIVATION;
-			si.Add(inputWallAhead, wallAheadActivationValue);
 
 			closestJewel = null;
 
@@ -478,18 +471,56 @@ namespace ClarionApp
 				}
 				n++;
 			}
-			double deliverActivationValue = deliver ? CurrentAgent.Parameters.MAX_ACTIVATION : CurrentAgent.Parameters.MIN_ACTIVATION;
-			si.Add(inputDeliverLeaflet, deliverActivationValue);
 
 			// Detect if we have food and we need it
 			bool needAndHaveFood = (closestFood != null) && (c.Fuel < 400);
-			double distantFoodActivationValue = (needAndHaveFood) ? CurrentAgent.Parameters.MAX_ACTIVATION : CurrentAgent.Parameters.MIN_ACTIVATION;
-			si.Add(inputDistantFood, distantFoodActivationValue);
 
-			// Detect if we have seen some jewel that we need
-			double distantJewelActivationValue = (closestJewel != null) ? CurrentAgent.Parameters.MAX_ACTIVATION : CurrentAgent.Parameters.MIN_ACTIVATION;
-			si.Add(inputDistantJewel, distantJewelActivationValue);
+			// Add sensorial input with a rule-based prioritization
 
+			if (checkThreeLeafletsDelivered()) {
+				// Success, don't do anything else
+				si.Add (inputWallAhead, CurrentAgent.Parameters.MIN_ACTIVATION);
+				si.Add (inputJewelAhead, CurrentAgent.Parameters.MIN_ACTIVATION);
+				si.Add (inputFoodAhead, CurrentAgent.Parameters.MIN_ACTIVATION);
+				si.Add (inputWallAhead, CurrentAgent.Parameters.MIN_ACTIVATION);
+				si.Add (inputDistantFood, CurrentAgent.Parameters.MIN_ACTIVATION);
+				si.Add (inputDistantJewel, CurrentAgent.Parameters.MIN_ACTIVATION);
+			} else if (jewelAhead || foodAhead) {
+				// Prioritize actions that don't require move: eat food, get jewel or deliver leaflet
+				double jewelAheadActivationValue = jewelAhead ? CurrentAgent.Parameters.MAX_ACTIVATION : CurrentAgent.Parameters.MIN_ACTIVATION;
+				double foodAheadActivationValue = foodAhead ? CurrentAgent.Parameters.MAX_ACTIVATION : CurrentAgent.Parameters.MIN_ACTIVATION;
+				double deliverActivationValue = deliver ? CurrentAgent.Parameters.MAX_ACTIVATION : CurrentAgent.Parameters.MIN_ACTIVATION;
+				si.Add (inputJewelAhead, jewelAheadActivationValue);
+				si.Add (inputFoodAhead, foodAheadActivationValue);
+				//si.Add (inputDeliverLeaflet, deliverActivationValue);
+				si.Add (inputWallAhead, CurrentAgent.Parameters.MIN_ACTIVATION);
+				si.Add (inputDistantFood, CurrentAgent.Parameters.MIN_ACTIVATION);
+				si.Add (inputDistantJewel, CurrentAgent.Parameters.MIN_ACTIVATION);
+			} else if (wallAhead) {
+				// Avoid obstacle
+				si.Add (inputWallAhead, CurrentAgent.Parameters.MAX_ACTIVATION);
+				si.Add (inputJewelAhead, CurrentAgent.Parameters.MIN_ACTIVATION);
+				si.Add (inputFoodAhead, CurrentAgent.Parameters.MIN_ACTIVATION);
+				//si.Add (inputDeliverLeaflet, CurrentAgent.Parameters.MIN_ACTIVATION);
+				si.Add (inputDistantFood, CurrentAgent.Parameters.MIN_ACTIVATION);
+				si.Add (inputDistantJewel, CurrentAgent.Parameters.MIN_ACTIVATION);
+			} else if (needAndHaveFood) {
+				// go for food if the creature needs it
+				si.Add (inputWallAhead, CurrentAgent.Parameters.MIN_ACTIVATION);
+				si.Add (inputJewelAhead, CurrentAgent.Parameters.MIN_ACTIVATION);
+				si.Add (inputFoodAhead, CurrentAgent.Parameters.MIN_ACTIVATION);
+				//si.Add (inputDeliverLeaflet, CurrentAgent.Parameters.MIN_ACTIVATION);
+				si.Add (inputDistantFood, CurrentAgent.Parameters.MAX_ACTIVATION);
+				si.Add (inputDistantJewel, CurrentAgent.Parameters.MIN_ACTIVATION);
+			} else if (closestJewel != null) {
+				// go for the closest jewel needed for a leaflet
+				si.Add (inputWallAhead, CurrentAgent.Parameters.MIN_ACTIVATION);
+				si.Add (inputJewelAhead, CurrentAgent.Parameters.MIN_ACTIVATION);
+				si.Add (inputFoodAhead, CurrentAgent.Parameters.MIN_ACTIVATION);
+				//si.Add (inputDeliverLeaflet, CurrentAgent.Parameters.MIN_ACTIVATION);
+				si.Add (inputDistantFood, CurrentAgent.Parameters.MIN_ACTIVATION);
+				si.Add (inputDistantJewel, CurrentAgent.Parameters.MAX_ACTIVATION);
+			}
 			return si;
         }
         #endregion
@@ -504,44 +535,38 @@ namespace ClarionApp
 		private double FixedRuleToStopWhenFinished(ActivationCollection currentInput, Rule target)
 		{
 			// See partial match threshold to verify what are the rules available for action selection
-			return (checkThreeLeafletsDelivered() && !stopped) ? 1.9 : 0.0;
+			return (checkThreeLeafletsDelivered() && !stopped) ? 1.0 : 0.0;
 		}
-
-		private double FixedRuleToGoAhead(ActivationCollection currentInput, Rule target)
-        {
-            // Here we will make the logic to go ahead
-			return ((currentInput.Contains(inputWallAhead, CurrentAgent.Parameters.MIN_ACTIVATION)) && !checkThreeLeafletsDelivered()) ? 1.0 : 0.0;
-        }
 
 		private double FixedRuleToGoToClosestJewel(ActivationCollection currentInput, Rule target)
 		{
 			// Here we will make the logic to go to jewel
-			return ((currentInput.Contains(inputDistantJewel, CurrentAgent.Parameters.MAX_ACTIVATION))) ? 1.4 : 0.0;
+			return ((currentInput.Contains (inputDistantJewel, CurrentAgent.Parameters.MAX_ACTIVATION))) ? 1.0 : 0.0;
 		}
 
 		private double FixedRuleToGoToClosestFood(ActivationCollection currentInput, Rule target)
 		{
 			// Here we will make the logic to go to food
-			return ((currentInput.Contains(inputDistantFood, CurrentAgent.Parameters.MAX_ACTIVATION))) ? 1.5 : 0.0;
+			return ((currentInput.Contains(inputDistantFood, CurrentAgent.Parameters.MAX_ACTIVATION))) ? 1.0 : 0.0;
 		}
 
 		private double FixedRuleToEatFood(ActivationCollection currentInput, Rule target)
 		{
 			// Here we will make the logic to eat food
-			return ((currentInput.Contains(inputFoodAhead, CurrentAgent.Parameters.MAX_ACTIVATION))) ? 1.7 : 0.0;
+			return ((currentInput.Contains(inputFoodAhead, CurrentAgent.Parameters.MAX_ACTIVATION))) ? 1.0 : 0.0;
 		}
 
 		private double FixedRuleToSackJewel(ActivationCollection currentInput, Rule target)
 		{
 			// Here we will make the logic to sack jewel
-			return ((currentInput.Contains(inputJewelAhead, CurrentAgent.Parameters.MAX_ACTIVATION))) ? 1.6 : 0.0;
+			return ((currentInput.Contains(inputJewelAhead, CurrentAgent.Parameters.MAX_ACTIVATION))) ? 1.0 : 0.0;
 		}
 
-		private double FixedRuleToDeliverLeaflet(ActivationCollection currentInput, Rule target)
-		{
+		//private double FixedRuleToDeliverLeaflet(ActivationCollection currentInput, Rule target)
+		//{
 			// Here we will make the logic to deliver a leaflet
-			return ((currentInput.Contains(inputDeliverLeaflet, CurrentAgent.Parameters.MAX_ACTIVATION))) ? 1.8 : 0.0;
-		}
+		//	return ((currentInput.Contains(inputDeliverLeaflet, CurrentAgent.Parameters.MAX_ACTIVATION))) ? 1.0 : 0.0;
+		//}
 		#endregion
 
         #region Run Thread Method
