@@ -1,0 +1,7 @@
+/mnt/sdb1/home/nbt/workspace/ia941/aula9/DemoClarion/ClarionApp/bin/Release/ClarionApp.exe
+/mnt/sdb1/home/nbt/workspace/ia941/aula9/DemoClarion/ClarionApp/bin/Release/ClarionApp.pdb
+/mnt/sdb1/home/nbt/workspace/ia941/aula9/DemoClarion/ClarionApp/bin/Release/ClarionLibrary.dll
+/mnt/sdb1/home/nbt/workspace/ia941/aula9/DemoClarion/ClarionApp/obj/x86/Release/ClarionApp.csproj.CoreCompileInputs.cache
+/mnt/sdb1/home/nbt/workspace/ia941/aula9/DemoClarion/ClarionApp/obj/x86/Release/ClarionApp.exe
+/mnt/sdb1/home/nbt/workspace/ia941/aula9/DemoClarion/ClarionApp/obj/x86/Release/ClarionApp.pdb
+/mnt/sdb1/home/nbt/workspace/ia941/aula9/DemoClarion/ClarionApp/obj/x86/Release/ClarionApp.csprojResolveAssemblyReference.cache
