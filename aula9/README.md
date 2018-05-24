@@ -6,6 +6,14 @@
 
 # Relatório da Aula 9 - Clarion: Controlando o WorldServer3D
 
+## Instruções de uso
+
+Para rodar o código desta aula, basta abrir a pasta *aula9* no terminal e executar: `./run.sh`
+
+A tela do World Server irá aparecer e, 3 segundos depois, o controlador Clarion será executado automaticamente, iniciando a busca pelas jóias.
+
+## Descrição do código
+
 Nesta atividade foi desenvolvido um controlador para um agente capaz de pegar todas as jóias indicadas em seus leaflets e parar depois disso.
 
 A abordagem escolhida foi adaptar o programa DemoClarion, ainda utilizando ACS, e alterando o SensoryInput para direcionar as decisões do agente.
