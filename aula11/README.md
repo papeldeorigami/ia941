@@ -17,9 +17,14 @@ Foi feita a leitura do artigo com os capítulos destacados na página da discipl
 
 
     Como a arquitetura LIDA implementa a percepção do ambiente ?
+Nodes armazenados na PAM; coligações (colitions) com nível de ativação e listeners que vão salvar no buffer de percepção.
 
     Como a arquitetura LIDA guarda/armazena informações de memória ?
-    Como a arquitetura LIDA seleciona as ações que serão implementadas no ambiente ?
-    Como a arquitetura LIDA executa a ação selecionada no ambiente ?
+Buffer de percepção
 
+    Como a arquitetura LIDA seleciona as ações que serão implementadas no ambiente ?
+Implementando Detectores
+
+    Como a arquitetura LIDA executa a ação selecionada no ambiente ?
+Através dos detectores configurados no XML
 
