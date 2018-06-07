@@ -10,29 +10,33 @@ import ws3dproxy.model.Creature;
 import ws3dproxy.model.Leaflet;
 import ws3dproxy.model.Thing;
 import ws3dproxy.model.World;
+import ws3dproxy.model.WorldPoint;
 import ws3dproxy.util.Constants;
 
 public class Environment extends EnvironmentImpl {
 
     private static final int DEFAULT_TICKS_PER_RUN = 100;
-    private int ticksPerRun;
+    private static final WorldPoint TARGET_DESTINATION = new WorldPoint(500, 400);
+    private int ticksPerRun;    
     private WS3DProxy proxy;
     private Creature creature;
+    private Thing block;
     private Thing food;
     private Thing jewel;
     private List<Thing> thingAhead;
     private Thing leafletJewel;
-    private String currentAction;   
-    
+    private String currentAction;
+   
     public Environment() {
         this.ticksPerRun = DEFAULT_TICKS_PER_RUN;
         this.proxy = new WS3DProxy();
         this.creature = null;
+        this.block = null;
         this.food = null;
         this.jewel = null;
         this.thingAhead = new ArrayList<>();
         this.leafletJewel = null;
-        this.currentAction = "rotate";
+        this.currentAction = "rotate";        
     }
 
     @Override
@@ -47,7 +51,8 @@ public class Environment extends EnvironmentImpl {
             creature = proxy.createCreature(100, 100, 0);
             creature.start();
             System.out.println("Starting the WS3D Resource Generator ... ");
-            World.grow(1);
+            World.createBrick(0, 150, 150, 200, 200);
+            //World.grow(1);
             Thread.sleep(4000);
             creature.updateState();
             System.out.println("DemoLIDA has started...");
@@ -79,6 +84,12 @@ public class Environment extends EnvironmentImpl {
         Object requestedObject = null;
         String mode = (String) params.get("mode");
         switch (mode) {
+            case "position":
+                requestedObject = creature.getPosition();
+                break;
+            case "targetDestination":
+                requestedObject = TARGET_DESTINATION;
+                break;
             case "food":
                 requestedObject = food;
                 break;
@@ -100,13 +111,16 @@ public class Environment extends EnvironmentImpl {
     
     public void updateEnvironment() {
         creature.updateState();
+        block = null;
         food = null;
         jewel = null;
         leafletJewel = null;
         thingAhead.clear();
                 
         for (Thing thing : creature.getThingsInVision()) {
-            if (creature.calculateDistanceTo(thing) <= Constants.OFFSET) {
+            if (thing.getCategory() == Constants.categoryBRICK) {
+                block = thing;
+            } else if (creature.calculateDistanceTo(thing) <= Constants.OFFSET) {
                 // Identifica o objeto proximo
                 thingAhead.add(thing);
                 break;
@@ -152,11 +166,10 @@ public class Environment extends EnvironmentImpl {
                     creature.rotate(1.0);
                     //CommandUtility.sendSetTurn(creature.getIndex(), -1.0, -1.0, 3.0);
                     break;
-                case "gotoFood":
-                    if (food != null) 
-                        creature.moveto(3.0, food.getX1(), food.getY1());
-                        //CommandUtility.sendGoTo(creature.getIndex(), 3.0, 3.0, food.getX1(), food.getY1());
-                    break;
+                //case "moveToTarget":
+                //    if (target != null) 
+                //       creature.moveto(3.0, target.getX1(), target.getY1());
+                //    break;
                 case "gotoJewel":
                     if (leafletJewel != null)
                         creature.moveto(3.0, leafletJewel.getX1(), leafletJewel.getY1());

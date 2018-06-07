@@ -15,20 +15,29 @@ O DemoLida foi baixado através do link indicado na página da disciplina. Seu c
 
 ## Atividade 2
 
+A janela do Lida foi habilitada com a propriedade lida.gui.enable=true.
 
 ## Atividade 3
 
-Respostas aos study questions:
+O problema de se levar o agente a um determinado ponto, desviando de obstáculos, foi dividido nas seguintes etapas:
 
-2.1. Esta GUI é significativamente mais elaborada do que aquela do basicAgentExercises. Enquanto esta apresentava apenas dois botões e um objeto, aquela apresenta
-uma multiplicidade de objetos, um grid bidimensional para movimentação do agente e diversos elementos para examinar o mundo, tais como o drop down e a possibilidade
-de clicar em objetos.
+1 - Modelar o mundo como um grafo, com destino e obstaculos imaginarios
+    
+    - Importamos a biblioteca [https://github.com/xaguzman/pathfinding](pathfinding)
+    - Definimos um grid de 80 por 60 (o tamanho default do mundo dividido por dez)
+    - Ocupamos alguns pontos do grid com obstaculos "imaginários", i.e. setamos com o valor 1, sem ter nenhum objeto criado no mundo ainda
+    - Apenas para auxiliar o desenvolvimento, determinamos um caminho fixo com um destino fixo
+    - O caminho é representado por um vetor chamado "path"
 
-2.2. Agora o agente "percebe", através das novas features e tarefas, quando um predador está diretamente em frente a ele, ou o nível de saúde está baixo. Essas ações acontecem porque essas novas percepções são ativadas e transferidas para o buffer de percepção.
+2 - Estabelecer um mecanismo para planejar e estimular a o agente a andar em direcao a um objetivo
 
-2.3. Algumas razões possíveis para o agente não fugir do predador: ausência de detectores de percepção, falta de definição de tarefas, falta de memória procedural ou a ausência de um codelet de atenção que gere as coligações (coalitions)
+    - Salvar o grid e o plano no sensory memory
+    - Fazer o agente detectar o "próximo passo": o primeiro elemento do vetor path que está na sensory memory
 
-2.4. Agora uma coligação é gerada toda vez que um predador está na vizinhança do agente, permitindo a definição de ações.
+3 - Implementar Acao Replanejar
 
-2.5. O nível de ativação ficou muito baixo para a comida, e praticamente sempre ele vai perder para outros estímulos, como por exemplo, uma frente vazia.
-1.3. The Current Situational Model includes past sensory information that were in the Perceptual Buffer; both come from the PAM, once detected by the agent.
+    - Detectar objetos e estimular o agente a replanejar o destino
+
+4 - preencher com objetos do mundo
+
+    - Fazer link com o WS3D para: detectar clique do mouse e detectar obstaculos
