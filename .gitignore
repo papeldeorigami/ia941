@@ -34,3 +34,4 @@ hs_err_pid*
 /aula6/ws3d-dist/*.so
 /aula6/*.so
 # /aula6/dist/
+/aula13/DemoLIDA/build/
