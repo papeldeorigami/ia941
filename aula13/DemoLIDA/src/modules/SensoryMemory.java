@@ -75,6 +75,9 @@ public class SensoryMemory extends SensoryMemoryImpl {
         sensorParam.put("mode", "position");
         position = (WorldPoint) environment.getState(sensorParam);
         sensorParam.clear();
+        sensorParam.put("mode", "destination");
+        destination = (WorldPoint) environment.getState(sensorParam);
+        sensorParam.clear();
         sensorParam.put("mode", "targetDestination");
         targetDestination = (WorldPoint) environment.getState(sensorParam);
         sensorParam.clear();
@@ -100,6 +103,7 @@ public class SensoryMemory extends SensoryMemoryImpl {
         String mode = (String) params.get("mode");
         switch (mode) {
             case "destination":
+                destination = targetDestination;
                 requestedObject = destination;
                 break;
             case "block":

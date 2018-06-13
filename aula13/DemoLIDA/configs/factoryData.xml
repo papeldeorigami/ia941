@@ -136,6 +136,12 @@
             <associatedmodule>SensoryMemory</associatedmodule>
             <associatedmodule>PerceptualAssociativeMemory</associatedmodule>
         </task>
+        <task name="DestinationDetector">
+            <class>detectors.DestinationDetector</class>
+            <ticksperrun>3</ticksperrun>
+            <associatedmodule>SensoryMemory</associatedmodule>
+            <associatedmodule>PerceptualAssociativeMemory</associatedmodule>
+        </task>
         <task name="BasicAttentionCodelet">
             <class>edu.memphis.ccrg.lida.attentioncodelets.BasicAttentionCodelet
             </class>

@@ -23,6 +23,7 @@ public class Environment extends EnvironmentImpl {
     private Thing block;
     private Thing food;
     private Thing jewel;
+    private WorldPoint targetDestination;
     private List<Thing> thingAhead;
     private Thing leafletJewel;
     private String currentAction;
@@ -36,7 +37,9 @@ public class Environment extends EnvironmentImpl {
         this.jewel = null;
         this.thingAhead = new ArrayList<>();
         this.leafletJewel = null;
-        this.currentAction = "rotate";        
+        this.currentAction = "moveToDestination";
+        
+        this.targetDestination = TARGET_DESTINATION;
     }
 
     @Override
@@ -88,7 +91,10 @@ public class Environment extends EnvironmentImpl {
                 requestedObject = creature.getPosition();
                 break;
             case "targetDestination":
-                requestedObject = TARGET_DESTINATION;
+                requestedObject = targetDestination;
+                break;
+            case "destination":
+                requestedObject = targetDestination;
                 break;
             case "food":
                 requestedObject = food;
@@ -115,39 +121,42 @@ public class Environment extends EnvironmentImpl {
         food = null;
         jewel = null;
         leafletJewel = null;
+        targetDestination = null;
         thingAhead.clear();
                 
-        for (Thing thing : creature.getThingsInVision()) {
-            if (thing.getCategory() == Constants.categoryBRICK) {
-                block = thing;
-            } else if (creature.calculateDistanceTo(thing) <= Constants.OFFSET) {
-                // Identifica o objeto proximo
-                thingAhead.add(thing);
-                break;
-            } else if (thing.getCategory() == Constants.categoryJEWEL) {
-                if (leafletJewel == null) {
-                    // Identifica se a joia esta no leaflet
-                    for(Leaflet leaflet: creature.getLeaflets()){
-                        if (leaflet.ifInLeaflet(thing.getMaterial().getColorName()) &&
-                                leaflet.getTotalNumberOfType(thing.getMaterial().getColorName()) > leaflet.getCollectedNumberOfType(thing.getMaterial().getColorName())){
-                            leafletJewel = thing;
-                            break;
-                        }
-                    }
-                } else {
-                    // Identifica a joia que nao esta no leaflet
-                    jewel = thing;
-                }
-            } else if (food == null && creature.getFuel() <= 300.0
-                        && (thing.getCategory() == Constants.categoryFOOD
-                        || thing.getCategory() == Constants.categoryPFOOD
-                        || thing.getCategory() == Constants.categoryNPFOOD)) {
-                
-                    // Identifica qualquer tipo de comida
-                    food = thing;
-            }
-           
-        }
+        //if (creature.getPosition().distanceTo(TARGET_DESTINATION) > 0) {
+            targetDestination = TARGET_DESTINATION;
+        //}
+        
+//        for (Thing thing : creature.getThingsInVision()) {
+//            if (creature.calculateDistanceTo(thing) <= Constants.OFFSET) {
+//                // Identifica o objeto proximo
+//                thingAhead.add(thing);
+//                break;
+//            } else if (thing.getCategory() == Constants.categoryJEWEL) {
+//                if (leafletJewel == null) {
+//                    // Identifica se a joia esta no leaflet
+//                    for(Leaflet leaflet: creature.getLeaflets()){
+//                        if (leaflet.ifInLeaflet(thing.getMaterial().getColorName()) &&
+//                                leaflet.getTotalNumberOfType(thing.getMaterial().getColorName()) > leaflet.getCollectedNumberOfType(thing.getMaterial().getColorName())){
+//                            leafletJewel = thing;
+//                            break;
+//                        }
+//                    }
+//                } else {
+//                    // Identifica a joia que nao esta no leaflet
+//                    jewel = thing;
+//                }
+//            } else if (food == null && creature.getFuel() <= 300.0
+//                        && (thing.getCategory() == Constants.categoryFOOD
+//                        || thing.getCategory() == Constants.categoryPFOOD
+//                        || thing.getCategory() == Constants.categoryNPFOOD)) {
+//                
+//                    // Identifica qualquer tipo de comida
+//                    food = thing;
+//            }
+//           
+//        }
     }
     
     
@@ -166,10 +175,10 @@ public class Environment extends EnvironmentImpl {
                     creature.rotate(1.0);
                     //CommandUtility.sendSetTurn(creature.getIndex(), -1.0, -1.0, 3.0);
                     break;
-                //case "moveToTarget":
-                //    if (target != null) 
-                //       creature.moveto(3.0, target.getX1(), target.getY1());
-                //    break;
+                case "moveToDestination":
+                    if (targetDestination != null) 
+                        creature.moveto(3.0, targetDestination.getX(), targetDestination.getY());
+                    break;
                 case "gotoJewel":
                     if (leafletJewel != null)
                         creature.moveto(3.0, leafletJewel.getX1(), leafletJewel.getY1());
