@@ -9,6 +9,11 @@
 O codigo-fonte das atividades desenvolvidas pelo aluno encontra-se disponivel em:
 https://github.com/papeldeorigami/ia941
 
+Para executar o programa desenvolvido nesta atividade, basta entrar na pasta e executar:
+```
+./run.sh
+```
+
 ## Atividade 1
 
 O DemoLida foi baixado através do link indicado na página da disciplina. Seu código foi estudado.
