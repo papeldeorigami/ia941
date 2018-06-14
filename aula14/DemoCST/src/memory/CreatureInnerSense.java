@@ -20,6 +20,8 @@
 package memory;
 
 import java.awt.Polygon;
+import java.util.List;
+import ws3dproxy.model.Leaflet;
 import ws3dproxy.model.WorldPoint;
 
 /**
@@ -31,12 +33,23 @@ public class CreatureInnerSense {
     public double pitch;
     public double fuel;
     public Polygon FOV;
+    public List<Leaflet> leaflets;
+    
+    public String leafletsToString() {
+        String result = "";
+        for (Leaflet leaflet: leaflets) {
+            result = leaflet.toString() + ",";
+        }
+        return result;
+    }
     
     public String toString() {
+        String result = "Pitch: " + (int) pitch + " Fuel: " + fuel;
         if (position != null)
-            return("Position: ("+(int)position.getX()+","+(int)position.getY()+") Pitch: "+(int)pitch+" Fuel: "+fuel);
+            result = "Position: (" + (int)position.getX() + "," + result;
         else 
-            return("Position: null,null"+" Pitch: "+pitch+" Fuel: "+fuel);
+            result = "Position: (null,null)" + result;
+        return result;
     }
 }
 

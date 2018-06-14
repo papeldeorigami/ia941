@@ -51,6 +51,7 @@ public class InnerSense extends Codelet {
              cis.pitch = c.getPitch();
              cis.fuel = c.getFuel();
              cis.FOV = c.getFOV();
+             cis.leaflets = c.getLeaflets();
 	}
         
         @Override
