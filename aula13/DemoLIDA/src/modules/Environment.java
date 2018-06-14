@@ -15,8 +15,9 @@ import ws3dproxy.util.Constants;
 
 public class Environment extends EnvironmentImpl {
 
+    public static final String INITIAL_ACTION = "moveToDestination";
     private static final int DEFAULT_TICKS_PER_RUN = 100;
-    private static final WorldPoint TARGET_DESTINATION = new WorldPoint(500, 400);
+    private static final WorldPoint TARGET_DESTINATION = new WorldPoint(300, 200);
     private int ticksPerRun;    
     private WS3DProxy proxy;
     private Creature creature;
@@ -37,7 +38,7 @@ public class Environment extends EnvironmentImpl {
         this.jewel = null;
         this.thingAhead = new ArrayList<>();
         this.leafletJewel = null;
-        this.currentAction = "moveToDestination";
+        this.currentAction = INITIAL_ACTION;
         
         this.targetDestination = TARGET_DESTINATION;
     }
@@ -79,7 +80,7 @@ public class Environment extends EnvironmentImpl {
 
     @Override
     public void resetState() {
-        currentAction = "rotate";
+        currentAction = INITIAL_ACTION;
     }
 
     @Override
@@ -95,6 +96,9 @@ public class Environment extends EnvironmentImpl {
                 break;
             case "destination":
                 requestedObject = targetDestination;
+                break;
+            case "block":
+                requestedObject = block;
                 break;
             case "food":
                 requestedObject = food;
@@ -124,9 +128,18 @@ public class Environment extends EnvironmentImpl {
         targetDestination = null;
         thingAhead.clear();
                 
-        //if (creature.getPosition().distanceTo(TARGET_DESTINATION) > 0) {
+        if (creature.getPosition().distanceTo(TARGET_DESTINATION) > 0) {
             targetDestination = TARGET_DESTINATION;
-        //}
+        }
+
+        for (Thing thing : creature.getThingsInVision()) {
+            if (creature.calculateDistanceTo(thing) <= Constants.OFFSET) {
+                if (thing.getCategory() == Constants.categoryBRICK) {
+                    block = thing;
+                }
+            }
+            
+        }
         
 //        for (Thing thing : creature.getThingsInVision()) {
 //            if (creature.calculateDistanceTo(thing) <= Constants.OFFSET) {
@@ -178,6 +191,11 @@ public class Environment extends EnvironmentImpl {
                 case "moveToDestination":
                     if (targetDestination != null) 
                         creature.moveto(3.0, targetDestination.getX(), targetDestination.getY());
+                    break;
+                case "gotoFood":
+                    if (food != null) 
+                        creature.moveto(3.0, food.getX1(), food.getY1());
+                        //CommandUtility.sendGoTo(creature.getIndex(), 3.0, 3.0, food.getX1(), food.getY1());
                     break;
                 case "gotoJewel":
                     if (leafletJewel != null)

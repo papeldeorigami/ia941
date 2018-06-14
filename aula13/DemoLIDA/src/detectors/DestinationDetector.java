@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import edu.memphis.ccrg.lida.pam.tasks.BasicDetectionAlgorithm;
-import org.xguzm.pathfinding.grid.GridCell;
+import ws3dproxy.model.WorldPoint;
 
 public class DestinationDetector extends BasicDetectionAlgorithm {
 
@@ -19,7 +19,7 @@ public class DestinationDetector extends BasicDetectionAlgorithm {
 
     @Override
     public double detect() {
-        GridCell destination = (GridCell) sensoryMemory.getSensoryContent(modality, detectorParams);
+        WorldPoint destination = (WorldPoint) sensoryMemory.getSensoryContent(modality, detectorParams);
         double activation = 0.0;
         if (destination != null) {
             activation = 1.0;
