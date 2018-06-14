@@ -48,7 +48,7 @@ public class ClosestLeafletJewelDetector extends Codelet {
 
 	@Override
 	public void accessMemoryObjects() {
-		this.knownMO=(MemoryObject)this.getInput("KNOWN_JEWEL");
+		this.knownMO=(MemoryObject)this.getInput("KNOWN_JEWELS");
 		this.innerSenseMO=(MemoryObject)this.getInput("INNER");
 		this.closestLeafletJewelMO=(MemoryObject)this.getOutput("CLOSEST_LEAFLET_JEWEL");	
 	}

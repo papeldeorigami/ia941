@@ -22,11 +22,15 @@ import br.unicamp.cst.core.entities.MemoryObject;
 import br.unicamp.cst.core.entities.Mind;
 import codelets.behaviors.EatClosestApple;
 import codelets.behaviors.Forage;
+import codelets.behaviors.GetClosestLeafletJewel;
 import codelets.behaviors.GoToClosestApple;
+import codelets.behaviors.GoToClosestLeafletJewel;
 import codelets.motor.HandsActionCodelet;
 import codelets.motor.LegsActionCodelet;
 import codelets.perception.AppleDetector;
 import codelets.perception.ClosestAppleDetector;
+import codelets.perception.ClosestLeafletJewelDetector;
+import codelets.perception.JewelDetector;
 import codelets.sensors.InnerSense;
 import codelets.sensors.Vision;
 import java.util.ArrayList;
@@ -55,6 +59,8 @@ public class AgentMind extends Mind {
                 MemoryObject innerSenseMO;
                 MemoryObject closestAppleMO;
                 MemoryObject knownApplesMO;
+                MemoryObject closestLeafletJewelMO;
+                MemoryObject knownJewelsMO;
                 
                 //Initialize Memory Objects
                 legsMO=createMemoryObject("LEGS", "");
@@ -67,9 +73,18 @@ public class AgentMind extends Mind {
                 closestAppleMO=createMemoryObject("CLOSEST_APPLE", closestApple);
                 List<Thing> knownApples = Collections.synchronizedList(new ArrayList<Thing>());
                 knownApplesMO=createMemoryObject("KNOWN_APPLES", knownApples);
+
+                Thing closestLeafletJewel = null;
+                closestLeafletJewelMO=createMemoryObject("CLOSEST_LEAFLET_JEWEL", closestLeafletJewel);
+                List<Thing> knownJewels = Collections.synchronizedList(new ArrayList<Thing>());
+                knownJewelsMO=createMemoryObject("KNOWN_JEWELS", knownJewels);
                 
                 // Create and Populate MindViewer
                 MindView mv = new MindView("MindView");
+
+                mv.addMO(knownJewelsMO);
+                mv.addMO(closestLeafletJewelMO);
+
                 mv.addMO(knownApplesMO);
                 mv.addMO(visionMO);
                 mv.addMO(closestAppleMO);
@@ -78,7 +93,7 @@ public class AgentMind extends Mind {
                 mv.addMO(legsMO);
                 mv.StartTimer();
                 mv.setVisible(true);
-		
+                
 		// Create Sensor Codelets	
 		Codelet vision=new Vision(env.c);
 		vision.addOutput(visionMO);
@@ -108,7 +123,18 @@ public class AgentMind extends Mind {
 		closestAppleDetector.addInput(innerSenseMO);
 		closestAppleDetector.addOutput(closestAppleMO);
                 insertCodelet(closestAppleDetector);
-		
+
+                Codelet jewelDetector = new JewelDetector();
+                jewelDetector.addInput(visionMO);
+                jewelDetector.addOutput(knownJewelsMO);
+                insertCodelet(jewelDetector);
+                
+		Codelet closestLeafletJewelDetector = new ClosestLeafletJewelDetector();
+		closestLeafletJewelDetector.addInput(knownJewelsMO);
+		closestLeafletJewelDetector.addInput(innerSenseMO);
+		closestLeafletJewelDetector.addOutput(closestLeafletJewelMO);
+                insertCodelet(closestLeafletJewelDetector);
+                
 		// Create Behavior Codelets
 		Codelet goToClosestApple = new GoToClosestApple(creatureBasicSpeed,reachDistance);
 		goToClosestApple.addInput(closestAppleMO);
@@ -123,6 +149,19 @@ public class AgentMind extends Mind {
                 eatApple.addOutput(knownApplesMO);
                 insertCodelet(eatApple);
                 
+		Codelet goToClosestLeafletJewel = new GoToClosestLeafletJewel(creatureBasicSpeed,reachDistance);
+		goToClosestLeafletJewel.addInput(closestLeafletJewelMO);
+		goToClosestLeafletJewel.addInput(innerSenseMO);
+		goToClosestLeafletJewel.addOutput(legsMO);
+                insertCodelet(goToClosestLeafletJewel);
+		
+		Codelet getClosestLeafletJewel=new GetClosestLeafletJewel(reachDistance);
+		getClosestLeafletJewel.addInput(closestLeafletJewelMO);
+		getClosestLeafletJewel.addInput(innerSenseMO);
+		getClosestLeafletJewel.addOutput(handsMO);
+                getClosestLeafletJewel.addOutput(knownJewelsMO);
+                insertCodelet(getClosestLeafletJewel);
+
                 Codelet forage=new Forage();
 		forage.addInput(knownApplesMO);
                 forage.addOutput(legsMO);

@@ -34,7 +34,7 @@ public class CreatureInnerSense {
     public double fuel;
     public Polygon FOV;
     public List<Leaflet> leaflets;
-    
+
     public String leafletsToString() {
         String result = "";
         for (Leaflet leaflet: leaflets) {
