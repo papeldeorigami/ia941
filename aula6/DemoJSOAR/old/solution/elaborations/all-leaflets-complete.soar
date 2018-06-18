@@ -1,0 +1,22 @@
+sp {monitor*all-leaflets-complete
+   (state <s> ^desired <desired>
+              ^knapsack <knapsack>)
+   (<desired>  ^Red <red>
+               ^Green <green>
+               ^Blue <blue>
+               ^Yellow <yellow>
+               ^Magenta <magenta>
+               ^White <white>)
+   (<knapsack> ^Red <red>
+               ^Green <green>
+               ^Blue <blue>
+               ^Yellow <yellow>
+               ^Magenta <magenta>
+               ^White <white>)
+-->
+   (write (crlf) | *************************************** |)
+   (write (crlf) | ***      ALL LEAFLETS COMPLETE      *** |)
+   (write (crlf) | *************************************** |)
+   (<s> ^all-leaflets-complete true)
+#   (interrupt)
+}

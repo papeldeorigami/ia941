@@ -10,7 +10,9 @@ sp {propose*initialize-solution
 sp {apply*initialize-solution
    (state <s> ^operator.name initialize-solution
               ^io.input-link.CREATURE <creature>)
-   (<creature> ^LEAFLETS <leaflets>)
+   (<creature> ^POSITION <p>
+               ^LEAFLETS <leaflets>
+               ^PARAMETERS.TIMESTAMP <timestamp>)
    (<leaflets> ^LEAFLET <l1> { <> <l1> <l2> })
    (<leaflets> ^LEAFLET <l2> { <> <l2> <l3> })
    (<leaflets> ^LEAFLET <l3> { <> <l1> <l3> })
@@ -36,12 +38,19 @@ sp {apply*initialize-solution
          ^Magenta <Magenta3>
          ^White <White3>)
 -->
-   (<s> ^name plan        
-        ^initialized true                  # flag to control whether these attributes have been initialized
+   (<s> ^name plan
+        # flag to control whether these attributes have been initialized
+        ^initialized true        
+        # these attributes are available both for deliberation and reactive actions
         ^desired <desired>                 # jewels required grouped by color
+        ^timestamp <timestamp>             # last timestamp read from the creature
+        ^delivery-spot <delivery-spot>     # always (0,0)
         ^actions <actions>                 # holds the actions to be output
         ^memory <memory>)                  # a persistant memory of the entities that have been seen
+   (<delivery-spot> ^X 0
+                    ^Y 0)
    (<desired>
+        ^better lower # success will be the lowest possible value for the numeric-value (traveledDistance)
         ^Red (+ <Red1> <Red2> <Red3>)
         ^Green (+ <Green1> <Green2> <Green3>)
         ^Blue (+ <Blue1> <Blue2> <Blue3>)

@@ -1,0 +1,18 @@
+sp {propose*plan
+   (state <s> ^name plan)
+-->
+   (<s> ^operator <o> +)
+   (<o> ^name plan)
+   (write (crlf) | Propose plan |)
+}  
+
+sp {apply*plan
+   (state <s> 
+        ^operator <o>
+        ^actions <actions>)
+   (<o> ^name plan)
+-->
+   (<s> ^name move)
+   (<actions> ^PLAN true)
+   (write (crlf) | Apply plan |)
+}

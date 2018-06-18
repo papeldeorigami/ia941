@@ -1,8 +1,8 @@
-sp {see*plan*preferences
+sp {see*start-plan*preferences
    (state <s> ^operator <o> +
           <o2> +)
    (<o> ^name see)
-   (<o2> ^name plan)
+   (<o2> ^name start-plan)
 -->
    (<s> ^operator <o> > <o2>)
 }

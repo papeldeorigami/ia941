@@ -1,0 +1,38 @@
+# this operator will always be proposed where there is something new in the input,
+# independent of the current state, as long as it is initialized
+sp {propose*see
+   (state <s> ^initialized true
+              ^memory <memory>
+              ^io.input-link.CREATURE <creature>)
+   (<creature> ^SENSOR.VISUAL.ENTITY <entity>)
+   (<entity> ^NAME <name>)
+  -(<memory> ^ENTITY.NAME <name>)
+-->
+   (<s> ^operator <op> + =)
+   (<op> ^name see)
+   (write (crlf) | Propose see: name=| <name> ||)
+}
+
+sp {apply*see*save
+   (state <s> ^operator <op>
+              ^memory <memory>
+              ^io.input-link.CREATURE <creature>)
+   (<op> ^name see)
+   (<creature> ^SENSOR.VISUAL.ENTITY <entity>)
+   (<entity> ^X <x>
+             ^Y <y>
+             ^NAME <name>
+             ^TYPE <type>
+             ^COLOR <color>
+             ^DISTANCE <distance>)
+  -(<memory> ^ENTITY.NAME <name>)
+-->
+   (<memory> ^ENTITY <newEntity>)
+   (<newEntity> ^X <x>
+                ^Y <y>
+                ^NAME <name>
+                ^TYPE <type>
+                ^COLOR <color>
+                ^DISTANCE <distance>)
+   (write (crlf) | apply see*new: name=| <name> | type=| <type> | color=| <color> | x=| <x> | y =| <y> | distance=| <distance> ||)
+}

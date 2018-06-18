@@ -1,0 +1,37 @@
+VERSION 4
+/solution/solution.dm
+0	ROOT solution solution 1
+1	0	FOPERATOR _firstload _firstload.soar 2
+2	0	FOLDER all all 3
+3	0	FOLDER elaborations elaborations 4
+4	3	FOPERATOR _all _all.soar 5
+5	3	FOPERATOR collected-count collected-count.soar 6
+6	3	FOPERATOR desired-count desired-count.soar 7
+7	3	FOPERATOR distance-to-delivery-spot distance-to-delivery-spot.soar 8
+8	3	FOPERATOR elapsed elapsed.soar 9
+9	3	FOPERATOR numeric-value numeric-value.soar 10
+10	3	FOPERATOR problem-space problem-space.soar 11
+11	3	FOPERATOR ready-to-deliver ready-to-deliver.soar 12
+12	3	FOPERATOR top-state top-state.soar 13
+13	3	FOPERATOR v-all-leaflets-complete v-all-leaflets-complete.soar 14
+14	3	FOPERATOR v-collected-count v-collected-count.soar 15
+15	0	FOPERATOR deliver deliver.soar 16
+16	0	FOPERATOR get get.soar 17
+17	0	HLFOPERATOR monitors monitors.soar monitors 0 18
+18	17	FOPERATOR selected-move selected-move.soar 19
+19	17	FOPERATOR v-knapsack v-knapsack.soar 20
+20	17	FOPERATOR v-traveled-distance v-traveled-distance.soar 21
+21	0	FOPERATOR move move.soar 22
+22	0	FOPERATOR output-command output-command.soar 23
+23	0	FOPERATOR plan-move plan-move.soar 24
+24	0	HLFOPERATOR preferences preferences.soar preferences 0 25
+25	0	FOPERATOR remove-output remove-output.soar 26
+26	0	FOPERATOR reset-plan reset-plan.soar 27
+27	0	FOPERATOR see see.soar 28
+28	0	FOPERATOR simulate-input simulate-input.soar 29
+29	0	FOPERATOR start-plan start-plan.soar 30
+30	0	FOPERATOR update-timestamp update-timestamp.soar 31
+31	0	FOPERATOR wait wait.soar 32
+32	0	FOPERATOR wander wander.soar 33
+33	0	OPERATOR initialize-solution initialize-solution.soar 34
+END

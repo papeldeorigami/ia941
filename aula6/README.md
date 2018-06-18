@@ -6,6 +6,31 @@
 
 # Relatório da Aula 6 - SOAR: Controlando o WorldServer3D
 
+## Instruções de uso
+
+Para rodar o código desta aula, basta abrir a pasta *aula6* no terminal e executar: `./run.sh`
+
+A tela do World Server irá aparecer e, 3 segundos depois, o controlador será iniciado.
+
+
+### Código-fonte
+
+Todo o conteúdo deste relatório (texto e imagens), assim como o código-fonte produzido durante a execução desta atividade, encontram-se disponíveis no seguinte repositório de acesso público:
+
+https://github.com/papeldeorigami/ia941
+
+Por conter submodulos (ws3d, WS3DProxy), recomenda-se fazer clone do repositório com o seguinte comando:
+
+```
+git clone --recursive https://github.com/papeldeorigami/ia941
+```
+
+Neste relatório, serão feitas referências ao repositório acima com a denominação de _repositório de trabalho_.
+
+## Pré-requisitos:
+
+* Sistema operacional: (K)Ubuntu 16.04 64bit
+* Oracle Java JDK version "1.8.0_161 ou compativel
 
 ## Atividade 1
 
@@ -22,7 +47,7 @@ Step e mstep servem para investigar o ciclo de execucao, sendo que o mstep vai u
 
 #### _Observe que essa classe já se utiliza das classes de apoio em WS3DProxy. Entenda e explique como é feito o acesso ao WorldServer3D, por meio do WS3DProxy.__
 
-Um objeto da classe Environment, inicializado PELA Main, inicializa uma instancia do WS3DProxy e pega uma instancia para o World. O SoarBridge recebe uma referência ao environment e, à partir daí, iterage com o WorldServer3D, acessando as criaturas, enviando comandos, etc.
+Um objeto da classe Environment, inicializado pela Main, inicializa uma instancia do WS3DProxy e pega uma instancia para o World. O SoarBridge recebe uma referência ao environment e, à partir daí, iterage com o WorldServer3D, acessando as criaturas, enviando comandos, etc.
 
 #### _Explique como é feita a leitura do estado do ambiente no WorldServer3D, e como esses dados sensoriais são enviado para o SOAR. Da mesma forma, explique como os dados enviados pelo SOAR são aproveitados para controlar a criatura no WorldServer3D. Registre suas conclusões no relatório de atividades._
 
@@ -47,11 +72,15 @@ A aplicação das regras associadas a esses comportamentos se dá na ordem defin
 5. Andar na direção de jóias/comida
 6. Procurar itens
 
-* _Na versão a ser entregue na Atividade 2, o JSoarDebugger deve ser inibido, seguindo-se o procedimento acima._
-
 ## Atividade 2
  
 Construir um controlador deliberativo, ao invés de reativo, para encontrar as jóias especificadas nos Leaflets da criatura, utilizando as técnicas de Planning aprendidas no tutorial do SOAR.
+
+### Definição da meta ("desired state")
+
+Estamos considerando a mochila do Agente como a variável que temos que trabalhar para chegar ao estado final desejado.
+A definição de um estado final desejado, ou meta, é fundamental para a abordagem deliberativa. Na resolução deste exercício, esse estado final é representado pela estrutura "desired" e é calculada através da soma de todas as jóias de cada cor necessárias para completar os 3 leaflets. Ou seja, o agente cumpriu sua missão, e pode trocar os seus leaflets, quando a sua mochila contiver todas as jóias de todos os leaflets.
+
 
 ### Leaflets no SOAR
 
@@ -82,7 +111,17 @@ Sendo assim, o resultado esperado (^desired) ficou sendo a soma de cada cor dos 
                ^White (+ <White1> <White2> <White3>))
 ```
 
-### Dicas
+### Operadores
+
+Foram definidos os seguintes operadores principais, com suas respectivas elaborações e sub-estados:
+- plan: planejar o próximo movimento que ajude a atingir o desired state
+- move: andar para o destino planejado
+- see: salvar em memoria qualquer novo objeto visto
+- get: sempre que encontrar alguma joia próxima, que sirva para completar algum leaflet, pegar
+- hide: sempre que encontrar alguma jóia próxima, que não seja necessária para algum leaflet, esconder
+- eat: sempre que encontrar comida proxima, comer
+
+### Detalhes de implementação
 
 * Para simplificar um pouco o código, criou-se uma regra de inicialização da criatura. Desta forma, pode-se inicializar contadores de jóias, eliminando a necessidade de rotinas duplicadas, tais como a see\*entity, que tinha duas versões (see\*entity\*with\*memory\*count e see\*entity\*without\*memory\*count).
 
@@ -90,144 +129,45 @@ Sendo assim, o resultado esperado (^desired) ficou sendo a soma de cada cor dos 
 
 * Utilizou-se o VisualSoar para se organizar melhor o código, com um arquivo para cada operador, permitindo ainda a verificação de sintaxe no próprio editor. Para abrir o código no VisualSoar, basta acessar o arquivo "rules/solution.vsa".
 
+### SoarBridge com memória persistente
 
-### Detectar leaflet completo
+Para poder fazer a ponte com o JSoar sem que ele fosse reiniciado toda vez, zerando a memória, utilizamos a classe InputBuilder para definir os WMEs. Essa classe permite pegar a referência aos elementos de Input criados anteriormente, evitando a duplicação de WMEs.
+
+Alterações realizadas no arquivo SoarBridge:
 ```
-sp {solution*evaluate*state*success
-   (state <s> ^desired <d>
-              ^name solution
-              ^knapsack <k>
-              ^traveledDistance <traveledDistance>)
-   (<d> ^Red <Red>
-        ^Green <Green>
-        ^Blue <Blue>
-        ^Yellow <Yellow>
-        ^Magenta <Magenta>
-        ^White <White>)        
-   (<k> ^Red <Red> 
-        ^Green <Green>
-        ^Blue <Blue>
-        ^Yellow <Yellow>
-        ^Magenta <Magenta>
-        ^White <White>)
--->
-   (<s> ^success <d>)
-   (write (crlf) | ****************************** |)
-   (write (crlf) | ********** Success! ********** |)
-   (write (crlf) | traveledDistance =  | <traveledDistance> ||)
-   (write (crlf) | ****************************** |)
-#   (halt)
-}
+    public SoarBridge(Environment _e, String path, Boolean startSOARDebugger) 
+    {
+            ...
+            builder = InputBuilder.create(agent.getInputOutput());
+            inputLink = builder.io.getInputLink();
+    ...
+
+    private void prepareInputLink() {
+        InputBuilder creatureSensor;
+    
+        ....
+
+        clearInputLink();
+        Creature c = env.getCreature();
+        try {
+            if (agent != null) {
+                creature = builder.push("CREATURE").markWme("CREATURE");
+                creature.push("MEMORY");
+    ...
+
+    private void clearInputLink() {
+        InputWme inputCreature;
+        inputCreature = builder.getWme("CREATURE");
+        if (inputCreature != null)
+            inputCreature.remove();
+    }
 ```
 
-### Entregar jóias no delivery spot
-
-```
-# Propose*move*delivery*spot:
-sp {propose*move*delivery*spot
-   (state <s> ^io.input-link <il>)
-   (<il> ^CREATURE <creature>)
-   (<creature> ^LEAFLETS.ALL_COMPLETED 1)
--->
-   (<s> ^operator <o> +)
-   (<o> ^name moveDeliverySpot)
-}
-   
-# move to delivery spot position (defaults to 0,0)
-sp {apply*move*delivery*spot
-   (state <s> ^operator <o>
-              ^io <io>)
-   (<io> ^input-link <il>)           
-   (<io> ^output-link <ol>)
-   (<o> ^name moveDeliverySpot)
--->
-   (<ol> ^MOVE <command>)
-   (<command> ^Vel 1)
-   (<command> ^VelR 1)
-   (<command> ^VelL 1)
-   (<command> ^X 0)
-   (<command> ^Y 0)
-}
-
-# Apply*moveDeliverySpot*remove-move:
-# If the moveDeliverySpot operator is selected,
-# and there is a completed move command on the output link,
-# then remove that command.   
-sp {apply*moveDeliverySpot*remove-move
-(state <s> ^operator.name moveDeliverySpot
-           ^io.output-link <out>)
-(<out> ^MOVE <move>)
-(<move> ^status complete)
--->
-(<out> ^MOVE <move> -)}   
-
-# Move Jewel vs Move Delivery Spot Preferences - Move DeliverySpot wins
-sp {moveJewel*moveDeliverySpot*preferences
-(state <s> ^attribute operator
-           ^impasse tie
-           ^item <o> {<> <o> <o2>}
-           ^superstate <ss>)
-(<ss> ^io.input-link <il>)
-(<o> ^name moveJewel)
-(<o2> ^name moveDeliverySpot)
--->
-(<ss> ^operator <o2> > <o>)} 
-
-# Move Food vs Move Delivery Spot Preferences - Move DeliverySpot wins
-sp {moveFood*moveDeliverySpot*preferences
-(state <s> ^attribute operator
-           ^impasse tie
-           ^item <o> {<> <o> <o2>}
-           ^superstate <ss>)
-(<ss> ^io.input-link <il>)
-(<o> ^name moveFood)
-(<o2> ^name moveDeliverySpot)
--->
-(<ss> ^operator <o2> > <o>)} 
-
-```
 ## Conclusão
 
-O programa desenvolvido utiliza raciocinio deliberativo para atingir o objetivo de trocar leaflets por pontos.
-Uma melhoria possível seria priorizar jóias dos leaflets na busca, considerando ainda a pontuação de cada leaflet.
+O programa desenvolvido utiliza raciocínio deliberativo para atingir o objetivo de trocar leaflets por pontos.
+Uma melhoria possível seria considerar a pontuação de cada leaflet para determinar a sequência das jóias a serem capturadas.
+
+Também seria possível a introdução de algoritmos de menor caminho, como A-star, para a busca de jóias, desviando-se inclusive de obstáculos.
 
 
-Foram definidos os seguintes operadores principais, com suas respectivas elaborações e sub-estados:
-
-- plan (Planejar)
-    - se algum leaflet estiver completo, mover para o delivery spot
-    - propor comando move para todas as joias em memoria que ajudem a completar os leaflets
-    - utilizar o selection problem (que vem na pasta default do soar) para determinar o melhor movimento
-    - o melhor movimento é o primeiro movimento que irá levar ao menor caminho para completar todos os leaflets
-    - priorizar leaflets de maior valor
-    - se nenhuma jóia faltante estiver presente, e nenhum leaflet não estiver completo, mudar para o estado rotate360
-
-- rotate360: girar 360 graus no inicio para certificar-se de ter visto todas as joias
-
-- deliver (Trocar leaflets)
-    - se estiver na posição do delivery spot (0,0), trocar todos os leaflets completos
-    - se não tiver mais nenhum leaflet para trocar, mas tiver algum incompleto ainda, voltar para rotate360
-
-- move (mover em direcao a um objeto, target)
-    - a posicao pode ser uma joia, uma comida ou o delivery spot
-    - o objeto target é determinado no planejamento
-    - reativamente desviar ou esconder obstaculos pelo caminho
-    - detectar se chegou perto do objeto, o suficiente para pegar (se for joia) ou comer (se for comida)
-    - colocar comando move no output, interromper execucao para que o java processe o mesmo, e depois remover
-    - voltar para o estado de planejamento se enxergar uma joia nova, que seja necessaria para algum leaflet
-
-Operadores propostos em qualquer estado:
-- see: salvar em memoria qualquer novo objeto visto
-- get: sempre que encontrar alguma joia próxima, que sirva para completar algum leaflet, pegar
-- hide: sempre que encontrar alguma jóia próxima, que não seja necessária para algum leaflet, esconder
-- eat: sempre que encontrar comida proxima, comer
-- wait: proposto sempre que parar em um loop de state no-change, onde nenhum outro operador tenha sido proposto (geralmente é algum bug, alguma situação imprevista)
-
-
-Problema: o selection problem sai do impasse com um movimento de menor distancia, mas não leva em consideração os próximos movimentos
-Causa:
-- o impasse só pode ser resolvido com os operadores propostos
-- cada operador contém apenas um destino (uma joia)
-Possiveis solucoes:
-1. propor operadores com todas as sequencias possiveis para pegar as joias faltantes; não parece haver suporte no SOAR para manipulação desse tipo de lista
-2. criar um operador para cada joia, gerar impasse para cada proxima joia, salvar o numeric-value como resultado do calculo até a última jóia. A dificuldade aqui é gerar os impasses em cascata, isto é, para cada estado, gerar um subestado de impasse sem sair do primeiro impasse e avaliar o numeric-value sendo a distancia total percorrida. Não se encontrou uma forma de implementar isto no tempo proposto para a atividade.

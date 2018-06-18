@@ -412,6 +412,21 @@ public class SoarBridge
                             }
                             break;
 
+                        case PLAN:
+                            command = new Command(Command.CommandType.PLAN);
+                            CommandPlan commandPlan = (CommandPlan)command.getCommandArgument();
+                            if (commandPlan != null)
+                            {
+                                String memoryWME = GetParameterValue("Memory");
+                                if (memoryWME != null) {
+                                    commandPlan.setMemoryWME(memoryWME);
+                                    commandList.add(command);
+                                } else {
+                                    logger.severe("Could not read the memory name for command " + commandType);
+                                }
+                            }
+                            break;
+
                         default:
                             break;
                     }   
@@ -504,6 +519,10 @@ public class SoarBridge
                         processHideCommand((CommandHide)command.getCommandArgument());
                     break;
 
+                    case PLAN:
+                        processPlanCommand((CommandPlan)command.getCommandArgument());
+                    break;
+
                     default:System.out.println("Nenhum comando definido ...");
                         // Do nothing
                     break;
@@ -584,6 +603,14 @@ public class SoarBridge
         }
     }
     
+     /**
+     * Process the Plan Command
+     * @param soarCommandPlan Soar Memory WME name
+     */
+    private void processPlanCommand(CommandPlan soarCommandPlan) {
+        
+    }
+
     /**
      * Try Parse a Float Element
      * @param value Float Value

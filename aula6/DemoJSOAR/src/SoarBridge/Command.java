@@ -16,7 +16,8 @@ public class Command
         MOVE,
         GET,
         EAT,
-        HIDE
+        HIDE,
+        PLAN
     }
 
     private CommandType commandType;
