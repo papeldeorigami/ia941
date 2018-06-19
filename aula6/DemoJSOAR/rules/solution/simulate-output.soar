@@ -1,0 +1,31 @@
+sp {propose*simulate-output
+   (state <s> ^io <io>
+              ^sent-command true
+             -^simulated-output)
+   (<io> ^output-link <output>
+         ^input-link.SIMULATION true)
+   (<output> ^<actionType>)
+-->
+   (<s> ^operator <o> + =)
+   (<o> ^name simulate-output)
+   (write (crlf) | Propose simulate-output |)
+   #(write (crlf) (cmd print --depth 2 <output>))
+}
+
+sp {apply*simulate-output*memorize
+   (state <s> ^operator.name simulate-output
+              ^io <io>)
+   (<io> ^input-link <input>
+         ^output-link <output>)
+   (<input> ^CREATURE <creature>)
+   (<creature> ^SENSOR.VISUAL <visual>
+               ^MEMORY <memory>)
+   (<output> ^MEMORIZE <entity>)
+   (<entity> ^Name <name>)
+   (<visual> ^ENTITY <visualEntity>)
+   (<visualEntity> ^NAME <name>)
+-->
+   (write (crlf) | Apply simulate-output: type=MEMORIZE name=| <name> ||)
+   (<s> ^simulated-output true)
+   (<memory> ^ENTITY <visualEntity>)
+}

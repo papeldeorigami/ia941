@@ -56,13 +56,15 @@ public class SoarBridge
     public String input_link_string = "";
     public String output_link_string = "";
 
+    List<Thing> thingsMemory = null;
+    
     /**
      * Constructor class
      * @param _e Environment
      * @param path Path for Rule Base
      * @param startSOARDebugger set true if you wish the SOAR Debugger to be started
      */
-    public SoarBridge(Environment _e, String path, Boolean startSOARDebugger) 
+    public SoarBridge(Environment _e, String path, Boolean startSOARDebugger)
     {
         env = _e;
         c = env.getCreature();
@@ -73,6 +75,7 @@ public class SoarBridge
             SoarCommands.source(agent.getInterpreter(), path);
             builder = InputBuilder.create(agent.getInputOutput());
             inputLink = builder.io.getInputLink();
+            thingsMemory = new ArrayList<Thing>();
 
             // Debugger line
             if (startSOARDebugger)
@@ -156,6 +159,7 @@ public class SoarBridge
         InputBuilder creatureLeaflets;
         InputBuilder creatureKnapsack;
         InputBuilder creaturePosition;
+        InputBuilder creatureMemory;
     
         //SymbolFactory sf = agent.getSymbols();
         // Always remove the current WMEs before updating the input        
@@ -167,7 +171,18 @@ public class SoarBridge
                 // Initialize Creature Entity
                 creature = builder.push("CREATURE").markWme("CREATURE");
                 // Initialize Creature Memory
-                creature.push("MEMORY");
+                creatureMemory = creature.push("MEMORY");
+                for (Thing t: thingsMemory) {
+                    InputBuilder entity = creatureMemory.push("ENTITY");
+                    entity.add("DISTANCE", GetGeometricDistanceToCreature(t.getX1(), t.getY1(), t.getX2(), t.getY2(), c.getPosition().getX(), c.getPosition().getY()));
+                    entity.add("X", t.getX1());
+                    entity.add("Y", t.getY1());
+                    entity.add("X2", t.getX2());
+                    entity.add("Y2", t.getY2());
+                    entity.add("TYPE", getItemType(t.getCategory()));
+                    entity.add("NAME", t.getName());
+                    entity.add("COLOR", Constants.getColorName(t.getMaterial().getColor()));
+                }
                 // Set Creature Parameters
                 Calendar lCDateTime = Calendar.getInstance();
                 creatureParameters = creature.push("PARAMETERS");
@@ -412,6 +427,22 @@ public class SoarBridge
                             }
                             break;
 
+                        case MEMORIZE:
+                            String thingNameToMemorize = null;
+                            command = new Command(Command.CommandType.MEMORIZE);
+                            CommandMemorize commandMemorize = (CommandMemorize)command.getCommandArgument();
+                            if (commandMemorize != null)
+                            {
+                                thingNameToMemorize = GetParameterValue("Name");
+                                if (thingNameToMemorize != null) {
+                                    commandMemorize.setThingName(thingNameToMemorize);
+                                    commandList.add(command);
+                                } else {
+                                    logger.severe("Could not read the thing name for command " + commandType);
+                                }
+                            }
+                            break;
+                            
                         case PLAN:
                             command = new Command(Command.CommandType.PLAN);
                             CommandPlan commandPlan = (CommandPlan)command.getCommandArgument();
@@ -519,6 +550,10 @@ public class SoarBridge
                         processHideCommand((CommandHide)command.getCommandArgument());
                     break;
 
+                    case MEMORIZE:
+                        processMemorizeCommand((CommandMemorize)command.getCommandArgument());
+                    break;
+
                     case PLAN:
                         processPlanCommand((CommandPlan)command.getCommandArgument());
                     break;
@@ -596,6 +631,22 @@ public class SoarBridge
         if (soarCommandHide != null)
         {
             c.eatIt(soarCommandHide.getThingName());
+        }
+        else
+        {
+            logger.severe("Error processing processMoveCommand");
+        }
+    }
+    
+     /**
+     * Store thing in the creature's persistent memory
+     * @param soarCommandMemorize Soar Memorize Command Structure
+     */
+    private void processMemorizeCommand(CommandMemorize soarCommandMemorize) throws CommandExecException
+    {
+        if (soarCommandMemorize != null)
+        {
+            storeInPersistentMemory(soarCommandMemorize.getThingName());
         }
         else
         {
@@ -731,6 +782,24 @@ public class SoarBridge
     
     public Set<Wme> getWorkingMemory() {
         return(agent.getAllWmesInRete());
+    }
+
+    /**
+     * Store thing in memory
+     * 
+     * Lookup thing data in the creature vision using the given thing name
+     * *Warning*: doesn't check if already persisted
+     * 
+     * @param thingName 
+     */
+    private void storeInPersistentMemory(String thingName) {
+        List<Thing> thingsList = (List<Thing>) c.getThingsInVision();
+        for (Thing t: thingsList) {
+            if (t.getName().equals(thingName)) {
+                thingsMemory.add(t);
+                break;
+            }
+        };
     }
 
 }

@@ -2,37 +2,35 @@
 # independent of the current state, as long as it is initialized
 sp {propose*see
    (state <s> ^initialized true
-              ^memory <memory>
-              ^io.input-link.CREATURE <creature>)
+              ^io.input-link <input>
+              ^actions <actions>)
+   (<input> ^CREATURE <creature>)
+   (<creature> ^MEMORY <memory>)
    (<creature> ^SENSOR.VISUAL.ENTITY <entity>)
    (<entity> ^NAME <name>)
   -(<memory> ^ENTITY.NAME <name>)
+   # if not memorizing something already
+   (<actions> -^MEMORIZE)
 -->
    (<s> ^operator <op> + =)
    (<op> ^name see)
    (write (crlf) | Propose see: name=| <name> ||)
 }
 
-sp {apply*see*save
+sp {apply*see*memorize
    (state <s> ^operator <op>
-              ^memory <memory>
-              ^io.input-link.CREATURE <creature>)
+              ^io.input-link <input>
+              ^actions <actions>)
+   (<input> ^CREATURE <creature>)
+   (<creature> ^MEMORY <memory>)
    (<op> ^name see)
    (<creature> ^SENSOR.VISUAL.ENTITY <entity>)
-   (<entity> ^X <x>
-             ^Y <y>
-             ^NAME <name>
-             ^TYPE <type>
-             ^COLOR <color>
-             ^DISTANCE <distance>)
+   (<entity> ^NAME <name>)
   -(<memory> ^ENTITY.NAME <name>)
+   # if not memorizing something already
+   (<actions> -^MEMORIZE)
 -->
-   (<memory> ^ENTITY <newEntity>)
-   (<newEntity> ^X <x>
-                ^Y <y>
-                ^NAME <name>
-                ^TYPE <type>
-                ^COLOR <color>
-                ^DISTANCE <distance>)
-   (write (crlf) | apply see*new: name=| <name> | type=| <type> | color=| <color> | x=| <x> | y =| <y> | distance=| <distance> ||)
+   # prepare the output action
+   (<actions> ^MEMORIZE.Name <name>)
+   (write (crlf) | apply see*memorize: name=| <name> ||)
 }

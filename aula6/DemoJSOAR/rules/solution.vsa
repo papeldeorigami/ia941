@@ -7,17 +7,18 @@ VERSION 4
 4	3	FOPERATOR _all _all.soar 5
 5	3	FOPERATOR all-leaflets-complete all-leaflets-complete.soar 6
 6	3	FOPERATOR top-state top-state.soar 7
-7	0	FOPERATOR eat eat.soar 18
-8	0	FOPERATOR get get.soar 8
-9	0	FOPERATOR hide hide.soar 9
-10	0	FOPERATOR move move.soar 10
-11	0	FOPERATOR output-command output-command.soar 19
-12	0	FOPERATOR plan plan.soar 11
-13	0	HLFOPERATOR preferences preferences.soar preferences 0 12
-14	0	FOPERATOR remove-output remove-output.soar 20
-15	0	FOPERATOR see see.soar 13
-16	0	FOPERATOR simulate-input simulate-input.soar 14
-17	0	FOPERATOR wait wait.soar 15
-18	0	FOPERATOR wander wander.soar 16
-19	0	OPERATOR initialize-solution initialize-solution.soar 17
+7	0	FOPERATOR eat eat.soar 8
+8	0	FOPERATOR get get.soar 9
+9	0	FOPERATOR hide hide.soar 10
+10	0	FOPERATOR move move.soar 11
+11	0	FOPERATOR see see.soar 21
+12	0	FOPERATOR output-command output-command.soar 12
+13	0	FOPERATOR plan plan.soar 13
+14	0	HLFOPERATOR preferences preferences.soar preferences 0 14
+15	0	FOPERATOR remove-output remove-output.soar 15
+16	0	FOPERATOR simulate-input simulate-input.soar 17
+17	0	FOPERATOR simulate-output simulate-output.soar 22
+18	0	FOPERATOR wait wait.soar 18
+19	0	FOPERATOR wander wander.soar 19
+20	0	OPERATOR initialize-solution initialize-solution.soar 20
 END

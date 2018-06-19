@@ -9,7 +9,8 @@ sp {propose*initialize-solution
 
 sp {apply*initialize-solution
    (state <s> ^operator.name initialize-solution
-              ^io.input-link.CREATURE <creature>)
+              ^io.input-link <input>)
+   (<input> ^CREATURE <creature>)
    (<creature> ^LEAFLETS <leaflets>)
    (<leaflets> ^LEAFLET <l1> { <> <l1> <l2> })
    (<leaflets> ^LEAFLET <l2> { <> <l2> <l3> })
@@ -36,11 +37,10 @@ sp {apply*initialize-solution
          ^Magenta <Magenta3>
          ^White <White3>)
 -->
-   (<s> ^name plan        
+   (<s> ^name solution        
         ^initialized true                  # flag to control whether these attributes have been initialized
         ^desired <desired>                 # jewels required grouped by color
-        ^actions <actions>                 # holds the actions to be output
-        ^memory <memory>)                  # a persistant memory of the entities that have been seen
+        ^actions <actions>)                # holds the actions to be output        
    (<desired>
         ^Red (+ <Red1> <Red2> <Red3>)
         ^Green (+ <Green1> <Green2> <Green3>)

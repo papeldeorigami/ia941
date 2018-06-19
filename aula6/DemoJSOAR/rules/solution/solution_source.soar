@@ -9,6 +9,7 @@ source eat.soar
 source get.soar
 source hide.soar
 source move.soar
+source see.soar
 source output-command.soar
 source plan.soar
 source preferences.soar
@@ -16,8 +17,8 @@ pushd preferences
 source preferences_source.soar
 popd
 source remove-output.soar
-source see.soar
 source simulate-input.soar
+source simulate-output.soar
 source wait.soar
 source wander.soar
 source initialize-solution.soar

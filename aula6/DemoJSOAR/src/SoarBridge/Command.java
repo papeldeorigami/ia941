@@ -17,6 +17,7 @@ public class Command
         GET,
         EAT,
         HIDE,
+        MEMORIZE,
         PLAN
     }
 
@@ -49,6 +50,14 @@ public class Command
 
             case HIDE:
                 commandArgument = new CommandHide();
+                break;
+
+            case MEMORIZE:
+                commandArgument = new CommandMemorize();
+                break;
+
+            case PLAN:
+                commandArgument = new CommandPlan();
                 break;
 
             default:
