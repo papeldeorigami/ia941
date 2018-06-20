@@ -10,8 +10,8 @@
 
 Para rodar o código desta aula, basta abrir a pasta *aula6* no terminal e executar: `./run.sh`
 
-A tela do World Server irá aparecer e, 3 segundos depois, o controlador será iniciado.
-
+A tela do World Server irá aparecer e, 3 segundos depois, os dois agentes, controlados pelo SOAR, serão iniciados.
+O título da janela do MindViewer foi modificado para indicar o nome de cada agente, assim pode-se acompanhar mais de perto o que cada um está fazendo.
 
 ### Código-fonte
 
@@ -85,6 +85,8 @@ A definição de um estado final desejado, ou meta, é fundamental para a aborda
 ### Leaflets no SOAR
 
 Para que o SOAR tenha acesso à informação dos Leaflets, estendemos a classe SoarBridge, metodo prepareInputLink, com a seguinte representação, onde cada folha com nome de cor representa o número de jóias necessário para completar aquele leaflet:
+
+```
 	CREATURE I4
 		^LEAFLETS I8
 			^LEAFLET I9
@@ -94,6 +96,7 @@ Para que o SOAR tenha acesso à informação dos Leaflets, estendemos a classe S
 				...
 			^LEAFLET I10
 				...
+```
 
 ### Knapsack & desired result
 
@@ -120,6 +123,15 @@ Foram definidos os seguintes operadores principais, com suas respectivas elabora
 - get: sempre que encontrar alguma joia próxima, que sirva para completar algum leaflet, pegar
 - hide: sempre que encontrar alguma jóia próxima, que não seja necessária para algum leaflet, esconder
 - eat: sempre que encontrar comida proxima, comer
+- wander: quando não há nada a buscar, o agente fica girando
+- success: quando o estado desejado é atingido, o programa exibe uma caixa de diálogo
+
+### Elaborations
+
+Para simplificar a lógica dos operadores, foram introduzidas ainda algumas elaborações, dentre elas:
+- all-leaflets-complete: checa quando o knapsack contém todas as jóias dos leaflets e augmenta o estado com o atributo de mesmo nome
+- thing-ahead: checa se existe algum objeto a menos de 30 unidades de distância
+- distance-to-waypoint-0: indica a distância a ser percorrida para mover o agente ao primeiro ponto da rota planejada
 
 ### Detalhes de implementação
 
@@ -160,6 +172,81 @@ Alterações realizadas no arquivo SoarBridge:
         inputCreature = builder.getWme("CREATURE");
         if (inputCreature != null)
             inputCreature.remove();
+    }
+```
+
+### Busca do melhor caminho
+
+No SoarBridge, implementou-se a ação PLAN, que essencialmente é constituida de uma rotina que busca a melhor rota para preencher os 3 leaflets.
+Essa sequencia de busca é salva no input-link e o SOAR utiliza o primeiro ponto (WAYPOINT-0) para a operação de Move.
+
+A listagem abaixo é a parte principal da implementação dessa busca:
+```
+    /**
+     * Draw the shortest path to complete all leaflets
+     */
+    private void rebuildPlan() {
+        HashMap<String, List<ThingWithDistance>> jewelListSortedByDistanceGroupedByColor = new HashMap<>();
+        HashMap<String, Integer> jewelsNeededGroupedByColor = new HashMap<>();
+        plan.clear();
+        // build a map of all available things, sorted by distance and grouped by color
+        for (Thing thing: thingsMemory) {
+            if (thing.getCategory() == Constants.categoryJEWEL) {
+                String color = Constants.getColorName(thing.getMaterial().getColor());
+                List<ThingWithDistance> sortedList = jewelListSortedByDistanceGroupedByColor.get(color);
+                if (sortedList == null) {
+                    sortedList = new ArrayList<>();
+                }
+                double distance = c.calculateDistanceTo(thing);
+                if (distance <= 30) {
+                    continue;
+                }
+                ThingWithDistance thingWithDistance = new ThingWithDistance(thing, distance);
+                sortedList.add(thingWithDistance);
+                sortedList.sort(Comparator.comparing(ThingWithDistance::getDistance));
+                jewelListSortedByDistanceGroupedByColor.put(color, sortedList);
+            }
+        }
+        // build a map of all jewels needed, with total quantity grouped by color
+        jewelsNeededGroupedByColor.put("Red", 0);
+        jewelsNeededGroupedByColor.put("Green", 0);
+        jewelsNeededGroupedByColor.put("Blue", 0);
+        jewelsNeededGroupedByColor.put("Yellow", 0);
+        jewelsNeededGroupedByColor.put("Magenta", 0);
+        jewelsNeededGroupedByColor.put("White", 0);
+        for (Leaflet l : c.getLeaflets()) {
+            HashMap<String, Integer[]> items = l.getItems();
+            for (HashMap.Entry<String, Integer[]> entry : items.entrySet()) {
+                String color = entry.getKey();
+                Integer needed = entry.getValue()[0];
+                Integer collected = entry.getValue()[1];
+                Integer previousNeeded = jewelsNeededGroupedByColor.get(color);
+                if (previousNeeded != null) {
+                    needed += previousNeeded;
+                }
+                jewelsNeededGroupedByColor.put(color, needed - collected);
+            }
+        }
+        // build a map of nearest jewels needed to complete all leaflets
+        List<ThingWithDistance> sortedListOfNeededThings = new ArrayList<>();
+        for (String color: jewelsNeededGroupedByColor.keySet()) {
+            int needed = jewelsNeededGroupedByColor.get(color);
+            List<ThingWithDistance> availableJewels = jewelListSortedByDistanceGroupedByColor.get(color);
+            if (availableJewels == null) {
+                continue;
+            }
+            if (needed > 0) {
+                for (int i = 0; (i < needed) && (i < availableJewels.size()); i++) {
+                    sortedListOfNeededThings.add(availableJewels.get(i));
+                    sortedListOfNeededThings.sort(Comparator.comparing(ThingWithDistance::getDistance));
+                }
+            }
+        }
+        // build the plan
+        for (ThingWithDistance thingWithDistance: sortedListOfNeededThings) {
+            Thing thing = thingWithDistance.getThing();
+            plan.add(thing.getCenterPosition());
+        }
     }
 ```
 

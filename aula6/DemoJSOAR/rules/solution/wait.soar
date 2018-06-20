@@ -5,7 +5,7 @@ sp {top-state*propose*wait
               ^choices none
              -^operator.name wait)
 -->
-   (<s> ^operator <o> +)
+   (<s> ^operator <o> + <)
    (<o> ^name wait)
    (interrupt)
 }

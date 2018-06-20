@@ -1,0 +1,19 @@
+sp {propose*success
+   (state <s> ^all-leaflets-complete
+              ^actions <actions>
+             -^message-sent)
+  -(<actions> ^<any>)
+-->
+   (<s> ^operator <op> + >)
+   (<op> ^name success)
+   (write (crlf) | Propose success |)
+}
+
+sp {apply*success
+   (state <s> ^operator.name success
+              ^actions <actions>)
+-->
+   (<actions> ^SUCCESS.Any true)
+   (<s> ^message-sent true)
+   (write (crlf) | Apply success |)
+}

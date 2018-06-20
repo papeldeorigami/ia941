@@ -1,64 +1,35 @@
-sp {propose*hide*exceeding*jewels
-   (state <s> ^name solution
+sp {propose*hide
+   (state <s> ^actions <actions>
               ^desired <desired>
-              ^memory <memory>
-              ^actions <actions>
+              ^thing-ahead <entity>
               ^io.input-link.CREATURE <creature>)
-   (<creature> ^SENSOR.VISUAL.ENTITY <entity>
+   (<creature> ^MEMORY <memory>
                ^KNAPSACK <knapsack>)
-   # find a jewel
    (<entity> ^NAME <entityName>
              ^TYPE JEWEL
-             ^COLOR <color>
-             # get only if close to the entity
-             ^DISTANCE { <DISTANCE> <= 50 })
-   # get only if already seen
-   (<memory> ^ENTITY <memoryEntity>)
-   (<memoryEntity> ^NAME <entityName>
-                  -^collected) # check if not collected before
-   # hide anything that we don't need
+             ^COLOR <color>)
+   # filter colors only that are missing in some leaflet
    (<desired> ^<color> <desiredQuantity>)
    (<knapsack> ^<color> { <quantity> >= <desiredQuantity> })
+   # must be already in memory to ensure consistency
+   (<memory> ^ENTITY <memoryEntity>)
+   (<memoryEntity> ^NAME <entityName>)
    # if not hiding something already
   -(<actions> ^HIDE)
 -->
-   (<s> ^operator <o> +)
+   (<s> ^operator <o> + =)
    (<o> ^name hide
         ^parameter.NAME <entityName>)
-   (write (crlf) | propose hide: name = | <entityName> | distance = | <DISTANCE> ||)
+   (write (crlf) | Propose hide: name = | <entityName> ||)
 }
 
 sp {solution*apply*hide
    (state <s> ^operator <o>
-              ^memory <memory>
-              ^desired <desired>
-              ^actions <actions>
-              ^v-knapsack <v-knapsack>
-              ^v-collected-names <v-collected-names>
-              ^io.input-link.CREATURE <creature>)
-   # read the jewel name from parameters
+              ^actions <actions>)
    (<o> ^name hide
         ^parameter <p>)
    (<p> ^NAME <entityName>)
-   # lookup the entity in the visual sensor
-   (<creature> ^SENSOR.VISUAL <visual>
-               ^KNAPSACK <knapsack>)
-   (<visual> ^ENTITY <visualEntity>)
-   (<visualEntity> ^NAME <entityName>)
-   # lookup the entity in the memory
-   (<memory> ^ENTITY <memoryEntity>)
-   (<memoryEntity>
-             ^NAME <entityName>
-             ^COLOR <color>
-            -^collected)
 -->
-   # remove element from the input (temporary)
-   (<visual> ^ENTITY <visualEntity> -)
-   # mark element as collected in memory
-   (<memoryEntity> ^collected true)
-   # mark the item also as collected in the virtual memory
-   (<v-collected-names> ^NAME <entityName>)
-   # prepare the output action
    (<actions> ^HIDE.Name <entityName>)
-   (write (crlf) | Hide: name=| <entityName> | color=| <color> ||)
+   (write (crlf) | Hide: name=| <entityName> ||)
 }

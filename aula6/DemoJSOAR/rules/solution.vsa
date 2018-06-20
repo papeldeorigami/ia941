@@ -6,19 +6,29 @@ VERSION 4
 3	0	FOLDER elaborations elaborations 4
 4	3	FOPERATOR _all _all.soar 5
 5	3	FOPERATOR all-leaflets-complete all-leaflets-complete.soar 6
-6	3	FOPERATOR top-state top-state.soar 7
-7	0	FOPERATOR eat eat.soar 8
-8	0	FOPERATOR get get.soar 9
-9	0	FOPERATOR hide hide.soar 10
-10	0	FOPERATOR move move.soar 11
-11	0	FOPERATOR see see.soar 21
-12	0	FOPERATOR output-command output-command.soar 12
-13	0	FOPERATOR plan plan.soar 13
-14	0	HLFOPERATOR preferences preferences.soar preferences 0 14
-15	0	FOPERATOR remove-output remove-output.soar 15
-16	0	FOPERATOR simulate-input simulate-input.soar 17
-17	0	FOPERATOR simulate-output simulate-output.soar 22
-18	0	FOPERATOR wait wait.soar 18
-19	0	FOPERATOR wander wander.soar 19
-20	0	OPERATOR initialize-solution initialize-solution.soar 20
+6	3	FOPERATOR brick-ahead brick-ahead.soar 25
+7	3	FOPERATOR distance-to-waypoint-0 distance-to-waypoint-0.soar 23
+8	3	FOPERATOR elapsed-wander-time elapsed-wander-time.soar 31
+9	3	FOPERATOR something-new something-new.soar 22
+10	3	FOPERATOR thing-ahead thing-ahead.soar 24
+11	3	FOPERATOR top-state top-state.soar 7
+12	0	FOPERATOR avoid-brick avoid-brick.soar 26
+13	0	FOPERATOR eat eat.soar 8
+14	0	FOPERATOR get get.soar 9
+15	0	FOPERATOR hide hide.soar 10
+16	0	FOPERATOR move move.soar 11
+17	0	FOPERATOR output-command output-command.soar 13
+18	0	FOPERATOR plan plan.soar 14
+19	0	HLFOPERATOR preferences preferences.soar preferences 0 15
+20	0	FOPERATOR remove-output remove-output.soar 16
+21	0	FOPERATOR see see.soar 12
+22	0	FOPERATOR simulate-input simulate-input.soar 17
+23	0	FOPERATOR simulate-output simulate-output.soar 18
+24	0	FOPERATOR success success.soar 32
+25	0	FOPERATOR wait wait.soar 19
+26	0	HLFOPERATOR wander wander.soar wander 0 20
+27	26	OPERATOR continue-wander continue-wander.soar 29
+28	26	OPERATOR start-wander start-wander.soar 30
+29	26	OPERATOR stop-wander stop-wander.soar 28
+30	0	OPERATOR initialize-solution initialize-solution.soar 21
 END

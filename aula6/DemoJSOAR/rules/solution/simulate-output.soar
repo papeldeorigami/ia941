@@ -27,5 +27,118 @@ sp {apply*simulate-output*memorize
 -->
    (write (crlf) | Apply simulate-output: type=MEMORIZE name=| <name> ||)
    (<s> ^simulated-output true)
-   (<memory> ^ENTITY <visualEntity>)
+   (<memory> ^ENTITY (deep-copy <visualEntity>))
+}
+
+sp {apply*simulate-output*get*remove-memory
+   (state <s> ^operator.name simulate-output
+              ^io <io>)
+   (<io> ^input-link <input>
+         ^output-link <output>)
+   (<input> ^CREATURE <creature>)
+   (<creature> ^SENSOR.VISUAL <visual>
+               ^MEMORY <memory>)
+   (<output> ^GET <entity>)
+   (<entity> ^Name <name>)
+   (<visual> ^ENTITY <visualEntity>)
+   (<visualEntity> ^NAME <name>)
+   (<memory> ^ENTITY <memoryEntity>)
+   (<memoryEntity> ^NAME <name>)
+-->
+   (write (crlf) | Apply simulate-output: type=GET name=| <name> | (remove items from memory) |)
+   (<visual> ^ENTITY <visualEntity> -)
+   (<memory> ^ENTITY <memoryEntity> -)
+}
+
+sp {apply*simulate-output*get*set-simulated
+   (state <s> ^operator.name simulate-output
+              ^io <io>)
+   (<io> ^output-link <output>)
+   (<output> ^GET <entity>)
+   (<entity> ^Name <name>)
+-->
+   (write (crlf) | Apply simulate-output: type=GET name=| <name> | (set simulated) |)
+   (<s> ^simulated-output true)
+}
+
+sp {apply*simulate-output*plan
+   (state <s> ^operator.name simulate-output
+              ^io <io>)
+   (<io> ^input-link <input>
+         ^output-link <output>)
+   (<input> ^CREATURE <creature>)
+   (<creature> ^PLAN <plan>)
+   (<output> ^PLAN)
+   (<plan> -^WAYPOINT-0)
+-->
+   (write (crlf) | Apply simulate-output: type=PLAN |)
+   (<s> ^simulated-output true)
+   (<plan> ^WAYPOINT-0 <entity31>
+           ^WAYPOINT-1 <entity30>
+           ^WAYPOINT-2 <entity29>
+           ^WAYPOINT-3 <entity28>)
+   (<entity31> ^COLOR White ^DISTANCE 432.22 ^NAME Jewel_1524399791240 ^TYPE JEWEL ^X 233.0 ^|X2| 333.0 ^Y 742.0 ^|Y2| 654.0)
+   (<entity30> ^COLOR Magenta ^DISTANCE 300.63 ^NAME Jewel_1524399791241 ^TYPE JEWEL ^X 401.0 ^|X2| 432.0 ^Y 632.0 ^|Y2| 634.0)
+   (<entity29> ^COLOR Magenta ^DISTANCE 298.32 ^NAME Jewel_1524399791242 ^TYPE JEWEL ^X 508.0 ^|X2| 657.0 ^Y 634.0 ^|Y2| 644.0)
+   (<entity28> ^COLOR Yellow ^DISTANCE 155.43 ^NAME Jewel_1524399791243 ^TYPE JEWEL ^X 432.0 ^|X2| 382.0 ^Y 734.0 ^|Y2| 223.0)
+}
+
+sp {apply*simulate-output*plan*already-exists
+   (state <s> ^operator.name simulate-output
+              ^io <io>)
+   (<io> ^input-link <input>
+         ^output-link <output>)
+   (<input> ^CREATURE <creature>)
+   (<creature> ^PLAN <plan>)
+   (<output> ^PLAN)
+   (<plan> ^WAYPOINT-0 <oldWaypoint0>)
+   (<plan> ^WAYPOINT-1 <oldWaypoint1>)
+   (<plan> ^WAYPOINT-2 <oldWaypoint2>)
+   (<plan> ^WAYPOINT-3 <oldWaypoint3>)
+-->
+   (write (crlf) | Apply simulate-output: type=PLAN (already exists)|)
+   (<s> ^simulated-output true)
+   (<plan> ^WAYPOINT-0 <oldWaypoint0> -
+           ^WAYPOINT-0 <entity28>
+           ^WAYPOINT-1 <oldWaypoint1> -
+           ^WAYPOINT-2 <oldWaypoint2> -
+           ^WAYPOINT-3 <oldWaypoint3> -)
+   (<entity28> ^COLOR Yellow ^DISTANCE 155.43 ^NAME Jewel_1524399791243 ^TYPE JEWEL ^X 432.0 ^|X2| 382.0 ^Y 734.0 ^|Y2| 223.0)
+}
+
+sp {apply*simulate-output*move
+   (state <s> ^operator.name simulate-output
+              ^io <io>)
+   (<io> ^input-link <input>
+         ^output-link <output>)
+   (<input> ^CREATURE <creature>)
+   (<creature> ^POSITION <position>)
+   (<position> ^X <oldX>
+               ^Y <oldY>)
+   (<output> ^MOVE <move>)
+   (<move> ^X <x>
+           ^Y <y>)
+-->
+   (write (crlf) | Apply simulate-output: type=MOVE |)
+   (<s> ^simulated-output true)
+   (<position> ^X <oldX> -
+               ^Y <oldY> -
+               ^X <x>
+               ^Y <y>)
+}
+
+sp {apply*simulate-output*move*rotate
+   (state <s> ^operator.name simulate-output
+              ^io <io>)
+   (<io> ^input-link <input>
+         ^output-link <output>)
+   (<input> ^CREATURE <creature>)
+   (<creature> ^PITCH <oldPitch>)
+   (<output> ^MOVE <move>)
+   (<move> ^VelR <VelR>)
+-->
+   (write (crlf) | Apply simulate-output: type=MOVE (rotate) |)
+   (<s> ^simulated-output true)
+   (<creature> ^PITCH <oldPitch> -
+               ^PITCH (+ <oldPitch> <VelR>))
 }

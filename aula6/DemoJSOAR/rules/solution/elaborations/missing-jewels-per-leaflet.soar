@@ -1,0 +1,15 @@
+sp {elaborations*at-least-one-leaflet-can-be-completed
+   (state <s> ^knapsack <knapsack>
+              ^io.input-link <input>)
+   (<input> ^CREATURE <creature>)
+   (<creature> ^LEAFLETS <leaflets>)
+   (<leaflets> ^LEAFLET <l1> { <> <l1> <l2> })
+   (<leaflets> ^LEAFLET <l2> { <> <l2> <l3> })
+   (<leaflets> ^LEAFLET <l3> { <> <l1> <l3> })
+-->
+   (write (crlf) | *************************************** |)
+   (write (crlf) | ***      ALL LEAFLETS COMPLETE      *** |)
+   (write (crlf) | *************************************** |)
+   (<s> ^all-leaflets-complete true)
+#   (interrupt)
+}

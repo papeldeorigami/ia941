@@ -1,0 +1,31 @@
+sp {propose*eat
+   (state <s> ^actions <actions>
+              ^desired <desired>
+              ^thing-ahead <entity>
+              ^io.input-link.CREATURE <creature>)
+   (<creature> ^MEMORY <memory>)
+   (<entity> ^NAME <entityName>
+             ^TYPE FOOD)
+   # must be already in memory to ensure consistency
+   (<memory> ^ENTITY <memoryEntity>)
+   (<memoryEntity> ^NAME <entityName>)
+   # if not eating something already
+  -(<actions> ^EAT)
+-->
+   (<s> ^operator <o> + =)
+   (<o> ^name eat
+        ^parameter.NAME <entityName>)
+   (write (crlf) | Propose eat: name = | <entityName> ||)
+}
+
+sp {solution*apply*eat
+   (state <s> ^operator <o>
+              ^actions <actions>)
+   (<o> ^name eat
+        ^parameter <p>)
+   (<p> ^NAME <entityName>)
+-->
+   (<s> ^name plan)
+   (<actions> ^EAT.Name <entityName>)
+   (write (crlf) | Eat: name=| <entityName> ||)
+}

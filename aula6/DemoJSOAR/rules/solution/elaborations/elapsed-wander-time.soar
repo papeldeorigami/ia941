@@ -1,0 +1,7 @@
+sp {elaborate*elapsed-wander-time
+   (state <s> ^name wander
+        ^initial-wander-timestamp <initial-timestamp>
+        ^io.input-link.CREATURE.PARAMETERS.TIMESTAMP <timestamp>)
+-->
+   (<s> ^elapsed-wander-time (- <timestamp> <initial-timestamp>))
+}

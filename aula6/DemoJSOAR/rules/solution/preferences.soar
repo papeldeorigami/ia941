@@ -1,35 +1,77 @@
-sp {see*plan*preferences
+sp {greater-than*see*preferences
    (state <s> ^operator <o> +
           <o2> +)
-   (<o> ^name see)
+   (<o> ^name << simulate-output remove-output >>)
+   (<o2> ^name see)
+-->
+   (<s> ^operator <o> > <o2>)
+}
+
+sp {move*versus*move*preference*food
+   (state <s> ^operator <o> +
+          <o2> +)
+   (<o> ^name move
+        ^TYPE FOOD)
+   (<o2> ^name move
+         ^TYPE JEWEL)
+-->
+   (<s> ^operator <o> > <o2>)
+}
+
+sp {move*versus*move*preference*closest
+   (state <s> ^operator <o> +
+          <o2> +)
+   (<o> ^name move
+        ^TYPE <type>
+        ^DISTANCE <distance1>)
+   (<o2> ^name move
+        ^TYPE <type>
+         ^DISTANCE { <distance2> > <distance1> })
+-->
+   (<s> ^operator <o> > <o2>)
+}
+
+sp {greater-than*plan*preferences
+   (state <s> ^operator <o> +
+          <o2> +)
+   (<o> ^name << remove-output success >>)
    (<o2> ^name plan)
 -->
    (<s> ^operator <o> > <o2>)
 }
 
-sp {see*move*preferences
+sp {greater-than*move*preferences
    (state <s> ^operator <o> +
           <o2> +)
-   (<o> ^name see)
+   (<o> ^name  << plan get hide eat see avoid-brick output-command remove-output success >>)
    (<o2> ^name move)
 -->
    (<s> ^operator <o> > <o2>)
 }
 
-sp {hide*move*preferences
+sp {greater-than*avoid-brick*preferences
    (state <s> ^operator <o> +
           <o2> +)
-   (<o> ^name hide)
-   (<o2> ^name move)
+   (<o> ^name << get hide eat >>)
+   (<o2> ^name avoid-brick)
 -->
    (<s> ^operator <o> > <o2>)
 }
 
-sp {get*move*preferences
+sp {greater-than*wander*preferences
    (state <s> ^operator <o> +
           <o2> +)
-   (<o> ^name get)
-   (<o2> ^name move)
+   (<o> ^name << simulate-output remove-output see get eat hide move success >>)
+   (<o2> ^name << start-wander stop-wander continue-wander >>)
+-->
+   (<s> ^operator <o> > <o2>)
+}
+
+sp {stop-wander*continue-wander*preferences
+   (state <s> ^operator <o> +
+          <o2> +)
+   (<o> ^name stop-wander)
+   (<o2> ^name continue-wander)
 -->
    (<s> ^operator <o> > <o2>)
 }
@@ -39,24 +81,6 @@ sp {simulate-output*remove-output*preferences
           <o2> +)
    (<o> ^name simulate-output)
    (<o2> ^name remove-output)
--->
-   (<s> ^operator <o> > <o2>)
-}
-
-sp {output-command*move*preferences
-   (state <s> ^operator <o> +
-          <o2> +)
-   (<o> ^name output-command)
-   (<o2> ^name move)
--->
-   (<s> ^operator <o> > <o2>)
-}
-
-sp {remove-output*move*preferences
-   (state <s> ^operator <o> +
-          <o2> +)
-   (<o> ^name remove-output)
-   (<o2> ^name move)
 -->
    (<s> ^operator <o> > <o2>)
 }

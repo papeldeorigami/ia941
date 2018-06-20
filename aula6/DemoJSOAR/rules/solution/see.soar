@@ -1,19 +1,15 @@
 # this operator will always be proposed where there is something new in the input,
 # independent of the current state, as long as it is initialized
 sp {propose*see
-   (state <s> ^initialized true
-              ^io.input-link <input>
+   (state <s> ^io.input-link <input>
+              ^something-new <entity>
               ^actions <actions>)
-   (<input> ^CREATURE <creature>)
-   (<creature> ^MEMORY <memory>)
-   (<creature> ^SENSOR.VISUAL.ENTITY <entity>)
    (<entity> ^NAME <name>)
-  -(<memory> ^ENTITY.NAME <name>)
-   # if not memorizing something already
-   (<actions> -^MEMORIZE)
+  -(<actions> ^MEMORIZE)
 -->
    (<s> ^operator <op> + =)
-   (<op> ^name see)
+   (<op> ^name see
+         ^entity <entity>)
    (write (crlf) | Propose see: name=| <name> ||)
 }
 
@@ -21,14 +17,9 @@ sp {apply*see*memorize
    (state <s> ^operator <op>
               ^io.input-link <input>
               ^actions <actions>)
-   (<input> ^CREATURE <creature>)
-   (<creature> ^MEMORY <memory>)
-   (<op> ^name see)
-   (<creature> ^SENSOR.VISUAL.ENTITY <entity>)
+   (<op> ^name see
+         ^entity <entity>)
    (<entity> ^NAME <name>)
-  -(<memory> ^ENTITY.NAME <name>)
-   # if not memorizing something already
-   (<actions> -^MEMORIZE)
 -->
    # prepare the output action
    (<actions> ^MEMORIZE.Name <name>)

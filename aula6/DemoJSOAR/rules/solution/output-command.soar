@@ -11,7 +11,8 @@ sp {propose*no-change*output-command
    (<o> ^name output-command
         ^parameters <p>)
    (<p> ^<type> <action>)
-   (write (crlf) | Nothing else to plan. Apply the first command. |)
+   (write (crlf) | Ready to output the command | <type> ||)
+   (write (crlf))
 }
 
 sp {apply*output-command

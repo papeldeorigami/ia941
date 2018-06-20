@@ -18,7 +18,8 @@ public class Command
         EAT,
         HIDE,
         MEMORIZE,
-        PLAN
+        PLAN,
+        SUCCESS
     }
 
     private CommandType commandType;

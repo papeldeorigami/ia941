@@ -1,6 +1,6 @@
-sp {monitor*all-leaflets-complete
+sp {elaborations*all-leaflets-complete
    (state <s> ^desired <desired>
-              ^knapsack <knapsack>)
+              ^io.input-link.CREATURE.KNAPSACK <knapsack>)
    (<desired>  ^Red <red>
                ^Green <green>
                ^Blue <blue>

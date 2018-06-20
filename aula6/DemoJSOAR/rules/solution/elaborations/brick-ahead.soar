@@ -1,0 +1,9 @@
+sp {elaborations*thing-ahead
+   (state <s> ^io.input-link <input>)
+   (<input> ^CREATURE <creature>)
+   (<creature> ^SENSOR.VISUAL.ENTITY <entity>)
+   (<entity> ^DISTANCE <distance> <= 61
+             ^TYPE BRICK)
+-->
+   (<s> ^brick-ahead <entity>)
+}  

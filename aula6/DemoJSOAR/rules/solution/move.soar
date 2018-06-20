@@ -1,98 +1,59 @@
-#sp {solution*propose*move*jewel
-#   (state <s> ^name solution
-#              ^memory.ENTITY <entity>
-#              ^desired <desired>
-#              ^v-distances <distances>
-#              ^v-knapsack <knapsack>
-#              ^v-collected-names <collectedNames>)
-#   (<entity> ^X <entityPositionX>
-#             ^Y <entityPositionY>
-#             ^NAME <entityName>
-#             ^TYPE JEWEL
-#             ^COLOR <color>)
-#   (<distances> ^<entityName> { <DISTANCE> > 60 }) # move only if distance is high
-#   # filter colors only that are missing in some leaflet
-#   (<desired> ^<color> <desiredQuantity>)
-#   (<knapsack> ^<color> { <quantity> < <desiredQuantity> })
-#   # do not get doubled entities
-#  -(<collectedNames> ^NAME <entityName>)
-#-->
-#   (<s> ^operator <o> +)
-#   (<o> ^name move)
-#   (<o> ^parameter <p>)
-#   (<p> ^ENTITY <entity>
-#        ^NAME <entityName>
-#        ^X <entityPositionX>
-#        ^Y <entityPositionY>
-#        ^COLOR <color>
-#        ^DISTANCE <DISTANCE>)
-#   (write (crlf) | propose move (to jewel): name = | <entityName> | distance = | <DISTANCE> ||)
-#}  
-#
-#sp {solution*apply*move
-#   (state <s> 
-#        ^operator <o>
-#        ^desired <desired>
-#        ^v-position <position>
-#        ^v-distances <distances>
-#        ^v-knapsack <knapsack>
-#        ^v-collected-names <collectedNames>
-#        ^v-traveled-distance <traveledDistance>)
-#   (<position> ^X <oldX>
-#               ^Y <oldY>)
-#   (<o> ^name move
-#        ^parameter <p>)
-#   (<p> ^ENTITY <entity>
-#        ^NAME <entityName>
-#        ^X <x>
-#        ^Y <y>
-#        ^COLOR <color>
-#        ^DISTANCE <DISTANCE>)
-#   (<knapsack> ^<color> <quantity>)
-#   (<desired> ^<color> <dquantity>)
-#-->
-#   (<collectedNames> ^NAME <entityName>)
-#   (<position> ^X <oldX> -
-#               ^Y <oldY> -
-#               ^X <x>
-#               ^Y <y>)
-#   (<knapsack> ^<color> <quantity> - (+ <quantity> 1))
-#   (<s> ^v-traveled-distance <traveledDistance> -
-#        ^v-traveled-distance (+ <traveledDistance> <DISTANCE>))
-#   (write (crlf) | Test move: name = | <entityName> | color=| <color> ||)
-#   (write (crlf) | Virtual get | <color> | | (+ <quantity> 1) |/| <dquantity> ||)
-#}
-#
-#sp {solution*apply*actual*move*only*once
-#   (state <s> 
-#        ^operator <o>
-#        ^actions <actions>)
-#  -(<actions> ^<attr> <any>)  # hold the first action only
-#   (<o> ^name move
-#        ^parameter <p>)
-#   (<p> ^ENTITY <entity>
-#        ^NAME <entityName>
-#        ^X <x>
-#        ^Y <y>)
-#-->
-#   (<actions> ^MOVE <command>)
-#   (<command> ^Vel 1)
-#   (<command> ^VelR 1)
-#   (<command> ^VelL 1)
-#   (<command> ^X <x>)
-#   (<command> ^Y <y>)
-#   (write (crlf))
-#   (write (crlf) | ***** prepare output move to entity = | <entityName> | x = | <x> | y = | <y> ||)
-#   (write (crlf))
-#   #(write (crlf) | apply move: name = | <entityName> | distance = | <DISTANCE> ||)
-#}
-#
-#sp {solution*apply*move*set-planning
-#   (state <s> ^operator.name move
-#             -^planning)
-#-->
-#   (<s> ^planning true)
-##   (write (crlf) | Set planning mode to true |)
-#}
-#
-#
+# when the fuel is fine, follow the plan
+sp {solution*propose*move*plan
+   (state <s> ^io.input-link <input>
+              ^actions <actions>
+              ^distance-to-waypoint-0 <distance> > 30)
+   (<input> ^CREATURE <creature>)
+   (<creature> ^PLAN <plan>)
+   (<plan> ^WAYPOINT-0 <entity>)
+   (<entity> ^X <x>
+             ^Y <y>)
+  -(<actions> ^MOVE)
+-->
+   (<s> ^operator <o> +)
+   (<o> ^name move)
+   (<o> ^X <x>
+        ^Y <y>
+        ^DISTANCE <distance>
+        ^TYPE JEWEL)
+   (write (crlf) | propose move to x=| <x> | y=| <y> ||)
+}  
+
+# if fuel is low, then ignore the plan and look for the closest food
+sp {solution*propose*move*food
+   (state <s> ^io.input-link <input>
+              ^actions <actions>)
+   (<input> ^CREATURE <creature>)
+   (<creature> ^MEMORY.ENTITY <entity>
+               ^PARAMETERS.MINFUEL <min-fuel>
+               ^SENSOR.FUEL { <fuel> <= <min-fuel> })
+   (<entity> ^TYPE FOOD
+             ^X <x>
+             ^Y <y>
+             ^DISTANCE <distance> > 30)
+-->
+   (<s> ^operator <o> +)
+   (<o> ^name move)
+   (<o> ^X <x>
+        ^Y <y>
+        ^DISTANCE <distance>
+        ^TYPE FOOD)
+   (write (crlf) | propose move to x=| <x> | y=| <y> ||)
+}  
+
+
+sp {solution*apply*move
+   (state <s> ^operator <o>
+              ^actions <actions>)
+   (<o> ^name move
+        ^X <x>
+        ^Y <y>)
+-->
+   (<actions> ^MOVE <command>)
+   (<command> ^Vel 1)
+   (<command> ^VelR 1)
+   (<command> ^VelL 1)
+   (<command> ^X <x>)
+   (<command> ^Y <y>)
+   (write (crlf) | Apply move to x=| <x> | y=| <y> ||)
+}

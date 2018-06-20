@@ -25,7 +25,7 @@ public class Main
         Logger.getLogger("Simulation").setLevel(Level.SEVERE);
     }
 
-    public Main() {
+    public Main(boolean resetWorld) {
         SilenceLoggers();
         try
         {
@@ -37,10 +37,10 @@ public class Main
             //String soarRulesPath = "soar-rules.soar";
 
             //Start enviroment data
-            Environment e = new Environment(Boolean.TRUE);
-            SoarBridge soarBridge = new SoarBridge(e,soarRulesPath,true);
-            //SoarBridge soarBridge = new SoarBridge(e,soarRulesPath,false);
+            Environment e = new Environment(resetWorld);
+            SoarBridge soarBridge = new SoarBridge(e,soarRulesPath,false);
             MindView mv = new MindView(soarBridge);
+            mv.setTitle(e.getCreature().getName());
             mv.setVisible(true);
             //mv.startDebugState();
 
@@ -68,7 +68,11 @@ public class Main
 
     public static void main(String[] args)
     {
-        Main m = new Main();
+        boolean noReset = false;
+        if (args.length > 0) {
+            noReset = true;
+        }        
+        Main m = new Main(!noReset);
     }
 
 

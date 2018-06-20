@@ -1,0 +1,20 @@
+sp {propose*avoid-brick
+   (state <s> ^io.input-link <il>
+              ^brick-ahead <entity>)
+   (<entity> ^DISTANCE <distance>)
+-->
+   (<s> ^operator <o> +)     
+   (<o> ^name avoid-brick)
+   (<o> ^parameter <distance>)}
+      
+     
+sp {apply*avoid-brick
+   (state <s> ^operator <o>
+              ^actions <actions>)
+   (<o> ^name avoid-brick)
+   (<o> ^parameter <distance>)              
+-->
+   (<actions> ^MOVE <command>)
+   (<command> ^Vel  0)
+   (<command> ^VelR (* 55 (/ <distance>)))
+   (<command> ^VelL 0)}

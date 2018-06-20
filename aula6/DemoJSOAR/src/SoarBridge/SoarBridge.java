@@ -8,11 +8,14 @@ package SoarBridge;
 import Simulation.Environment;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import org.jsoar.kernel.Agent;
 import org.jsoar.kernel.Phase;
 import org.jsoar.kernel.RunType;
@@ -33,6 +36,7 @@ import ws3dproxy.CommandUtility;
 import ws3dproxy.model.Creature;
 import ws3dproxy.model.Leaflet;
 import ws3dproxy.model.Thing;
+import ws3dproxy.model.WorldPoint;
 import ws3dproxy.util.Constants;
 
 /**
@@ -41,6 +45,25 @@ import ws3dproxy.util.Constants;
  */
 public class SoarBridge
 {
+
+    class ThingWithDistance {
+        private final Thing thing;
+        private final double distance;
+        
+        public ThingWithDistance(Thing thing, double distance) {
+            this.thing = thing;
+            this.distance = distance;
+        }
+        
+        public double getDistance() {
+            return this.distance;
+        }
+
+        public Thing getThing() {
+            return this.thing;
+        }
+    }
+    
     // Log Variable
     Logger logger = Logger.getLogger(SoarBridge.class.getName());
 
@@ -57,6 +80,8 @@ public class SoarBridge
     public String output_link_string = "";
 
     List<Thing> thingsMemory = null;
+
+    List<WorldPoint> plan = null;
     
     /**
      * Constructor class
@@ -76,6 +101,7 @@ public class SoarBridge
             builder = InputBuilder.create(agent.getInputOutput());
             inputLink = builder.io.getInputLink();
             thingsMemory = new ArrayList<Thing>();
+            plan = new ArrayList<WorldPoint>();
 
             // Debugger line
             if (startSOARDebugger)
@@ -160,6 +186,7 @@ public class SoarBridge
         InputBuilder creatureKnapsack;
         InputBuilder creaturePosition;
         InputBuilder creatureMemory;
+        InputBuilder planWme;
     
         //SymbolFactory sf = agent.getSymbols();
         // Always remove the current WMEs before updating the input        
@@ -170,6 +197,15 @@ public class SoarBridge
                 //SimulationCreature creatureParameter = (SimulationCreature)parameter;
                 // Initialize Creature Entity
                 creature = builder.push("CREATURE").markWme("CREATURE");
+                // Initialize the plan structure
+                planWme = creature.push("PLAN");
+                int waypointCounter = 0;
+                for (WorldPoint p: plan) {
+                    InputBuilder waypoint = planWme.push("WAYPOINT-" + waypointCounter);
+                    waypoint.add("X", p.getX());
+                    waypoint.add("Y", p.getY());
+                    waypointCounter++;
+                }
                 // Initialize Creature Memory
                 creatureMemory = creature.push("MEMORY");
                 for (Thing t: thingsMemory) {
@@ -189,6 +225,7 @@ public class SoarBridge
                 creatureParameters.add("MINFUEL", 400);
                 creatureParameters.add("TIMESTAMP", lCDateTime.getTimeInMillis());
                 // Setting creature Position
+                creature.add("PITCH", c.getPitch());
                 creaturePosition = creature.push("POSITION");
                 creaturePosition.add("X", c.getPosition().getX());
                 creaturePosition.add("Y", c.getPosition().getY());
@@ -458,6 +495,11 @@ public class SoarBridge
                             }
                             break;
 
+                        case SUCCESS:
+                            command = new Command(Command.CommandType.SUCCESS);
+                            commandList.add(command);
+                            break;
+
                         default:
                             break;
                     }   
@@ -557,6 +599,10 @@ public class SoarBridge
                     case PLAN:
                         processPlanCommand((CommandPlan)command.getCommandArgument());
                     break;
+                    
+                    case SUCCESS:                        
+                        processSuccessCommand();
+                    break;
 
                     default:System.out.println("Nenhum comando definido ...");
                         // Do nothing
@@ -564,7 +610,7 @@ public class SoarBridge
                 }
             }
         }
-        else System.out.println("comando nulo ...");
+        //else System.out.println("comando nulo ...");
     }
 
     /**
@@ -577,11 +623,11 @@ public class SoarBridge
         {
             if (soarCommandMove.getX() != null && soarCommandMove.getY() != null)
             {
-                CommandUtility.sendGoTo("0", soarCommandMove.getRightVelocity(), soarCommandMove.getLeftVelocity(), soarCommandMove.getX(), soarCommandMove.getY());
+                CommandUtility.sendGoTo(c.getIndex(), soarCommandMove.getRightVelocity(), soarCommandMove.getLeftVelocity(), soarCommandMove.getX(), soarCommandMove.getY());
             }
             else
             {
-                CommandUtility.sendSetTurn("0",soarCommandMove.getLinearVelocity(),soarCommandMove.getRightVelocity(),soarCommandMove.getLeftVelocity());
+                CommandUtility.sendSetTurn(c.getIndex(),soarCommandMove.getLinearVelocity(),soarCommandMove.getRightVelocity(),soarCommandMove.getLeftVelocity());
             }
         }
         else
@@ -598,11 +644,14 @@ public class SoarBridge
     {
         if (soarCommandGet != null)
         {
-            c.putInSack(soarCommandGet.getThingName());
+            final String thingName = soarCommandGet.getThingName();
+            c.putInSack(thingName);
+            removeFromPersistentMemory(thingName);
+            rebuildPlan();
         }
         else
         {
-            logger.severe("Error processing processMoveCommand");
+            logger.severe("Error processing processGetCommand");
         }
     }
 
@@ -614,11 +663,14 @@ public class SoarBridge
     {
         if (soarCommandEat != null)
         {
-            c.eatIt(soarCommandEat.getThingName());
+            String thingName = soarCommandEat.getThingName();
+            c.eatIt(thingName);
+            removeFromPersistentMemory(thingName);
+            rebuildPlan();
         }
         else
         {
-            logger.severe("Error processing processMoveCommand");
+            logger.severe("Error processing processEatCommand");
         }
     }
     
@@ -630,11 +682,14 @@ public class SoarBridge
     {
         if (soarCommandHide != null)
         {
-            c.eatIt(soarCommandHide.getThingName());
+            String thingName = soarCommandHide.getThingName();
+            c.hideIt(thingName);
+            removeFromPersistentMemory(thingName);
+            rebuildPlan();
         }
         else
         {
-            logger.severe("Error processing processMoveCommand");
+            logger.severe("Error processing processHideCommand");
         }
     }
     
@@ -647,6 +702,7 @@ public class SoarBridge
         if (soarCommandMemorize != null)
         {
             storeInPersistentMemory(soarCommandMemorize.getThingName());
+            rebuildPlan();
         }
         else
         {
@@ -659,7 +715,14 @@ public class SoarBridge
      * @param soarCommandPlan Soar Memory WME name
      */
     private void processPlanCommand(CommandPlan soarCommandPlan) {
-        
+        if (soarCommandPlan != null)
+        {
+            rebuildPlan();
+        }
+        else
+        {
+            logger.severe("Error processing processMoveCommand");
+        }        
     }
 
     /**
@@ -802,4 +865,90 @@ public class SoarBridge
         };
     }
 
+    /**
+     * Remove thing from memory
+     * 
+     * @param thingName 
+     */
+    private void removeFromPersistentMemory(String thingName) {
+        thingsMemory.removeIf(t -> t.getName().equals(thingName));
+    }
+
+    /**
+     * Draw the shortest path to complete all leaflets
+     */
+    private void rebuildPlan() {
+        HashMap<String, List<ThingWithDistance>> jewelListSortedByDistanceGroupedByColor = new HashMap<>();
+        HashMap<String, Integer> jewelsNeededGroupedByColor = new HashMap<>();
+        plan.clear();
+        // build a map of all available things, sorted by distance and grouped by color
+        for (Thing thing: thingsMemory) {
+            if (thing.getCategory() == Constants.categoryJEWEL) {
+                String color = Constants.getColorName(thing.getMaterial().getColor());
+                List<ThingWithDistance> sortedList = jewelListSortedByDistanceGroupedByColor.get(color);
+                if (sortedList == null) {
+                    sortedList = new ArrayList<>();
+                }
+                double distance = c.calculateDistanceTo(thing);
+                if (distance <= 30) {
+                    // something is probably wrong - the object must be gone
+                    continue;
+                }
+                ThingWithDistance thingWithDistance = new ThingWithDistance(thing, distance);
+                sortedList.add(thingWithDistance);
+                sortedList.sort(Comparator.comparing(ThingWithDistance::getDistance));
+                jewelListSortedByDistanceGroupedByColor.put(color, sortedList);
+            }
+        }
+        // build a map of all jewels needed, with total quantity grouped by color
+        jewelsNeededGroupedByColor.put("Red", 0);
+        jewelsNeededGroupedByColor.put("Green", 0);
+        jewelsNeededGroupedByColor.put("Blue", 0);
+        jewelsNeededGroupedByColor.put("Yellow", 0);
+        jewelsNeededGroupedByColor.put("Magenta", 0);
+        jewelsNeededGroupedByColor.put("White", 0);
+        for (Leaflet l : c.getLeaflets()) {
+            HashMap<String, Integer[]> items = l.getItems();
+            for (HashMap.Entry<String, Integer[]> entry : items.entrySet()) {
+                String color = entry.getKey();
+                Integer needed = entry.getValue()[0];
+                Integer collected = entry.getValue()[1];
+                Integer previousNeeded = jewelsNeededGroupedByColor.get(color);
+                if (previousNeeded != null) {
+                    needed += previousNeeded;
+                }
+                jewelsNeededGroupedByColor.put(color, needed - collected);
+            }
+        }
+        // build a map of nearest jewels needed to complete all leaflets
+        List<ThingWithDistance> sortedListOfNeededThings = new ArrayList<>();
+        for (String color: jewelsNeededGroupedByColor.keySet()) {
+            int needed = jewelsNeededGroupedByColor.get(color);
+            List<ThingWithDistance> availableJewels = jewelListSortedByDistanceGroupedByColor.get(color);
+            if (availableJewels == null) {
+                continue;
+            }
+            if (needed > 0) {
+                for (int i = 0; (i < needed) && (i < availableJewels.size()); i++) {
+                    sortedListOfNeededThings.add(availableJewels.get(i));
+                    sortedListOfNeededThings.sort(Comparator.comparing(ThingWithDistance::getDistance));
+                }
+            }
+        }
+        // build the plan
+        for (ThingWithDistance thingWithDistance: sortedListOfNeededThings) {
+            Thing thing = thingWithDistance.getThing();
+            plan.add(thing.getCenterPosition());
+        }
+        // TODO check if there is any obstacle between the creature and the first point and calculate intermediary steps
+    }
+
+    private void processSuccessCommand() {
+        try {
+            c.stop();
+        } catch (CommandExecException ex) {
+            Logger.getLogger(SoarBridge.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        JOptionPane.showMessageDialog(null, "Creature: " + c.getName() + " - All leaflets complete!");
+    }    
 }
