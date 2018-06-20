@@ -10,8 +10,17 @@
 
 Para rodar o código desta aula, basta abrir a pasta *aula6* no terminal e executar: `./run.sh`
 
-A tela do World Server irá aparecer e, 3 segundos depois, os dois agentes, controlados pelo SOAR, serão iniciados.
+A tela do World Server irá aparecer e, 3 segundos depois, o primeiro agente, controlado pelo SOAR, será iniciado.
+O segundo agente precisa de mais 10 segundos para ser iniciado, para dar tempo do mundo carregar.
 O título da janela do MindViewer foi modificado para indicar o nome de cada agente, assim pode-se acompanhar mais de perto o que cada um está fazendo.
+
+![run.sh](run.png)
+
+Outros agentes podem ser iniciados, na pasta DemoJSOAR, diretamente pelo comando: `java -jar ./dist/DemoJSOAR.jar no-reset`. Esse último parâmetro, no-reset, indica que o programa Java não deve chamar o método World.reset(), mantendo o ambiente já criado.
+
+Segue uma imagem da tela do programa em execução.
+
+![Screenshot](screenshot.png)
 
 ### Código-fonte
 
@@ -180,7 +189,10 @@ Alterações realizadas no arquivo SoarBridge:
 No SoarBridge, implementou-se a ação PLAN, que essencialmente é constituida de uma rotina que busca a melhor rota para preencher os 3 leaflets.
 Essa sequencia de busca é salva no input-link e o SOAR utiliza o primeiro ponto (WAYPOINT-0) para a operação de Move.
 
-A listagem abaixo é a parte principal da implementação dessa busca:
+Toda vez que um novo objeto é visto, capturado, escondido, etc (i.e. provoque mudanças no ambiente), o planejamento é refeito. Da mesma forma, quando nenhum operador MOVE é selecionado, o agente também dispara um planejamento.
+Se nenhum plano existir, o operador Wander entra em ação, para tentar enxergar novas jóias.
+
+A listagem abaixo é a parte principal da implementação dessa busca pela melhor rota:
 ```
     /**
      * Draw the shortest path to complete all leaflets
@@ -253,8 +265,12 @@ A listagem abaixo é a parte principal da implementação dessa busca:
 ## Conclusão
 
 O programa desenvolvido utiliza raciocínio deliberativo para atingir o objetivo de trocar leaflets por pontos.
+Foram colocados dois agentes em execução simultaneamente para observar melhor o comportamento deles.
+
 Uma melhoria possível seria considerar a pontuação de cada leaflet para determinar a sequência das jóias a serem capturadas.
 
 Também seria possível a introdução de algoritmos de menor caminho, como A-star, para a busca de jóias, desviando-se inclusive de obstáculos.
+
+Além disso, os agentes precisam ser modificados para lidar melhor com mudanças de ambiente, tais como uma jóia que foi capturada pelo outro agente ou obstáculos fora do campo de visão (jóias travam o agente "de lado").
 
 
