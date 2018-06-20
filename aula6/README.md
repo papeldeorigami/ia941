@@ -16,6 +16,8 @@ O título da janela do MindViewer foi modificado para indicar o nome de cada age
 
 ![run.sh](run.png)
 
+Para iniciar um agente sozinho, utilize o seguinte script: `./run_alone.sh`
+
 Outros agentes podem ser iniciados, na pasta DemoJSOAR, diretamente pelo comando: `java -jar ./dist/DemoJSOAR.jar no-reset`. Esse último parâmetro, no-reset, indica que o programa Java não deve chamar o método World.reset(), mantendo o ambiente já criado.
 
 Segue uma imagem da tela do programa em execução.
