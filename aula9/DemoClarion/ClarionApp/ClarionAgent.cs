@@ -59,7 +59,7 @@ namespace ClarionApp
 		/// <summary>
 		/// Constant that represents that some leaflet is ready to be delivered
 		/// </summary>
-		//private String DIMENSION_DELIVER_LEAFLET = "DeliverLeaflet";
+		private String DIMENSION_DELIVER_LEAFLET = "DeliverLeaflet";
 
 		double prad = 0;
         #endregion
@@ -126,7 +126,7 @@ namespace ClarionApp
 		/// <summary>
 		/// Perception input to indicate ready to deliver a leaflet
 		/// </summary>
-		//private DimensionValuePair inputDeliverLeaflet;
+		private DimensionValuePair inputDeliverLeaflet;
         #endregion
 
         #region Action Output
@@ -183,7 +183,7 @@ namespace ClarionApp
 			inputJewelAhead = World.NewDimensionValuePair(SENSOR_VISUAL_DIMENSION, DIMENSION_JEWEL_AHEAD);
 			inputDistantJewel = World.NewDimensionValuePair(SENSOR_VISUAL_DIMENSION, DIMENSION_DISTANT_JEWEL);
 			inputDistantFood = World.NewDimensionValuePair(SENSOR_VISUAL_DIMENSION, DIMENSION_DISTANT_FOOD);
-			//inputDeliverLeaflet = World.NewDimensionValuePair(SENSOR_VISUAL_DIMENSION, DIMENSION_DELIVER_LEAFLET);
+			inputDeliverLeaflet = World.NewDimensionValuePair(SENSOR_VISUAL_DIMENSION, DIMENSION_DELIVER_LEAFLET);
 
             // Initialize Output actions
             outputRotateClockwise = World.NewExternalActionChunk(CreatureActions.ROTATE_CLOCKWISE.ToString());
@@ -285,8 +285,9 @@ namespace ClarionApp
 					Console.WriteLine("Sack jewel " + jewelName);
 					break;
 				case CreatureActions.DELIVER_LEAFLET:
-					worldServer.SendDeliverIt (creatureId, leafletId);
-					Console.WriteLine ("Delivered " + leafletId);
+					Console.WriteLine ("Ready to deliver " + leafletId);
+					// don't actually deliver it, otherwise the world creates a new leaflet and the 3 will never end
+					//worldServer.SendDeliverIt (creatureId, leafletId);
 					deliveredLeaflets[leafletId] = true;
 					break;
 				case CreatureActions.STOP:
@@ -372,8 +373,8 @@ namespace ClarionApp
 			CurrentAgent.Commit(ruleSackJewel);
 
 			// Create Rule to Deliver a Leaflet
-			//SupportCalculator deliverLeafletSupportCalculator = FixedRuleToDeliverLeaflet;
-			//FixedRule ruleDeliverLeaflet = AgentInitializer.InitializeActionRule(CurrentAgent, FixedRule.Factory, outputDeliverLeaflet, deliverLeafletSupportCalculator);
+			SupportCalculator deliverLeafletSupportCalculator = FixedRuleToDeliverLeaflet;
+			FixedRule ruleDeliverLeaflet = AgentInitializer.InitializeActionRule(CurrentAgent, FixedRule.Factory, outputDeliverLeaflet, deliverLeafletSupportCalculator);
 
 			// Commit this rule to Agent (in the ACS)
 			//CurrentAgent.Commit(ruleDeliverLeaflet);
@@ -562,11 +563,11 @@ namespace ClarionApp
 			return ((currentInput.Contains(inputJewelAhead, CurrentAgent.Parameters.MAX_ACTIVATION))) ? 1.0 : 0.0;
 		}
 
-		//private double FixedRuleToDeliverLeaflet(ActivationCollection currentInput, Rule target)
-		//{
+		private double FixedRuleToDeliverLeaflet(ActivationCollection currentInput, Rule target)
+		{
 			// Here we will make the logic to deliver a leaflet
-		//	return ((currentInput.Contains(inputDeliverLeaflet, CurrentAgent.Parameters.MAX_ACTIVATION))) ? 1.0 : 0.0;
-		//}
+			return ((currentInput.Contains(inputDeliverLeaflet, CurrentAgent.Parameters.MAX_ACTIVATION))) ? 1.0 : 0.0;
+		}
 		#endregion
 
         #region Run Thread Method
