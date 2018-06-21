@@ -294,6 +294,7 @@ namespace ClarionApp
 					worldServer.SendStopCreature (creatureId);
 					Console.WriteLine ("Success! All leaflets delivered. Stop the creature.");
 					stopped = true;
+					ShowMessage(null, creatureName, "Creature " + creatureName + ": All three leaflets complete!");
 					break;
 				default:
 					break;
@@ -377,7 +378,7 @@ namespace ClarionApp
 			FixedRule ruleDeliverLeaflet = AgentInitializer.InitializeActionRule(CurrentAgent, FixedRule.Factory, outputDeliverLeaflet, deliverLeafletSupportCalculator);
 
 			// Commit this rule to Agent (in the ACS)
-			//CurrentAgent.Commit(ruleDeliverLeaflet);
+			CurrentAgent.Commit(ruleDeliverLeaflet);
 
             // Disable Rule Refinement
             CurrentAgent.ACS.Parameters.PERFORM_RER_REFINEMENT = false;
@@ -493,7 +494,7 @@ namespace ClarionApp
 				double deliverActivationValue = deliver ? CurrentAgent.Parameters.MAX_ACTIVATION : CurrentAgent.Parameters.MIN_ACTIVATION;
 				si.Add (inputJewelAhead, jewelAheadActivationValue);
 				si.Add (inputFoodAhead, foodAheadActivationValue);
-				//si.Add (inputDeliverLeaflet, deliverActivationValue);
+				si.Add (inputDeliverLeaflet, deliverActivationValue);
 				si.Add (inputWallAhead, CurrentAgent.Parameters.MIN_ACTIVATION);
 				si.Add (inputDistantFood, CurrentAgent.Parameters.MIN_ACTIVATION);
 				si.Add (inputDistantJewel, CurrentAgent.Parameters.MIN_ACTIVATION);
@@ -502,7 +503,7 @@ namespace ClarionApp
 				si.Add (inputWallAhead, CurrentAgent.Parameters.MAX_ACTIVATION);
 				si.Add (inputJewelAhead, CurrentAgent.Parameters.MIN_ACTIVATION);
 				si.Add (inputFoodAhead, CurrentAgent.Parameters.MIN_ACTIVATION);
-				//si.Add (inputDeliverLeaflet, CurrentAgent.Parameters.MIN_ACTIVATION);
+				si.Add (inputDeliverLeaflet, CurrentAgent.Parameters.MIN_ACTIVATION);
 				si.Add (inputDistantFood, CurrentAgent.Parameters.MIN_ACTIVATION);
 				si.Add (inputDistantJewel, CurrentAgent.Parameters.MIN_ACTIVATION);
 			} else if (needAndHaveFood) {
@@ -510,7 +511,7 @@ namespace ClarionApp
 				si.Add (inputWallAhead, CurrentAgent.Parameters.MIN_ACTIVATION);
 				si.Add (inputJewelAhead, CurrentAgent.Parameters.MIN_ACTIVATION);
 				si.Add (inputFoodAhead, CurrentAgent.Parameters.MIN_ACTIVATION);
-				//si.Add (inputDeliverLeaflet, CurrentAgent.Parameters.MIN_ACTIVATION);
+				si.Add (inputDeliverLeaflet, CurrentAgent.Parameters.MIN_ACTIVATION);
 				si.Add (inputDistantFood, CurrentAgent.Parameters.MAX_ACTIVATION);
 				si.Add (inputDistantJewel, CurrentAgent.Parameters.MIN_ACTIVATION);
 			} else if (closestJewel != null) {
@@ -518,7 +519,7 @@ namespace ClarionApp
 				si.Add (inputWallAhead, CurrentAgent.Parameters.MIN_ACTIVATION);
 				si.Add (inputJewelAhead, CurrentAgent.Parameters.MIN_ACTIVATION);
 				si.Add (inputFoodAhead, CurrentAgent.Parameters.MIN_ACTIVATION);
-				//si.Add (inputDeliverLeaflet, CurrentAgent.Parameters.MIN_ACTIVATION);
+				si.Add (inputDeliverLeaflet, CurrentAgent.Parameters.MIN_ACTIVATION);
 				si.Add (inputDistantFood, CurrentAgent.Parameters.MIN_ACTIVATION);
 				si.Add (inputDistantJewel, CurrentAgent.Parameters.MAX_ACTIVATION);
 			}
@@ -609,5 +610,21 @@ namespace ClarionApp
         }
         #endregion
 
-    }
+		void ShowMessage (Window parent, string title, string message)
+		{
+			Dialog dialog = null;
+			try {
+				dialog = new Dialog (title, parent,
+					DialogFlags.DestroyWithParent | DialogFlags.Modal,
+					ResponseType.Ok);
+				dialog.VBox.Add (new Label (message));
+				dialog.ShowAll ();
+
+				dialog.Run ();
+			} finally {
+				if (dialog != null)
+					dialog.Destroy ();
+			}
+		}
+	}
 }
