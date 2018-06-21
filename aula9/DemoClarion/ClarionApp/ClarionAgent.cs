@@ -294,7 +294,6 @@ namespace ClarionApp
 					worldServer.SendStopCreature (creatureId);
 					Console.WriteLine ("Success! All leaflets delivered. Stop the creature.");
 					stopped = true;
-					ShowMessage(null, creatureName, "Creature " + creatureName + ": All three leaflets complete!");
 					break;
 				default:
 					break;
@@ -609,22 +608,5 @@ namespace ClarionApp
 			}
         }
         #endregion
-
-		void ShowMessage (Window parent, string title, string message)
-		{
-			Dialog dialog = null;
-			try {
-				dialog = new Dialog (title, parent,
-					DialogFlags.DestroyWithParent | DialogFlags.Modal,
-					ResponseType.Ok);
-				dialog.VBox.Add (new Label (message));
-				dialog.ShowAll ();
-
-				dialog.Run ();
-			} finally {
-				if (dialog != null)
-					dialog.Destroy ();
-			}
-		}
 	}
 }
