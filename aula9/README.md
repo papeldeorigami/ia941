@@ -173,7 +173,10 @@ Quando uma jóia que não pertence a um leaflet está bloqueando o caminho, ou u
 
 Quando o combustivel está abaixo de 400, a coleta de alimentos ganha prioridade maior que a de jóias do leaflet.
 
-Quando os três leaflets estão completos, o agente pára.
+Quando os três leaflets estão completos, o agente pára e uma mensagem de aviso é exibida.
+
+
+Iniciamos o agente desenvolvido nesta atividade, junto com o agente da aula 6. O agente da aula 6 acabou ficando um pouco travado, porque não conseguia pegar algumas jóias que ele não tinha visto, mas no geral, ele tende a terminar a atividade antes.
 
 ## Conclusão
 
