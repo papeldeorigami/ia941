@@ -60,7 +60,7 @@ public class CurrentActionPanel extends GuiPanelImpl implements
 
         buttonGroup1 = new javax.swing.ButtonGroup();
         jTabbedPane1 = new javax.swing.JTabbedPane();
-        positionTab = new javax.swing.JPanel();
+        actionTab = new javax.swing.JPanel();
         positionPanel = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         currentActionLabel = new javax.swing.JLabel();
@@ -209,20 +209,20 @@ public class CurrentActionPanel extends GuiPanelImpl implements
                 .addContainerGap(66, Short.MAX_VALUE))
         );
 
-        javax.swing.GroupLayout positionTabLayout = new javax.swing.GroupLayout(positionTab);
-        positionTab.setLayout(positionTabLayout);
-        positionTabLayout.setHorizontalGroup(
-            positionTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, positionTabLayout.createSequentialGroup()
+        javax.swing.GroupLayout actionTabLayout = new javax.swing.GroupLayout(actionTab);
+        actionTab.setLayout(actionTabLayout);
+        actionTabLayout.setHorizontalGroup(
+            actionTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, actionTabLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(positionTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addGroup(actionTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(positionPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
-        positionTabLayout.setVerticalGroup(
-            positionTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, positionTabLayout.createSequentialGroup()
+        actionTabLayout.setVerticalGroup(
+            actionTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, actionTabLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(positionPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -230,7 +230,7 @@ public class CurrentActionPanel extends GuiPanelImpl implements
                 .addContainerGap())
         );
 
-        jTabbedPane1.addTab("Position", positionTab);
+        jTabbedPane1.addTab("Action", actionTab);
 
         planTab.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
@@ -317,6 +317,7 @@ public class CurrentActionPanel extends GuiPanelImpl implements
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JRadioButton aStarButton;
+    private javax.swing.JPanel actionTab;
     private javax.swing.JCheckBox allowDiagonal;
     private javax.swing.JRadioButton autoButton;
     private javax.swing.ButtonGroup buttonGroup1;
@@ -337,7 +338,6 @@ public class CurrentActionPanel extends GuiPanelImpl implements
     private javax.swing.JTextArea planTextArea;
     private javax.swing.JLabel positionLabel;
     private javax.swing.JPanel positionPanel;
-    private javax.swing.JPanel positionTab;
     private javax.swing.JTextField targetXLabel;
     private javax.swing.JTextField targetYLabel;
     private javax.swing.JRadioButton thetaStarButton;
@@ -414,7 +414,7 @@ public class CurrentActionPanel extends GuiPanelImpl implements
                         if (col == 0) {
                             return row;
                         }
-                        if (col == currentGridPosition.getX() && row == currentGridPosition.getY()) {
+                        if (col == currentGridPosition.getX() + 1 && row == currentGridPosition.getY()) {
                             return "o";
                         }
                         if (grid[col - 1][row].isWalkable()) {

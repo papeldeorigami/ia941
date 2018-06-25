@@ -210,7 +210,7 @@ public class Environment extends EnvironmentImpl {
 
         WorldPoint position = getPosition();
         
-        if (targetDestination != null && (position != null) && (position.distanceTo(targetDestination) <= CELL_WIDTH)) {
+        if (targetDestination != null && (position != null) && (position.distanceTo(targetDestination) <= 1)) {
             targetReached = true;
             destination = null;
             return;
