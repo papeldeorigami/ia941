@@ -63,6 +63,7 @@ public class Environment extends EnvironmentImpl {
     private int environmentHeight;
     private WorldPoint destination;
     private WorldPoint lastPosition;
+    private boolean targetReached;
     private int gridWidth;
     private int gridHeight;
     private Finder finder = Finder.A_STAR_FINDER;
@@ -135,6 +136,7 @@ public class Environment extends EnvironmentImpl {
         } catch (CommandExecException ex) {
             Logger.getLogger(Environment.class.getName()).log(Level.SEVERE, null, ex);
         }
+        targetReached = false;
         destination = planNextStep();
     }
 
@@ -162,7 +164,13 @@ public class Environment extends EnvironmentImpl {
         Object requestedObject = null;
         String mode = (String) params.get("mode");
         switch (mode) {
+            case "targetReached":
+                requestedObject = targetReached;
+                break;
             case "destination":
+//                if (destination == null) {
+//                    destination = planNextStep();
+//                }
                 requestedObject = destination;
                 break;
             case "position":
@@ -198,13 +206,20 @@ public class Environment extends EnvironmentImpl {
         thingAhead.clear();
         destination = null;
 
+        WorldPoint position = getPosition();
+        
+        if (targetDestination != null && (position != null) && (position.distanceTo(targetDestination) <= CELL_WIDTH)) {
+            targetReached = true;
+            destination = null;
+            return;
+        }
+        
         if (storeNewThingsInVision() || (destination == null)) {
             destination = planNextStep();                    
         }
 
-        WorldPoint position = getPosition();
         for (Thing thing : creature.getThingsInVision()) {
-            if (Environment.distanceToThingLessThan(thing, position, 40)) {
+            if (Environment.distanceToThingLessThan(thing, position, CELL_WIDTH)) {
                 if (thing.getCategory() == Constants.categoryBRICK) {
                     block = thing;
                     destination = null;
@@ -267,26 +282,17 @@ public class Environment extends EnvironmentImpl {
                     break;
                 case "moveToDestination":
                     final WorldPoint position = creature.getPosition();
-                    if (targetDestination != null && (position.distanceTo(targetDestination) <= 20)) {
-                        creature.stop();
-                        System.out.println("Target destination reached!");
-                        destination = null;
-                        //resetState();
-                        break;
-                    }
                     if (destination == null || (position.distanceTo(destination) <= 1)) {
-                        //creature.stop();
                         destination = planNextStep();
-                        //resetState();
                         break;
                     }
                     double speed = Math.max(0.5, Math.min(3, position.distanceTo(destination) / gridWidth));
-//                    double speed = 1.0;
-//                    if (position.distanceTo(destination) > gridWidth) {
-//                        speed = 3.0;
-//                    }
                     creature.start();
                     creature.moveto(speed, destination.getX(), destination.getY());
+                    break;
+                case "stop":
+                    creature.stop();
+                    System.out.println("Agent stoped");
                     break;
                 case "gotoFood":
                     if (food != null) {
@@ -395,15 +401,20 @@ public class Environment extends EnvironmentImpl {
                 
             }
         }
-        if (newPlan == null) {
+        if (newPlan == null || newPlan.isEmpty()) {
             //System.out.println("Warning: could not plan a route to the target destination - use old plan");
             return null;
         }
         // avoid infinite loop because of cell too close
         GridCell firstStep = newPlan.get(0);
-        while (tooClose(firstStep)) {
+        while (tooClose(firstStep) && !newPlan.isEmpty()) {
             newPlan.remove(0);
-            firstStep = newPlan.get(0);
+            if (!newPlan.isEmpty())
+                firstStep = newPlan.get(0);
+        }
+        if (newPlan.isEmpty()) {
+            //System.out.println("Warning: could not plan a route to the target destination - use old plan");
+            return null;
         }
         return newPlan;
     }
@@ -415,24 +426,18 @@ public class Environment extends EnvironmentImpl {
 
     private WorldPoint planNextStep() {
         WorldPoint currentDestination = destination;
-        if ((creature == null) || (targetDestination == null)) {
+        if ((creature == null) || (targetDestination == null) || targetReached) {
             return null;
         }
 
-//        if (lastPosition != null) {
-//            if (getPosition().equals(lastPosition)) {
-//                return null;
-//            }
-//        }
-        
         if (obstacles.isEmpty()) {
             destination = targetDestination;
             return targetDestination;
         }
         
         // check if the next step is not within the cell containing the target destination
-        if (tooClose(destination)) {
-            return destination;
+        if ((currentDestination != null) && tooClose(currentDestination)) {
+            return currentDestination;
         }
 
         createWorldGrid();
@@ -440,16 +445,16 @@ public class Environment extends EnvironmentImpl {
         plan = rebuildPlan();
 
         if (plan == null || plan.isEmpty()) {
-            return null;
+            return targetDestination;
         }
 
         final GridCell nextDestinationGrid = plan.get(0);
 
         WorldPoint destinationGridCenter = gridCellCenter(nextDestinationGrid);
         
-        //if (checkIfWayBlocked(destinationGridCenter)) {
-        //    return null;
-        //}
+//        if (checkIfWayBlocked(destinationGridCenter)) {
+//            return null;
+//        }
         
         lastPosition = getPosition();
         

@@ -18,6 +18,7 @@ public class SensoryMemory extends SensoryMemoryImpl {
     private Thing leafletJewel;
 
     private WorldPoint destination;
+    private boolean targetReached;
     private WorldPoint position;
    
     public SensoryMemory() {
@@ -29,6 +30,7 @@ public class SensoryMemory extends SensoryMemoryImpl {
         this.leafletJewel = null;
 
         this.destination = null;
+        this.targetReached = false;
     }
 
     @SuppressWarnings("unchecked")
@@ -54,6 +56,9 @@ public class SensoryMemory extends SensoryMemoryImpl {
         sensorParam.put("mode", "destination");
         destination = (WorldPoint) environment.getState(sensorParam);
         sensorParam.clear();
+        sensorParam.put("mode", "targetReached");
+        targetReached = (boolean) environment.getState(sensorParam);
+        sensorParam.clear();
         sensorParam.put("mode", "position");
         position = (WorldPoint) environment.getState(sensorParam);
     }
@@ -63,6 +68,9 @@ public class SensoryMemory extends SensoryMemoryImpl {
         Object requestedObject = null;
         String mode = (String) params.get("mode");
         switch (mode) {
+            case "targetReached":
+                requestedObject = targetReached;
+                break;
             case "destination":
                 requestedObject = destination;
                 break;
