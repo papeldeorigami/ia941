@@ -22,7 +22,7 @@ public class DestinationDetector extends BasicDetectionAlgorithm {
         WorldPoint destination = (WorldPoint) sensoryMemory.getSensoryContent(modality, detectorParams);
         double activation = 0.0;
         if (destination != null) {
-            activation = 1.0;
+            activation = 0.5;
         }
         return activation;
     }

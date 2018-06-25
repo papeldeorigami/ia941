@@ -6,13 +6,18 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.xguzm.pathfinding.grid.GridCell;
 import org.xguzm.pathfinding.grid.NavigationGrid;
 import org.xguzm.pathfinding.grid.finders.AStarGridFinder;
+import org.xguzm.pathfinding.grid.finders.GridFinderOptions;
 import org.xguzm.pathfinding.grid.finders.ThetaStarGridFinder;
+import org.xguzm.pathfinding.grid.finders.JumpPointFinder;
+import ws3dproxy.CommandExecException;
+import ws3dproxy.CommandUtility;
 import ws3dproxy.WS3DProxy;
 import ws3dproxy.model.Creature;
-import ws3dproxy.model.SelfAttributes;
 import ws3dproxy.model.Thing;
 import ws3dproxy.model.World;
 import ws3dproxy.model.WorldPoint;
@@ -20,12 +25,26 @@ import ws3dproxy.util.Constants;
 
 public class Environment extends EnvironmentImpl {
 
-    public static final Integer[] obstacleCategories = new Integer[]{ Constants.categoryBRICK, Constants.categoryCREATURE };
-    public static final String INITIAL_ACTION = "moveToDestination";
+    //public static final double CELL_WIDTH = Constants.CREATURE_SIZE;
+    //public static final double CELL_HEIGHT = Constants.CREATURE_SIZE;
+    public static final double CELL_WIDTH = 40;
+    public static final double CELL_HEIGHT = 40;
+
+    public static enum Finder {
+        AUTO,
+        A_STAR_FINDER,
+        THETA_FINDER,
+        JUMP_POINT_FINDER
+    }
+    public static final Integer[] obstacleCategories = new Integer[]{Constants.categoryBRICK};
+    public static final Integer[] getCategories = new Integer[]{Constants.categoryFOOD, Constants.categoryFOOD, Constants.categoryNPFOOD, Constants.categoryPFOOD};
+    public static final String INITIAL_ACTION = "none";
     private static final int DEFAULT_TICKS_PER_RUN = 100;
-    public static final int INITIAL_DESTINATION_X = 300;
-    public static final int INITIAL_DESTINATION_Y = 400;
-    private int ticksPerRun;    
+    public static final int INITIAL_POSITION_X = 50;
+    public static final int INITIAL_POSITION_Y = 50;
+    public static final int INITIAL_DESTINATION_X = 650;
+    public static final int INITIAL_DESTINATION_Y = 450;
+    private int ticksPerRun;
     private WS3DProxy proxy;
     private Creature creature;
     private Thing block;
@@ -35,7 +54,7 @@ public class Environment extends EnvironmentImpl {
     private List<Thing> thingAhead;
     private Thing leafletJewel;
     private String currentAction;
-    
+
     // attributes necessary to calculate paths
     private List<Thing> thingsMemory;
     private List<Thing> obstacles;
@@ -43,11 +62,13 @@ public class Environment extends EnvironmentImpl {
     private int environmentWidth;
     private int environmentHeight;
     private WorldPoint destination;
-    private double creatureWidth;
-    private double creatureHeight;
+    private WorldPoint lastPosition;
     private int gridWidth;
     private int gridHeight;
-   
+    private Finder finder = Finder.A_STAR_FINDER;
+    private boolean allowDiagonal;
+    private GridCell[][] grid;
+
     public Environment() {
         this.ticksPerRun = DEFAULT_TICKS_PER_RUN;
         this.proxy = new WS3DProxy();
@@ -57,8 +78,8 @@ public class Environment extends EnvironmentImpl {
         this.jewel = null;
         this.thingAhead = new ArrayList<>();
         this.leafletJewel = null;
-        
-        this.currentAction = INITIAL_ACTION;      
+
+        this.currentAction = INITIAL_ACTION;
         this.targetDestination = new WorldPoint(INITIAL_DESTINATION_X, INITIAL_DESTINATION_Y);
     }
 
@@ -67,7 +88,7 @@ public class Environment extends EnvironmentImpl {
         super.init();
         ticksPerRun = (Integer) getParam("environment.ticksPerRun", DEFAULT_TICKS_PER_RUN);
         taskSpawner.addTask(new BackgroundTask(ticksPerRun));
-        
+
         try {
             System.out.println("Reseting the WS3D World ...");
             final World world = proxy.getWorld();
@@ -76,10 +97,24 @@ public class Environment extends EnvironmentImpl {
             environmentWidth = world.getEnvironmentWidth();
             this.thingsMemory = new ArrayList<>();
             this.obstacles = new ArrayList<>();
-            creature = proxy.createCreature(100, 100, 0);
+            creature = proxy.createCreature(INITIAL_POSITION_X, INITIAL_POSITION_Y, 0);
             calculateGridSize();
             System.out.println("Starting the WS3D Resource Generator ... ");
-            World.createBrick(0, 180, 180, 200, 200);
+//            World.createBrick(2, 120, 0, 160, 400);
+//            World.createBrick(3, 240, 200, 280, 600);
+//            World.createBrick(4, 400, 0, 440, 280);
+//            World.createBrick(4, 400, 400, 440, 600);
+//            World.createBrick(4, 520, 300, 560, 340);
+//            World.createBrick(4, 680, 200, 800, 400);
+            int HALL_WIDTH = 100;
+            int BLOCK_WIDTH = 40;
+            World.createBrick(2, HALL_WIDTH, 0, HALL_WIDTH + BLOCK_WIDTH, 400);
+            World.createBrick(3, 2 * HALL_WIDTH + 2 * BLOCK_WIDTH, 200, 2 * HALL_WIDTH + 3 * BLOCK_WIDTH, 600);
+            World.createBrick(4, 3 * HALL_WIDTH + 3 * BLOCK_WIDTH, 0, 3 * HALL_WIDTH + 4 * BLOCK_WIDTH, 280);
+            World.createBrick(4, 3 * HALL_WIDTH + 3 * BLOCK_WIDTH, 400, 3 * HALL_WIDTH + 4 * BLOCK_WIDTH, 600);
+            World.createBrick(4, 4 * HALL_WIDTH + 4 * BLOCK_WIDTH, 300, 4 * HALL_WIDTH + 5 * BLOCK_WIDTH, 340);
+            World.createBrick(4, 5 * HALL_WIDTH + 5 * BLOCK_WIDTH, 200, 5 * HALL_WIDTH + 6 * BLOCK_WIDTH, 400);
+            World.createFood(0, INITIAL_DESTINATION_X, INITIAL_DESTINATION_Y);
             //World.grow(1);
             //Thread.sleep(4000);
             creature.updateState();
@@ -90,9 +125,17 @@ public class Environment extends EnvironmentImpl {
         }
     }
 
-    public void setTargetDestination(int x, int y) {
+    public void setTargetDestination(int x, int y, boolean useThetaStar, boolean allowDiagonal, Finder finder) {
         targetDestination.setX(x);
         targetDestination.setY(y);
+        this.finder = finder;
+        this.allowDiagonal = allowDiagonal;
+        try {
+            World.createFood(0, x, y);
+        } catch (CommandExecException ex) {
+            Logger.getLogger(Environment.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        destination = planNextStep();
     }
 
     private class BackgroundTask extends FrameworkTaskImpl {
@@ -111,6 +154,7 @@ public class Environment extends EnvironmentImpl {
     @Override
     public void resetState() {
         currentAction = INITIAL_ACTION;
+        destination = planNextStep();
     }
 
     @Override
@@ -120,6 +164,9 @@ public class Environment extends EnvironmentImpl {
         switch (mode) {
             case "destination":
                 requestedObject = destination;
+                break;
+            case "position":
+                requestedObject = getPosition();
                 break;
             case "block":
                 requestedObject = block;
@@ -142,26 +189,32 @@ public class Environment extends EnvironmentImpl {
         return requestedObject;
     }
 
-    
     public void updateEnvironment() {
         creature.updateState();
-        storeNewThingsInVision();
-        destination = planNextStep();
         block = null;
         food = null;
         jewel = null;
         leafletJewel = null;
         thingAhead.clear();
-        
+        destination = null;
+
+        if (storeNewThingsInVision() || (destination == null)) {
+            destination = planNextStep();                    
+        }
+
+        WorldPoint position = getPosition();
         for (Thing thing : creature.getThingsInVision()) {
-            if (creature.calculateDistanceTo(thing) <= Constants.OFFSET) {
+            if (Environment.distanceToThingLessThan(thing, position, 40)) {
                 if (thing.getCategory() == Constants.categoryBRICK) {
                     block = thing;
+                    destination = null;
+                    break;
+                } else if (isGettable(thing)) {
+                    thingAhead.add(thing);                    
                 }
             }
-            
         }
-        
+
 //        for (Thing thing : creature.getThingsInVision()) {
 //            if (creature.calculateDistanceTo(thing) <= Constants.OFFSET) {
 //                // Identifica o objeto proximo
@@ -192,9 +245,7 @@ public class Environment extends EnvironmentImpl {
 //           
 //        }
     }
-    
-    
-    
+
     @Override
     public void processAction(Object action) {
         String actionName = (String) action;
@@ -206,27 +257,49 @@ public class Environment extends EnvironmentImpl {
             //System.out.println("Action: "+currentAction);
             switch (currentAction) {
                 case "rotate":
-                    creature.rotate(1.0);
-                    //CommandUtility.sendSetTurn(creature.getIndex(), -1.0, -1.0, 3.0);
+                    double angle = -1;
+                    if (block != null) {
+                        angle = oppositeDirectionTo(block);
+                    }
+                    //creature.rotate(angle);
+                    CommandUtility.sendSetAngle(creature.getIndex(), angle, -angle, angle);
+                    resetState();
                     break;
                 case "moveToDestination":
                     final WorldPoint position = creature.getPosition();
-                    if ((destination != null) && (distanceLessThanGivenSize(position, destination, (int) creatureWidth / 2, (int) creatureHeight / 2))) {
+                    if (targetDestination != null && (position.distanceTo(targetDestination) <= 20)) {
+                        creature.stop();
+                        System.out.println("Target destination reached!");
+                        destination = null;
+                        //resetState();
                         break;
                     }
-                    if (destination != null) 
-                        creature.moveto(3.0, destination.getX(), destination.getY());
+                    if (destination == null || (position.distanceTo(destination) <= 1)) {
+                        //creature.stop();
+                        destination = planNextStep();
+                        //resetState();
+                        break;
+                    }
+                    double speed = Math.max(0.5, Math.min(3, position.distanceTo(destination) / gridWidth));
+//                    double speed = 1.0;
+//                    if (position.distanceTo(destination) > gridWidth) {
+//                        speed = 3.0;
+//                    }
+                    creature.start();
+                    creature.moveto(speed, destination.getX(), destination.getY());
                     break;
                 case "gotoFood":
-                    if (food != null) 
+                    if (food != null) {
                         creature.moveto(3.0, food.getX1(), food.getY1());
-                        //CommandUtility.sendGoTo(creature.getIndex(), 3.0, 3.0, food.getX1(), food.getY1());
+                    }
+                    //CommandUtility.sendGoTo(creature.getIndex(), 3.0, 3.0, food.getX1(), food.getY1());
                     break;
                 case "gotoJewel":
-                    if (leafletJewel != null)
+                    if (leafletJewel != null) {
                         creature.moveto(3.0, leafletJewel.getX1(), leafletJewel.getY1());
-                        //CommandUtility.sendGoTo(creature.getIndex(), 3.0, 3.0, leafletJewel.getX1(), leafletJewel.getY1());
-                    break;                    
+                    }
+                    //CommandUtility.sendGoTo(creature.getIndex(), 3.0, 3.0, leafletJewel.getX1(), leafletJewel.getY1());
+                    break;
                 case "get":
                     //creature.move(0.0, 0.0, 0.0);
                     //CommandUtility.sendSetTurn(creature.getIndex(), 0.0, 0.0, 0.0);
@@ -250,80 +323,148 @@ public class Environment extends EnvironmentImpl {
     }
 
     /**
-     * Represent the world, with its obstacles, as a grid with each cell based on the size of the creature
-     * 
+     * Represent the world, with its obstacles, as a grid with each cell based
+     * on the size of the creature
+     *
      */
-    private GridCell[][] createWorldGrid() {       
-        GridCell[][] grid = new GridCell[gridWidth][gridHeight];
+    private GridCell[][] createWorldGrid() {
+        grid = new GridCell[gridWidth][gridHeight];
         for (int x = 0; x < gridWidth; x++) {
-            for (int y = gridHeight - 1; y > 0; y--) {
+            for (int y = 0; y < gridHeight; y++) {
                 boolean obstacle = checkObstaclesInCell(x, y);
                 final GridCell gridCell = new GridCell(x, y, !obstacle);
                 grid[x][y] = gridCell;
                 //System.out.println(gridCell + " = " + !obstacle);
-            }            
-        }        
+            }
+        }
 
         return grid;
     }
-   
+
     WorldPoint gridCellCenter(GridCell gridCell) {
-        return new WorldPoint(gridCell.getX() * creatureWidth + creatureWidth / 2, gridCell.getY() * creatureHeight + creatureHeight / 2);
+        return new WorldPoint(gridCell.getX() * CELL_WIDTH + CELL_WIDTH / 2, gridCell.getY() * CELL_HEIGHT + CELL_HEIGHT / 2);
     }
-            
+
     /**
      * Draw the shortest path to complete all leaflets
      */
     private List<GridCell> rebuildPlan() {
-        GridCell[][] cells = createWorldGrid();
-        NavigationGrid<GridCell> navGrid = new NavigationGrid(cells, false);
+        NavigationGrid<GridCell> navGrid = new NavigationGrid(grid, false);
 
-        //ThetaStarGridFinder<GridCell> finder = new ThetaStarGridFinder(GridCell.class);
-        AStarGridFinder<GridCell> finder = new AStarGridFinder(GridCell.class);
-        final GridCell start = worldPointToGridCell(creature.getPosition());
+        GridFinderOptions opt = new GridFinderOptions();
+        opt.allowDiagonal = this.allowDiagonal;
+        final WorldPoint position = creature.getPosition();
+        final GridCell start = worldPointToGridCell(position);
         final GridCell end = worldPointToGridCell(targetDestination);
-        List<GridCell> newPlan = finder.findPath(start.getX(), start.getY(), end.getX(), end.getY(), navGrid);
+        
+        if (start == null || end == null) {
+            // System.out.println("Warning: Invalid position or target");
+            return null;
+        }
+
+        List<GridCell> newPlan;
+        switch (finder) {
+            case THETA_FINDER: {
+                ThetaStarGridFinder thetaStarFinder = new ThetaStarGridFinder(GridCell.class, opt);
+                newPlan = thetaStarFinder.findPath(start.getX(), start.getY(), end.getX(), end.getY(), navGrid);
+                break;
+            }
+            case A_STAR_FINDER: {
+                AStarGridFinder aStarFinder = new AStarGridFinder(GridCell.class, opt);
+                newPlan = aStarFinder.findPath(start.getX(), start.getY(), end.getX(), end.getY(), navGrid);
+                break;
+            }
+            case JUMP_POINT_FINDER: {
+                JumpPointFinder jumpPointFinder = new JumpPointFinder(GridCell.class, opt);
+                newPlan = jumpPointFinder.findPath(start.getX(), start.getY(), end.getX(), end.getY(), navGrid);
+                break;
+            }
+            default: {
+                JumpPointFinder jumpPointFinder = new JumpPointFinder(GridCell.class, opt);
+                newPlan = jumpPointFinder.findPath(start.getX(), start.getY(), end.getX(), end.getY(), navGrid);
+                if (newPlan == null) {
+                    ThetaStarGridFinder thetaStarFinder = new ThetaStarGridFinder(GridCell.class, opt);
+                    newPlan = thetaStarFinder.findPath(start.getX(), start.getY(), end.getX(), end.getY(), navGrid);
+                } else {
+                    break;                    
+                }
+                if (newPlan == null) {
+                    AStarGridFinder aStarFinder = new AStarGridFinder(GridCell.class, opt);
+                    newPlan = aStarFinder.findPath(start.getX(), start.getY(), end.getX(), end.getY(), navGrid);
+                }
+                
+            }
+        }
+        if (newPlan == null) {
+            //System.out.println("Warning: could not plan a route to the target destination - use old plan");
+            return null;
+        }
+        // avoid infinite loop because of cell too close
+        GridCell firstStep = newPlan.get(0);
+        while (tooClose(firstStep)) {
+            newPlan.remove(0);
+            firstStep = newPlan.get(0);
+        }
         return newPlan;
     }
-    
+
     private boolean distanceLessThanGivenSize(WorldPoint point1, WorldPoint point2, int width, int height) {
         return (Math.abs(point1.getX() - point2.getX()) < width)
-                        && (Math.abs(point1.getY() - point2.getY()) < height);
+                && (Math.abs(point1.getY() - point2.getY()) < height);
     }
-    
+
     private WorldPoint planNextStep() {
         WorldPoint currentDestination = destination;
         if ((creature == null) || (targetDestination == null)) {
             return null;
         }
+
+//        if (lastPosition != null) {
+//            if (getPosition().equals(lastPosition)) {
+//                return null;
+//            }
+//        }
+        
+        if (obstacles.isEmpty()) {
+            destination = targetDestination;
+            return targetDestination;
+        }
+        
+        // check if the next step is not within the cell containing the target destination
+        if (tooClose(destination)) {
+            return destination;
+        }
+
+        createWorldGrid();
         
         plan = rebuildPlan();
 
         if (plan == null || plan.isEmpty()) {
-            System.out.println("Warning: could not plan a route to the target destination");
-            return currentDestination;
+            return null;
         }
-        
+
         final GridCell nextDestinationGrid = plan.get(0);
+
         WorldPoint destinationGridCenter = gridCellCenter(nextDestinationGrid);
         
-        // check if the next step is not within the cell containing the target destination
-        if (distanceLessThanGivenSize(destinationGridCenter, targetDestination, (int) creatureWidth, (int) creatureHeight))
-        {
-            return targetDestination;
-        } else {
-            return destinationGridCenter;
-        }
+        //if (checkIfWayBlocked(destinationGridCenter)) {
+        //    return null;
+        //}
+        
+        lastPosition = getPosition();
+        
+        return destinationGridCenter;
     }
 
     /**
      * Store thing in memory
-     * 
+     *
      * This routine checks if already persisted before storing
-     * 
-     * @param thingName 
+     *
+     * @param thingName
      */
-    private void storeInPersistentMemoryIfNotAlreadyExists(Thing thing) {
+    private boolean storeInPersistentMemoryIfNotAlreadyExists(Thing thing) {
+        boolean result = false;
         boolean exists = false;
         for (Thing t : thingsMemory) {
             if (t.getName().equals(thing.getName())) {
@@ -331,18 +472,20 @@ public class Environment extends EnvironmentImpl {
                 break;
             }
         }
-        if(!exists) {
-            thingsMemory.add(thing);            
+        if (!exists) {
+            thingsMemory.add(thing);
             if (isObstacle(thing)) {
                 obstacles.add(thing);
             }
+            result = true;
         }
+        return result;
     }
 
     /**
      * Remove thing from memory
-     * 
-     * @param thingName 
+     *
+     * @param thingName
      */
     private void removeFromPersistentMemory(String thingName) {
         for (Iterator<Thing> it = thingsMemory.iterator(); it.hasNext();) {
@@ -354,17 +497,33 @@ public class Environment extends EnvironmentImpl {
         }
     }
 
-    private GridCell worldPointToGridCell(WorldPoint p) {
-        return new GridCell((int) Math.round(p.getX() / creatureWidth), (int) Math.round(p.getY() / creatureHeight));
+    public GridCell worldPointToGridCell(WorldPoint p) {
+        if (p == null)
+            return null;
+        return new GridCell((int) Math.floor(p.getX() / CELL_WIDTH), (int) Math.floor(p.getY() / CELL_HEIGHT));
     }
-    
+
+    private boolean lineIntesects(int line1Start, int line1End, int line2Start, int line2End) {
+        if (line1Start <= line2Start) {
+            return line2Start < line1End;
+        } else {
+            return line2End > line1Start;
+        }
+    }
+
     private boolean checkObstaclesInCell(int x, int y) {
+        final int SEC = 20;
+        int cellLeft = (int) Math.floor(x * CELL_WIDTH);
+        int cellRight = (int) Math.floor((x + 1) * CELL_WIDTH) - 1;
+        int cellTop = (int) Math.floor(y * CELL_HEIGHT);
+        int cellBottom = (int) Math.floor((y + 1) * CELL_HEIGHT) - 1;
         for (Thing t : obstacles) {
-            int left = (int) (Math.min(t.getX1(), t.getX2()) / creatureWidth);
-            int right = (int) (Math.max(t.getX1(), t.getX2()) / creatureWidth);
-            int top = (int) (Math.min(t.getY1(), t.getY2()) / creatureHeight);
-            int bottom = (int) (Math.max(t.getY1(), t.getY2()) / creatureHeight);
-            if ((left <= x) && (right >= x) && (top <= y) && (bottom >= y)) {
+            int obstacleLeft = (int) (Math.min(t.getX1(), t.getX2()) - SEC);
+            int obstacleRight = (int) (Math.max(t.getX1(), t.getX2()) + SEC) - 1;
+            int obstacleTop = (int) (Math.min(t.getY1(), t.getY2()) - SEC);
+            int obstacleBottom = (int) (Math.max(t.getY1(), t.getY2()) + SEC) - 1;
+            if (lineIntesects(cellLeft, cellRight, obstacleLeft, obstacleRight)
+                    && lineIntesects(cellTop, cellBottom, obstacleTop, obstacleBottom)) {
                 return true;
             }
         }
@@ -373,30 +532,101 @@ public class Environment extends EnvironmentImpl {
 
     private boolean isObstacle(Thing t) {
         for (final int i : obstacleCategories) {
-             if (i == t.getCategory()) {
-                 return true;
-             }
+            if (i == t.getCategory()) {
+                return true;
+            }
         }
         return false;
     }
 
-    private void storeNewThingsInVision() {
+    private boolean isGettable(Thing t) {
+        for (final int i : getCategories) {
+            if (i == t.getCategory()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean storeNewThingsInVision() {
+        boolean result = false;
         List<Thing> thingsInVision = creature.getThingsInVision();
         for (Thing t : thingsInVision) {
-            storeInPersistentMemoryIfNotAlreadyExists(t);
+            if (storeInPersistentMemoryIfNotAlreadyExists(t)) {
+                result = true;
+            }
         }
+        return result;
     }
 
     private void calculateGridSize() {
-        final SelfAttributes attributes = creature.getAttributes();
-        creatureWidth = Math.abs(attributes.getX2() - attributes.getX1());
-        creatureHeight = Math.abs(attributes.getY2() - attributes.getY1());
-        gridWidth = (int) Math.round(environmentWidth / creatureWidth);
-        gridHeight = (int) Math.round(environmentHeight / creatureHeight);
+        gridWidth = (int) Math.floor(environmentWidth / CELL_WIDTH);
+        gridHeight = (int) Math.floor(environmentHeight / CELL_HEIGHT);
     }
     
+    public Integer[] getGridSize() {
+        return new Integer[] {gridWidth, gridHeight};
+    }
+
     public List<GridCell> getPlan() {
         return plan;
     }
-   
+
+    private boolean tooClose(WorldPoint point) {
+        return (point != null) && (distanceLessThanGivenSize(point, creature.getPosition(), (int) CELL_WIDTH, (int) CELL_HEIGHT));
+    }
+
+    private boolean tooClose(GridCell cell) {
+        return (cell != null) && (tooClose(gridCellCenter(cell)));
+    }
+
+    public WorldPoint getPosition() {
+        WorldPoint position = creature.getPosition();
+        return position;
+    }
+
+    public double getPitch() {
+        return creature.getPitch();
+    }
+    
+    private double oppositeDirectionTo(Thing thing) {
+        WorldPoint thingPosition = thing.getCenterPosition();
+        WorldPoint creaturePosition = creature.getPosition();
+        if (creature.getPitch() >= 0) {
+            if (creaturePosition.getX() <= thingPosition.getX()) {
+                return 1.0;
+            } else {
+                return -1.0;
+            }
+        } else {
+            if (creaturePosition.getX() <= thingPosition.getX()) {
+                return -1.0;
+            } else {
+                return 1.0;
+            }            
+        }
+    }    
+
+    public WorldPoint getDestination() {
+        return destination;
+    }
+
+    public GridCell[][] getGrid() {
+        return grid;
+    }
+
+    public static boolean distanceToThingLessThan(Thing t, WorldPoint position, double distance) {
+        int x = (int) position.getX();
+        int y = (int) position.getY();
+        int thingLeft = (int) (Math.min(t.getX1(), t.getX2()) - distance);
+        int thingRight = (int) (Math.max(t.getX1(), t.getX2()) + distance) - 1;
+        int thingTop = (int) (Math.min(t.getY1(), t.getY2()) - distance);
+        int thingBottom = (int) (Math.max(t.getY1(), t.getY2()) + distance) - 1;
+        return (x >= thingLeft && x <= thingRight && y >= thingTop && y <= thingBottom);
+    }
+
+    public GridCell getGridPosition() {
+        return worldPointToGridCell(getPosition());
+    }
+
 }

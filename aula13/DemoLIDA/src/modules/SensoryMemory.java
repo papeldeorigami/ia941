@@ -18,6 +18,7 @@ public class SensoryMemory extends SensoryMemoryImpl {
     private Thing leafletJewel;
 
     private WorldPoint destination;
+    private WorldPoint position;
    
     public SensoryMemory() {
         this.sensorParam = new HashMap<>();
@@ -52,6 +53,9 @@ public class SensoryMemory extends SensoryMemoryImpl {
         sensorParam.clear();
         sensorParam.put("mode", "destination");
         destination = (WorldPoint) environment.getState(sensorParam);
+        sensorParam.clear();
+        sensorParam.put("mode", "position");
+        position = (WorldPoint) environment.getState(sensorParam);
     }
 
     @Override
@@ -61,6 +65,9 @@ public class SensoryMemory extends SensoryMemoryImpl {
         switch (mode) {
             case "destination":
                 requestedObject = destination;
+                break;
+            case "position":
+                requestedObject = position;
                 break;
             case "block":
                 requestedObject = block;
