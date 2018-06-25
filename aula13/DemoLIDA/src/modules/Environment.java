@@ -62,6 +62,8 @@ public class Environment extends EnvironmentImpl {
     private int environmentWidth;
     private int environmentHeight;
     private WorldPoint destination;
+    private WorldPoint lastDestination;
+    private WorldPoint lastDestinationTime;
     private WorldPoint lastPosition;
     private boolean targetReached;
     private int gridWidth;
@@ -214,9 +216,7 @@ public class Environment extends EnvironmentImpl {
             return;
         }
         
-        if (storeNewThingsInVision() || (destination == null)) {
-            destination = planNextStep();                    
-        }
+        storeNewThingsInVision();
 
         for (Thing thing : creature.getThingsInVision()) {
             if (Environment.distanceToThingLessThan(thing, position, CELL_WIDTH)) {
@@ -229,6 +229,10 @@ public class Environment extends EnvironmentImpl {
                 }
             }
         }
+        
+        if (block == null) {
+            destination = planNextStep();
+        }                    
 
 //        for (Thing thing : creature.getThingsInVision()) {
 //            if (creature.calculateDistanceTo(thing) <= Constants.OFFSET) {
@@ -278,14 +282,17 @@ public class Environment extends EnvironmentImpl {
                     }
                     //creature.rotate(angle);
                     CommandUtility.sendSetAngle(creature.getIndex(), angle, -angle, angle);
-                    resetState();
+                    //resetState();
                     break;
                 case "moveToDestination":
                     final WorldPoint position = creature.getPosition();
-                    if (destination == null || (position.distanceTo(destination) <= 1)) {
-                        destination = planNextStep();
+                    if (destination == null) {
                         break;
                     }
+//                    if (position.distanceTo(destination) <= 1) {
+//                        destination = planNextStep();
+//                        break;
+//                    }
                     double speed = Math.max(0.5, Math.min(3, position.distanceTo(destination) / gridWidth));
                     creature.start();
                     creature.moveto(speed, destination.getX(), destination.getY());
@@ -293,6 +300,7 @@ public class Environment extends EnvironmentImpl {
                 case "stop":
                     creature.stop();
                     System.out.println("Agent stoped");
+                    targetReached = false;
                     break;
                 case "gotoFood":
                     if (food != null) {
@@ -451,12 +459,6 @@ public class Environment extends EnvironmentImpl {
         final GridCell nextDestinationGrid = plan.get(0);
 
         WorldPoint destinationGridCenter = gridCellCenter(nextDestinationGrid);
-        
-//        if (checkIfWayBlocked(destinationGridCenter)) {
-//            return null;
-//        }
-        
-        lastPosition = getPosition();
         
         return destinationGridCenter;
     }
