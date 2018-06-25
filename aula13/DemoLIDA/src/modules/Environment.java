@@ -129,16 +129,15 @@ public class Environment extends EnvironmentImpl {
     }
 
     public void setTargetDestination(int x, int y, boolean useThetaStar, boolean allowDiagonal, Finder finder) {
-        targetDestination.setX(x);
-        targetDestination.setY(y);
+        targetDestination = new WorldPoint(x, y);
         this.finder = finder;
         this.allowDiagonal = allowDiagonal;
+        targetReached = false;
         try {
             World.createFood(0, x, y);
         } catch (CommandExecException ex) {
             Logger.getLogger(Environment.class.getName()).log(Level.SEVERE, null, ex);
         }
-        targetReached = false;
         destination = planNextStep();
     }
 
@@ -158,7 +157,7 @@ public class Environment extends EnvironmentImpl {
     @Override
     public void resetState() {
         currentAction = INITIAL_ACTION;
-        destination = planNextStep();
+        //destination = planNextStep();
     }
 
     @Override
@@ -301,6 +300,8 @@ public class Environment extends EnvironmentImpl {
                     creature.stop();
                     System.out.println("Agent stoped");
                     targetReached = false;
+                    targetDestination = null;
+                    resetState();
                     break;
                 case "gotoFood":
                     if (food != null) {
@@ -326,7 +327,7 @@ public class Environment extends EnvironmentImpl {
                             }
                         }
                     }
-                    this.resetState();
+                    //this.resetState();
                     break;
                 default:
                     break;
