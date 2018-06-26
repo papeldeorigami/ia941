@@ -1,0 +1,57 @@
+sp {propose*plan*any-state
+   (state <s> -^all-leaflets-complete
+              -^something-new
+               ^wandered
+              -^delivered
+               ^actions <actions>)
+   (<actions> -^<any>)
+-->
+   (<s> ^operator <o> + =)
+   (<o> ^name plan)
+   (write (crlf) | Propose plan |)
+}
+
+sp {propose*plan*distance
+   (state <s> ^distance-to-waypoint-0 <distance> < 10
+              ^actions <actions>)
+   (<actions> -^<any>)
+-->
+   (<s> ^operator <o> + =)
+   (<o> ^name plan)
+   (write (crlf) | Propose plan (state plan) |)
+}
+
+sp {propose*plan*state
+   (state <s> ^name plan
+              ^actions <actions>)
+   (<actions> -^<any>)
+-->
+   (<s> ^operator <o> + =)
+   (<o> ^name plan)
+   (write (crlf) | Propose plan (state plan) |)
+}
+
+sp {apply*plan
+   (state <s> ^operator.name plan
+              ^actions <actions>)
+-->
+   (<actions> ^PLAN <plan>)
+   (<plan> ^ANY true)
+   (write (crlf) | Apply plan |)
+}
+
+sp {apply*plan*remove-wandered
+   (state <s> ^operator.name plan
+              ^wandered true)
+-->
+   (<s> ^wandered true -)
+   (write (crlf) | Apply plan (remove wandered) |)
+}
+
+sp {apply*plan*remove-state-name
+   (state <s> ^operator.name plan
+              ^name plan)
+-->
+   (<s> ^name plan -)
+   (write (crlf) | Apply plan (remove state name) |)
+}

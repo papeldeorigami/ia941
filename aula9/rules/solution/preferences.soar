@@ -1,0 +1,114 @@
+sp {greater-than*see*preferences
+   (state <s> ^operator <o> +
+          <o2> +)
+   (<o> ^name << simulate-output remove-output deliver >>)
+   (<o2> ^name see)
+-->
+   (<s> ^operator <o> > <o2>)
+}
+
+sp {move*versus*move*preference*food
+   (state <s> ^operator <o> +
+          <o2> +)
+   (<o> ^name move
+        ^TYPE FOOD)
+   (<o2> ^name move
+         ^TYPE JEWEL)
+-->
+   (<s> ^operator <o> > <o2>)
+}
+
+sp {move*versus*move*preference*closest
+   (state <s> ^operator <o> +
+          <o2> +)
+   (<o> ^name move
+        ^TYPE <type>
+        ^DISTANCE <distance1>)
+   (<o2> ^name move
+        ^TYPE <type>
+         ^DISTANCE { <distance2> > <distance1> })
+-->
+   (<s> ^operator <o> > <o2>)
+}
+
+sp {greater*than*hide*preferences
+   (state <s> ^operator <o> +
+          <o2> +)
+   (<o> ^name << deliver remove-output >>)
+   (<o2> ^name hide)
+-->
+   (<s> ^operator <o> > <o2>)
+}
+
+sp {greater*than*get*preferences
+   (state <s> ^operator <o> +
+          <o2> +)
+   (<o> ^name << hide deliver remove-output >>)
+   (<o2> ^name get)
+-->
+   (<s> ^operator <o> > <o2>)
+}
+
+sp {greater-than*deliver*preferences
+   (state <s> ^operator <o> +
+          <o2> +)
+   (<o> ^name << output-command remove-output >>)
+   (<o2> ^name deliver)
+-->
+   (<s> ^operator <o> > <o2>)
+}
+
+sp {greater-than*plan*preferences
+   (state <s> ^operator <o> +
+          <o2> +)
+   (<o> ^name << remove-output deliver >>)
+   (<o2> ^name plan)
+-->
+   (<s> ^operator <o> > <o2>)
+}
+
+sp {greater-than*move*preferences
+   (state <s> ^operator <o> +
+          <o2> +)
+   (<o> ^name  << plan get hide eat see avoid-brick output-command remove-output deliver >>)
+   (<o2> ^name move)
+-->
+   (<s> ^operator <o> > <o2>)
+}
+
+sp {greater-than*avoid-brick*preferences
+   (state <s> ^operator <o> +
+          <o2> +)
+   (<o> ^name << get hide eat >>)
+   (<o2> ^name avoid-brick)
+-->
+   (<s> ^operator <o> > <o2>)
+}
+
+sp {greater-than*wander*preferences
+   (state <s> ^operator <o> +
+          <o2> +)
+   (<o> ^name << simulate-output remove-output see get eat hide move deliver >>)
+   (<o2> ^name << start-wander stop-wander continue-wander >>)
+-->
+   (<s> ^operator <o> > <o2>)
+}
+
+sp {stop-wander*continue-wander*preferences
+   (state <s> ^operator <o> +
+          <o2> +)
+   (<o> ^name stop-wander)
+   (<o2> ^name continue-wander)
+-->
+   (<s> ^operator <o> > <o2>)
+}
+
+sp {simulate-output*remove-output*preferences
+   (state <s> ^operator <o> +
+          <o2> +)
+   (<o> ^name simulate-output)
+   (<o2> ^name remove-output)
+-->
+   (<s> ^operator <o> > <o2>)
+}
+

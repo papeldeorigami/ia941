@@ -94,6 +94,8 @@ namespace ClarionApp
 
 		private global::Gtk.Label label2;
 
+		private global::Gtk.Label messageLabel;
+
 		protected virtual void Build()
 		{
 			global::Stetic.Gui.Initialize(this);
@@ -566,13 +568,22 @@ namespace ClarionApp
 			global::Gtk.Fixed.FixedChild w44 = ((global::Gtk.Fixed.FixedChild)(this.fixed2[this.label2]));
 			w44.X = 42;
 			w44.Y = 213;
+			// Container child fixed2.Gtk.Fixed+FixedChild
+			this.messageLabel = new global::Gtk.Label();
+			this.messageLabel.WidthRequest = 226;
+			this.messageLabel.Name = "messageLabel";
+			this.messageLabel.LabelProp = global::Mono.Unix.Catalog.GetString("Running");
+			this.fixed2.Add(this.messageLabel);
+			global::Gtk.Fixed.FixedChild w45 = ((global::Gtk.Fixed.FixedChild)(this.fixed2[this.messageLabel]));
+			w45.X = 17;
+			w45.Y = 403;
 			this.Add(this.fixed2);
 			if ((this.Child != null))
 			{
 				this.Child.ShowAll();
 			}
 			this.DefaultWidth = 280;
-			this.DefaultHeight = 411;
+			this.DefaultHeight = 443;
 			this.Show();
 		}
 	}

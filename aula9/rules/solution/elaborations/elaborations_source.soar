@@ -1,0 +1,7 @@
+source _all.soar
+source all-leaflets-complete.soar
+source brick-ahead.soar
+source distance-to-waypoint-0.soar
+source elapsed-wander-time.soar
+source something-new.soar
+source thing-ahead.soar

@@ -7,7 +7,7 @@
   <import>
     <widget-library name="../bin/Release/ClarionApp.exe" internal="true" />
   </import>
-  <widget class="Gtk.Window" id="ClarionApp.MindViewer" design-size="280 411">
+  <widget class="Gtk.Window" id="ClarionApp.MindViewer" design-size="280 443">
     <property name="MemberName" />
     <property name="Title" translatable="yes">Creature Bag</property>
     <property name="WindowPosition">CenterOnParent</property>
@@ -756,6 +756,17 @@
           <packing>
             <property name="X">42</property>
             <property name="Y">213</property>
+          </packing>
+        </child>
+        <child>
+          <widget class="Gtk.Label" id="messageLabel">
+            <property name="MemberName" />
+            <property name="WidthRequest">226</property>
+            <property name="LabelProp" translatable="yes">Running</property>
+          </widget>
+          <packing>
+            <property name="X">17</property>
+            <property name="Y">403</property>
           </packing>
         </child>
       </widget>

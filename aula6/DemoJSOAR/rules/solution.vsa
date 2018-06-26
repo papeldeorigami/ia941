@@ -24,10 +24,10 @@ VERSION 4
 21	0	FOPERATOR see see.soar 22
 22	0	FOPERATOR simulate-input simulate-input.soar 23
 23	0	FOPERATOR simulate-output simulate-output.soar 24
-24	0	FOPERATOR wait wait.soar 26
-25	0	HLFOPERATOR wander wander.soar wander 0 27
-26	25	OPERATOR continue-wander continue-wander.soar 28
-27	25	OPERATOR start-wander start-wander.soar 29
-28	25	OPERATOR stop-wander stop-wander.soar 30
-29	0	OPERATOR initialize-solution initialize-solution.soar 31
+24	0	FOPERATOR wait wait.soar 25
+25	0	HLFOPERATOR wander wander.soar wander 0 26
+26	25	OPERATOR continue-wander continue-wander.soar 27
+27	25	OPERATOR start-wander start-wander.soar 28
+28	25	OPERATOR stop-wander stop-wander.soar 29
+29	0	OPERATOR initialize-solution initialize-solution.soar 30
 END

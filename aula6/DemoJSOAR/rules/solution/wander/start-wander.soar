@@ -2,7 +2,6 @@ sp {propose*no-change*start-wander
    (state <s>
              ^superstate <ss>
              ^impasse no-change)
-  -(<ss> ^impasse tie)
    (<ss> -^state wander
           ^actions <actions>
          -^distance-to-waypoint-0

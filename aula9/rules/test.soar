@@ -1,0 +1,108 @@
+sp {monitor*test
+   (state <s> ^io.input-link <input>
+             -^moving)
+   (<input> ^CREATURE <creature>)
+   (<creature> ^POSITION <position>)
+   (<position> ^X <px>
+               ^Y <py>)
+-->
+   (write (crlf) | input ready. creature=| <creature> ||)
+}
+
+sp {propose*test
+   (state <s> ^io.input-link <input>
+             -^moving)
+   (<creature> ^SENSOR.VISUAL.ENTITY.DISTANCE { <DISTANCE> > 30 })
+-->
+   (<s> ^operator <o> +)
+   (<o> ^name test)
+}
+
+sp {apply*test
+   (state <s> ^operator.name test
+              ^io.input-link <input>
+              ^io.output-link <output>
+             -^moving)
+   (<input> ^CREATURE <creature>)
+   (<creature> ^SENSOR.VISUAL.ENTITY <entity>)
+   (<entity> ^NAME <entityName>
+             ^X <x>
+             ^Y <y>
+             ^DISTANCE { <DISTANCE> > 30 })
+-->
+   (write (crlf) | Apply test: creature | <creature> ||)
+   (<s> ^moving true)
+#  (<input> ^CREATURE <creature> -)
+#   (<output> ^GET.Name <entityName>)
+   (<output> ^MOVE <command>)
+   (<command> ^Vel 1)
+   (<command> ^VelR 1)
+   (<command> ^VelL 1)
+   (<command> ^X <x>)
+   (<command> ^Y <y>)
+   (interrupt)
+}
+
+sp {apply*test*add-timestamp
+   (state <s> ^operator.name test
+              ^io.input-link <input>
+             -^timestamp)
+   (<input> ^CREATURE <creature>)
+   (<creature> ^PARAMETERS.TIMESTAMP <timestamp>)
+-->
+   (<s> ^timestamp <timestamp>)
+}
+
+sp {propose*remove-output
+   (state <s> ^io.output-link <output>
+              ^moving true)
+   (<output> ^MOVE)
+-->
+   (<s> ^operator <o> +)
+   (<o> ^name remove-output)
+}
+
+sp {apply*remove-output
+   (state <s> ^operator.name remove-output
+              ^io.output-link <output>)
+   (<output> ^MOVE <move>)
+-->
+   (write (crlf) | Apply remove-output: MOVE | <move> ||)
+   (<s> ^moving true -)
+   (<output> ^MOVE <move> -)
+}
+
+sp {elaborate*elapsed
+   (state <s> ^io.input-link <input>
+              ^timestamp <oldTimestamp>)
+   (<input> ^CREATURE.PARAMETERS.TIMESTAMP <timestamp>)
+-->
+   (<s> ^elapsed (- <timestamp> <oldTimestamp>))
+   (write (crlf) | elapsed=| (- <timestamp> <oldTimestamp>) ||)
+}
+
+sp {no-change*interrupt
+   (state <s> ^impasse no-change)
+-->
+   (wait 1000)
+   (interrupt)
+}
+
+sp {propose*update-timestamp
+   (state <s> ^elapsed { <elapsed> > 1 })
+-->
+   (<s> ^operator <o> + <)
+   (<o> ^name update-timestamp)
+   (write (crlf) | propose update timestamp |)
+}
+
+sp {apply*update-timestamp
+   (state <s> ^operator.name update-timestamp
+              ^io.input-link <input>
+              ^timestamp <oldTimestamp>)
+   (<input> ^CREATURE.PARAMETERS.TIMESTAMP <timestamp>)
+-->
+   (<s> ^timestamp <oldTimestamp> -
+        ^timestamp <timestamp>)
+   (write (crlf) | update timestamp=| <timestamp> ||)
+}

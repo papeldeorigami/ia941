@@ -1,0 +1,13 @@
+sp {elaborations*distance-to-waypoint-0
+   (state <s> ^io.input-link <input>)
+   (<input> ^CREATURE <creature>)
+   (<creature> ^POSITION <position>
+               ^PLAN <plan>)
+   (<plan> ^WAYPOINT-0 <entity>)
+   (<entity> ^X <x>
+             ^Y <y>)
+   (<position> ^X <px>
+               ^Y <py>)
+-->
+   (<s> ^distance-to-waypoint-0 (sqrt (+ (* (- <px> <x>) (- <px> <x>)) (* (- <py> <y>) (- <py> <y>)))))
+}  

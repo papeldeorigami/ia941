@@ -241,6 +241,7 @@ public class SoarBridge
                 collectedColors.put("White", 0);
                 int order = 0;
                 int totalCollected = 0;
+                int leafletsCount = 0; // avoid more than 3 leaflets
                 for (Leaflet l : c.getLeaflets()) {
                     InputBuilder leaflet = creatureLeaflets.push("LEAFLET");
                     leaflet.add("ORDER", order++);
@@ -269,6 +270,10 @@ public class SoarBridge
                         leaflet.add("COMPLETE", "true");
                     } else {
                         leaflet.add("COMPLETE", "false");
+                    }
+                    leafletsCount++;
+                    if (leafletsCount == 3) {
+                        break;
                     }
                 }
                 // Set Creature KNAPSACK (Bag)
@@ -924,6 +929,7 @@ public class SoarBridge
         jewelsNeededGroupedByColor.put("Yellow", 0);
         jewelsNeededGroupedByColor.put("Magenta", 0);
         jewelsNeededGroupedByColor.put("White", 0);
+        int leafletsCount = 0;
         for (Leaflet l : c.getLeaflets()) {
             HashMap<String, Integer[]> items = l.getItems();
             for (HashMap.Entry<String, Integer[]> entry : items.entrySet()) {
@@ -935,6 +941,10 @@ public class SoarBridge
                     needed += previousNeeded;
                 }
                 jewelsNeededGroupedByColor.put(color, needed - collected);
+            }
+            leafletsCount++;
+            if (leafletsCount == 3) {
+                break;
             }
         }
         // build a map of nearest jewels needed to complete all leaflets

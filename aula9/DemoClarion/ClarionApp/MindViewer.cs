@@ -118,6 +118,10 @@ namespace ClarionApp
 			// Otherwise this might cause unpredictable thread problems
 			Gtk.Application.Invoke(delegate{update();});
 		}
+
+		public void ShowCompleteMessage() {
+			messageLabel.Text = "All leaflets complete";
+		}
 	}
 }
 

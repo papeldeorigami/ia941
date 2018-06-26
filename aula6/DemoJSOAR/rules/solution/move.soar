@@ -1,7 +1,7 @@
 # when the fuel is fine, follow the plan
 sp {solution*propose*move*plan
    (state <s> ^io.input-link <input>
-             -^all-leaflets-complete
+             -^delivered
               ^actions <actions>
               ^distance-to-waypoint-0 <distance> > 30)
    (<input> ^CREATURE <creature>)

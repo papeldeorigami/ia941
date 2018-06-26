@@ -1,0 +1,36 @@
+sp {propose*hide
+   (state <s> ^actions <actions>
+              ^desired <desired>
+              ^thing-ahead <entity>
+             -^delivered
+              ^io.input-link.CREATURE <creature>)
+   (<creature> ^MEMORY <memory>
+               ^KNAPSACK <knapsack>)
+   (<entity> ^NAME <entityName>
+             ^TYPE JEWEL
+             ^COLOR <color>)
+   # filter colors only that are missing in some leaflet
+   (<desired> ^<color> <desiredQuantity>)
+   (<knapsack> ^<color> { <quantity> >= <desiredQuantity> })
+   # must be already in memory to ensure consistency
+   (<memory> ^ENTITY <memoryEntity>)
+   (<memoryEntity> ^NAME <entityName>)
+   # if not hiding something already
+  -(<actions> ^HIDE)
+-->
+   (<s> ^operator <o> + =)
+   (<o> ^name hide
+        ^parameter.NAME <entityName>)
+   (write (crlf) | Propose hide: name = | <entityName> ||)
+}
+
+sp {solution*apply*hide
+   (state <s> ^operator <o>
+              ^actions <actions>)
+   (<o> ^name hide
+        ^parameter <p>)
+   (<p> ^NAME <entityName>)
+-->
+   (<actions> ^HIDE.Name <entityName>)
+   (write (crlf) | Hide: name=| <entityName> ||)
+}

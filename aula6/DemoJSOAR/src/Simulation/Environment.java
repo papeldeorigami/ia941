@@ -34,7 +34,7 @@ public class Environment
         if (resetWorld)
         {
             w.reset();
-            //w.grow(1);            
+//            w.grow(1);            
             //CommandUtility.sendNewJewel(1,200.0,125.0);
             // Create Simulation Enviroment - Bricks
             CommandUtility.sendNewBrick(4,747.0,2.0,800.0,567.0);

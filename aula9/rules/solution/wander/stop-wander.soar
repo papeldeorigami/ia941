@@ -1,0 +1,25 @@
+sp {propose*stop-wander
+   (state <s> ^name wander
+              ^elapsed-wander-time <elapsed> > 2000)
+-->
+   (write (crlf) | Propose stop-wander |)
+   (<s> ^operator <o> + <)
+   (<o> ^name stop-wander)
+}
+
+sp {apply*stop-wander
+   (state <s> ^operator.name stop-wander
+              ^initial-wander-timestamp <timestamp>)
+-->
+   (write (crlf) | Apply stop-wander |)
+   (<s> ^name solution
+        ^initial-wander-timestamp <timestamp> -)
+}
+
+sp {apply*stop-wander*wandered
+   (state <s> ^operator.name stop-wander
+             -^wandered true)
+-->
+   (write (crlf) | Apply stop-wander (set wandered true) |)
+   (<s> ^wandered true)
+}

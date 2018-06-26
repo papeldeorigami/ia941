@@ -1,0 +1,27 @@
+# this operator will always be proposed where there is something new in the input,
+# independent of the current state, as long as it is initialized
+sp {propose*see
+   (state <s> ^io.input-link <input>
+              ^something-new <entity>
+              ^actions <actions>)
+   (<entity> ^NAME <name>)
+  -(<actions> ^MEMORIZE)
+-->
+   (<s> ^operator <op> + =)
+   (<op> ^name see
+         ^entity <entity>)
+   (write (crlf) | Propose see: name=| <name> ||)
+}
+
+sp {apply*see*memorize
+   (state <s> ^operator <op>
+              ^io.input-link <input>
+              ^actions <actions>)
+   (<op> ^name see
+         ^entity <entity>)
+   (<entity> ^NAME <name>)
+-->
+   # prepare the output action
+   (<actions> ^MEMORIZE.Name <name>)
+   (write (crlf) | apply see*memorize: name=| <name> ||)
+}

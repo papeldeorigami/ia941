@@ -1,0 +1,31 @@
+sp {propose*no-change*start-wander
+   (state <s>
+             ^superstate <ss>
+             ^impasse no-change)
+  -(<ss> ^impasse tie)
+   (<ss> -^state wander
+          ^actions <actions>
+         -^distance-to-waypoint-0
+         -^delivered
+         -^initial-wander-timestamp
+         -^wandered)
+  -(<actions> ^<any>)
+-->
+   (write (crlf) | Propose start-wander |)
+   (<ss> ^operator <o> + <)
+   (<o> ^name start-wander)
+}
+
+sp {apply*start-wander
+   (state <s> ^operator.name start-wander
+              ^actions <actions>
+              ^io.input-link.CREATURE.PARAMETERS.TIMESTAMP <timestamp>)
+-->
+   (<actions> ^MOVE <command>)
+   (<command> ^Vel 0)
+   (<command> ^VelR 2)
+   (<command> ^VelL 0)
+   (<s> ^initial-wander-timestamp <timestamp>
+        ^name wander)
+   (write (crlf) | Apply wander |)
+}

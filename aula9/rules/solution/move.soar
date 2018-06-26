@@ -1,0 +1,60 @@
+# when the fuel is fine, follow the plan
+sp {solution*propose*move*plan
+   (state <s> ^io.input-link <input>
+             -^all-leaflets-complete
+              ^actions <actions>
+              ^distance-to-waypoint-0 <distance> > 30)
+   (<input> ^CREATURE <creature>)
+   (<creature> ^PLAN <plan>)
+   (<plan> ^WAYPOINT-0 <entity>)
+   (<entity> ^X <x>
+             ^Y <y>)
+  -(<actions> ^MOVE)
+-->
+   (<s> ^operator <o> +)
+   (<o> ^name move)
+   (<o> ^X <x>
+        ^Y <y>
+        ^DISTANCE <distance>
+        ^TYPE JEWEL)
+   (write (crlf) | propose move to x=| <x> | y=| <y> ||)
+}  
+
+# if fuel is low, then ignore the plan and look for the closest food
+sp {solution*propose*move*food
+   (state <s> ^io.input-link <input>
+              ^actions <actions>)
+   (<input> ^CREATURE <creature>)
+   (<creature> ^MEMORY.ENTITY <entity>
+               ^PARAMETERS.MINFUEL <min-fuel>
+               ^SENSOR.FUEL { <fuel> <= <min-fuel> })
+   (<entity> ^TYPE FOOD
+             ^X <x>
+             ^Y <y>
+             ^DISTANCE <distance> > 30)
+-->
+   (<s> ^operator <o> +)
+   (<o> ^name move)
+   (<o> ^X <x>
+        ^Y <y>
+        ^DISTANCE <distance>
+        ^TYPE FOOD)
+   (write (crlf) | propose move to x=| <x> | y=| <y> ||)
+}  
+
+
+sp {solution*apply*move
+   (state <s> ^operator <o>
+              ^actions <actions>)
+   (<o> ^name move
+        ^X <x>
+        ^Y <y>)
+-->
+   (<actions> ^MOVE <command>)
+   (<command> ^Vel 1)
+   (<command> ^VelR 1)
+   (<command> ^VelL 1)
+   (<command> ^X <x>)
+   (<command> ^Y <y>)
+   (write (crlf) | Apply move to x=| <x> | y=| <y> ||)
+}

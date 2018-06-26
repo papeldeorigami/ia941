@@ -1,0 +1,29 @@
+sp {propose*remove-output
+   (state <s> ^io.output-link <output>
+              ^sent-command true)
+   (<output> ^<type> <action>)
+-->
+   (<s> ^operator <o> + =)
+   (<o> ^name remove-output)
+   (write (crlf) | Propose remove-output |)
+   #(write (crlf) (cmd print --depth 2 <output>))
+}
+
+sp {apply*remove-output
+   (state <s> ^operator.name remove-output
+              ^sent-command true
+              ^io.output-link <output>)
+   (<output> ^<type> <action>)
+-->
+   (write (crlf) | Apply remove-output: type=| <type> | action=| <action> ||)
+   (<s> ^sent-command true -)
+   (<output> ^<type> <action> -)
+}
+
+sp {apply*remove-output*simulated
+   (state <s> ^operator.name remove-output
+              ^simulated-output true)
+-->
+   (write (crlf) | Apply remove-output*simulated |)
+   (<s> ^simulated-output true -)
+}

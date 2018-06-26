@@ -1,0 +1,10 @@
+sp {elaborations*something-new
+   (state <s> ^io.input-link <input>)
+   (<input> ^CREATURE <creature>)
+   (<creature> ^MEMORY <memory>)
+   (<creature> ^SENSOR.VISUAL.ENTITY <entity>)
+   (<entity> ^NAME <name>)
+  -(<memory> ^ENTITY.NAME <name>)
+-->
+   (<s> ^something-new <entity>)
+}
