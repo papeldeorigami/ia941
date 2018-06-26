@@ -17,6 +17,7 @@ namespace ClarionApp
 		#region properties
 		private WSProxy ws = null;
         private ClarionAgent agent;
+		static bool skipReset = false;
         String creatureId = String.Empty;
         String creatureName = String.Empty;
 		#endregion
@@ -34,75 +35,77 @@ namespace ClarionApp
                 if (ws != null && ws.IsConnected)
                 {
                     Console.Out.WriteLine ("[SUCCESS] " + message + "\n");
-					ws.SendWorldReset();
+					if (!skipReset) {
+						ws.SendWorldReset ();
+						ws.NewBrick (4, 747, 2, 800, 567);
+						ws.NewBrick (4, 50, -4, 747, 47);
+						ws.NewBrick (4, 49, 562, 796, 599);
+						ws.NewBrick (4, -2, 6, 50, 599);
+
+						// Create some food
+						ws.NewFood (0, 415, 212);
+						ws.NewFood (0, 237, 321);
+						ws.NewFood (0, 165, 440);
+
+						// Create 9 jewels of each color, to enable easy planning
+						ws.NewJewel (0, 200, 200);
+						ws.NewJewel (0, 200, 220);
+						ws.NewJewel (0, 200, 440);
+						ws.NewJewel (0, 420, 100);
+						ws.NewJewel (0, 420, 220);
+						ws.NewJewel (0, 420, 440);
+						ws.NewJewel (0, 640, 100);
+						ws.NewJewel (0, 640, 220);
+						ws.NewJewel (0, 640, 440);
+						ws.NewJewel (1, 200, 200);
+						ws.NewJewel (1, 140, 340);
+						ws.NewJewel (1, 140, 500);
+						ws.NewJewel (1, 340, 220);
+						ws.NewJewel (1, 340, 340);
+						ws.NewJewel (1, 340, 500);
+						ws.NewJewel (1, 600, 140);
+						ws.NewJewel (1, 600, 340);
+						ws.NewJewel (1, 600, 500);
+						ws.NewJewel (2, 250, 170);
+						ws.NewJewel (2, 250, 240);
+						ws.NewJewel (2, 250, 400);
+						ws.NewJewel (2, 440, 170);
+						ws.NewJewel (2, 440, 240);
+						ws.NewJewel (2, 440, 400);
+						ws.NewJewel (2, 530, 170);
+						ws.NewJewel (2, 530, 240);
+						ws.NewJewel (2, 530, 400);
+
+						ws.NewJewel (3, 260, 100);
+						ws.NewJewel (3, 260, 220);
+						ws.NewJewel (3, 260, 440);
+						ws.NewJewel (3, 500, 100);
+						ws.NewJewel (3, 500, 220);
+						ws.NewJewel (3, 480, 440);
+						ws.NewJewel (3, 700, 100);
+						ws.NewJewel (3, 700, 220);
+						ws.NewJewel (3, 700, 440);
+						ws.NewJewel (4, 200, 140);
+						ws.NewJewel (4, 200, 340);
+						ws.NewJewel (4, 200, 500);
+						ws.NewJewel (4, 400, 220);
+						ws.NewJewel (4, 400, 340);
+						ws.NewJewel (4, 400, 500);
+						ws.NewJewel (4, 660, 140);
+						ws.NewJewel (4, 660, 340);
+						ws.NewJewel (4, 660, 500);
+						ws.NewJewel (5, 310, 170);
+						ws.NewJewel (5, 310, 240);
+						ws.NewJewel (5, 310, 400);
+						ws.NewJewel (5, 500, 170);
+						ws.NewJewel (5, 500, 240);
+						ws.NewJewel (5, 500, 400);
+						ws.NewJewel (5, 590, 170);
+						ws.NewJewel (5, 590, 240);
+						ws.NewJewel (5, 590, 400);
+					}
                     ws.NewCreature(100, 100, 0, out creatureId, out creatureName);
 					ws.SendCreateLeaflet();
-                    ws.NewBrick(4, 747, 2, 800, 567);
-                    ws.NewBrick(4, 50, -4, 747, 47);
-                    ws.NewBrick(4, 49, 562, 796, 599);
-                    ws.NewBrick(4, -2, 6, 50, 599);
-
-					// Create some food
-					ws.NewFood(0,415,212);
-					ws.NewFood(0,237,321);
-					ws.NewFood(0,165,440);
-
-					// Create 9 jewels of each color, to enable easy planning
-					ws.NewJewel(0,200,200);
-					ws.NewJewel(0,200,220);
-					ws.NewJewel(0,200,440);
-					ws.NewJewel(0,420,100);
-					ws.NewJewel(0,420,220);
-					ws.NewJewel(0,420,440);
-					ws.NewJewel(0,640,100);
-					ws.NewJewel(0,640,220);
-					ws.NewJewel(0,640,440);
-					ws.NewJewel(1,200,200);
-					ws.NewJewel(1,140,340);
-					ws.NewJewel(1,140,500);
-					ws.NewJewel(1,340,220);
-					ws.NewJewel(1,340,340);
-					ws.NewJewel(1,340,500);
-					ws.NewJewel(1,600,140);
-					ws.NewJewel(1,600,340);
-					ws.NewJewel(1,600,500);
-					ws.NewJewel(2,250,170);
-					ws.NewJewel(2,250,240);
-					ws.NewJewel(2,250,400);
-					ws.NewJewel(2,440,170);
-					ws.NewJewel(2,440,240);
-					ws.NewJewel(2,440,400);
-					ws.NewJewel(2,530,170);
-					ws.NewJewel(2,530,240);
-					ws.NewJewel(2,530,400);
-
-					ws.NewJewel(3,260,100);
-					ws.NewJewel(3,260,220);
-					ws.NewJewel(3,260,440);
-					ws.NewJewel(3,500,100);
-					ws.NewJewel(3,500,220);
-					ws.NewJewel(3,480,440);
-					ws.NewJewel(3,700,100);
-					ws.NewJewel(3,700,220);
-					ws.NewJewel(3,700,440);
-					ws.NewJewel(4,200,140);
-					ws.NewJewel(4,200,340);
-					ws.NewJewel(4,200,500);
-					ws.NewJewel(4,400,220);
-					ws.NewJewel(4,400,340);
-					ws.NewJewel(4,400,500);
-					ws.NewJewel(4,660,140);
-					ws.NewJewel(4,660,340);
-					ws.NewJewel(4,660,500);
-					ws.NewJewel(5,310,170);
-					ws.NewJewel(5,310,240);
-					ws.NewJewel(5,310,400);
-					ws.NewJewel(5,500,170);
-					ws.NewJewel(5,500,240);
-					ws.NewJewel(5,500,400);
-					ws.NewJewel(5,590,170);
-					ws.NewJewel(5,590,240);
-					ws.NewJewel(5,590,400);
 
                     if (!String.IsNullOrWhiteSpace(creatureId))
                     {
@@ -138,6 +141,9 @@ namespace ClarionApp
 
 		#region Methods
 		public static void Main (string[] args)	{
+			if (args.Length > 0) {
+				skipReset = true;
+			}
 			new MainClass();
 		}
 			

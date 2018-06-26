@@ -80,8 +80,8 @@ public class SoarBridge
     public String output_link_string = "";
 
     List<Thing> thingsMemory = null;
-
     List<WorldPoint> plan = null;
+    int deliveredCount;
     
     /**
      * Constructor class
@@ -102,6 +102,7 @@ public class SoarBridge
             inputLink = builder.io.getInputLink();
             thingsMemory = new ArrayList<Thing>();
             plan = new ArrayList<WorldPoint>();
+            deliveredCount = 0;
 
             // Debugger line
             if (startSOARDebugger)
@@ -495,8 +496,9 @@ public class SoarBridge
                             }
                             break;
 
-                        case SUCCESS:
-                            command = new Command(Command.CommandType.SUCCESS);
+                        case DELIVER:
+                            String leafletIdDeliver = null;
+                            command = new Command(Command.CommandType.DELIVER);
                             commandList.add(command);
                             break;
 
@@ -600,8 +602,8 @@ public class SoarBridge
                         processPlanCommand((CommandPlan)command.getCommandArgument());
                     break;
                     
-                    case SUCCESS:                        
-                        processSuccessCommand();
+                    case DELIVER:                        
+                        processDeliverCommand();
                     break;
 
                     default:System.out.println("Nenhum comando definido ...");
@@ -723,6 +725,21 @@ public class SoarBridge
         {
             logger.severe("Error processing processMoveCommand");
         }        
+    }
+
+    private void processDeliverCommand() {
+        try {
+            c.stop();
+            for (Leaflet l: c.getLeaflets()) {
+                String leafletId = String.valueOf(l.getID());
+                c.deliverLeaflet(leafletId);
+                logger.info("Delivered " + leafletId);                
+            }
+        } catch (CommandExecException ex) {
+            Logger.getLogger(SoarBridge.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        JOptionPane.showMessageDialog(null, "Creature: " + c.getName() + " - All leaflets complete!");            
+        logger.info("All leaflets delivered!");
     }
 
     /**
@@ -943,12 +960,4 @@ public class SoarBridge
         // TODO check if there is any obstacle between the creature and the first point and calculate intermediary steps
     }
 
-    private void processSuccessCommand() {
-        try {
-            c.stop();
-        } catch (CommandExecException ex) {
-            Logger.getLogger(SoarBridge.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        JOptionPane.showMessageDialog(null, "Creature: " + c.getName() + " - All leaflets complete!");
-    }    
 }

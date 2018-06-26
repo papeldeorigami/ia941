@@ -6,6 +6,7 @@ pushd elaborations
 source elaborations_source.soar
 popd
 source avoid-brick.soar
+source deliver.soar
 source eat.soar
 source get.soar
 source hide.soar
@@ -20,7 +21,6 @@ source remove-output.soar
 source see.soar
 source simulate-input.soar
 source simulate-output.soar
-source success.soar
 source wait.soar
 source wander.soar
 pushd wander

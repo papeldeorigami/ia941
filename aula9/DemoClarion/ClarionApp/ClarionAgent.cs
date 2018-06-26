@@ -61,6 +61,8 @@ namespace ClarionApp
 		/// </summary>
 		private String DIMENSION_DELIVER_LEAFLET = "DeliverLeaflet";
 
+		private static int CLOSE_DISTANCE = 40;
+
 		double prad = 0;
         #endregion
 
@@ -292,6 +294,9 @@ namespace ClarionApp
 					break;
 				case CreatureActions.STOP:
 					worldServer.SendStopCreature (creatureId);
+					foreach (string leafletIdKey in deliveredLeaflets.Keys) {
+						worldServer.SendDeliverIt (creatureId, leafletIdKey);
+					}
 					Console.WriteLine ("Success! All leaflets delivered. Stop the creature.");
 					stopped = true;
 					break;
@@ -326,13 +331,31 @@ namespace ClarionApp
 			// Create Rule To Stop when all leaflets have been delivered (success)
 			SupportCalculator stopWhenFinishedSupportCalculator = FixedRuleToStopWhenFinished;
 			FixedRule ruleStopWhenFinished = AgentInitializer.InitializeActionRule(CurrentAgent, FixedRule.Factory, outputStop, stopWhenFinishedSupportCalculator);
+			ruleStopWhenFinished.Parameters.WEIGHT = 1;
 
 			// Commit this rule to Agent (in the ACS)
 			CurrentAgent.Commit(ruleStopWhenFinished);
 
+			// Create Rule to Eat Food
+			SupportCalculator eatFoodSupportCalculator = FixedRuleToEatFood;
+			FixedRule ruleEatFood = AgentInitializer.InitializeActionRule(CurrentAgent, FixedRule.Factory, outputEatFood, eatFoodSupportCalculator);
+			ruleEatFood.Parameters.WEIGHT = 0.9;
+
+            // Commit this rule to Agent (in the ACS)
+			CurrentAgent.Commit(ruleEatFood);
+
+			// Create Rule to Collect (Sack) Jewel
+			SupportCalculator sackJewelSupportCalculator = FixedRuleToSackJewel;
+			FixedRule ruleSackJewel = AgentInitializer.InitializeActionRule(CurrentAgent, FixedRule.Factory, outputSackJewel, sackJewelSupportCalculator);
+			ruleSackJewel.Parameters.WEIGHT = 0.9;
+
+			// Commit this rule to Agent (in the ACS)
+			CurrentAgent.Commit(ruleSackJewel);
+
 			// Create Rule to avoid colision with wall
             SupportCalculator avoidCollisionWallSupportCalculator = FixedRuleToAvoidCollisionWall;
             FixedRule ruleAvoidCollisionWall = AgentInitializer.InitializeActionRule(CurrentAgent, FixedRule.Factory, outputRotateClockwise, avoidCollisionWallSupportCalculator);
+			ruleAvoidCollisionWall.Parameters.WEIGHT = 0.8;
 
             // Commit this rule to Agent (in the ACS)
             CurrentAgent.Commit(ruleAvoidCollisionWall);
@@ -347,6 +370,7 @@ namespace ClarionApp
 			// Create Rule To Go To Closest Jewel
 			SupportCalculator goToClosestJewelSupportCalculator = FixedRuleToGoToClosestJewel;
 			FixedRule ruleGoToClosestJewel = AgentInitializer.InitializeActionRule(CurrentAgent, FixedRule.Factory, outputGoToClosestJewel, goToClosestJewelSupportCalculator);
+			ruleGoToClosestJewel.Parameters.WEIGHT = 0.7;
 
 			// Commit this rule to Agent (in the ACS)
 			CurrentAgent.Commit(ruleGoToClosestJewel);
@@ -354,23 +378,10 @@ namespace ClarionApp
 			// Create Rule To Go To Closest Jewel
 			SupportCalculator goToClosestFoodSupportCalculator = FixedRuleToGoToClosestFood;
 			FixedRule ruleGoToClosestFood = AgentInitializer.InitializeActionRule(CurrentAgent, FixedRule.Factory, outputGoToClosestFood, goToClosestFoodSupportCalculator);
+			ruleGoToClosestFood.Parameters.WEIGHT = 0.6;
 
 			// Commit this rule to Agent (in the ACS)
 			CurrentAgent.Commit(ruleGoToClosestFood);
-
-			// Create Rule to Eat Food
-			SupportCalculator eatFoodSupportCalculator = FixedRuleToEatFood;
-			FixedRule ruleEatFood = AgentInitializer.InitializeActionRule(CurrentAgent, FixedRule.Factory, outputEatFood, eatFoodSupportCalculator);
-
-            // Commit this rule to Agent (in the ACS)
-			CurrentAgent.Commit(ruleEatFood);
-
-			// Create Rule to Collect (Sack) Jewel
-			SupportCalculator sackJewelSupportCalculator = FixedRuleToSackJewel;
-			FixedRule ruleSackJewel = AgentInitializer.InitializeActionRule(CurrentAgent, FixedRule.Factory, outputSackJewel, sackJewelSupportCalculator);
-
-			// Commit this rule to Agent (in the ACS)
-			CurrentAgent.Commit(ruleSackJewel);
 
 			// Create Rule to Deliver a Leaflet
 			SupportCalculator deliverLeafletSupportCalculator = FixedRuleToDeliverLeaflet;
@@ -426,25 +437,25 @@ namespace ClarionApp
             SensoryInformation si = World.NewSensoryInformation(CurrentAgent);
 
 			// Detect if we have jewel ahead
-			IEnumerable<Thing> jewelsAhead = listOfThings.Where(item => (item.CategoryId == Thing.CATEGORY_JEWEL && item.DistanceToCreature <= 61));
+			IEnumerable<Thing> jewelsAhead = listOfThings.Where(item => (item.CategoryId == Thing.CATEGORY_JEWEL && item.DistanceToCreature <= CLOSE_DISTANCE));
 			Boolean jewelAhead = jewelsAhead.Any();
 			if (jewelAhead)
 				jewelName = jewelsAhead.First().Name;
 
 			// Detect if we have food ahead
-			IEnumerable<Thing> foods = listOfThings.Where(item => ((item.CategoryId == Thing.CATEGORY_FOOD || item.CategoryId == Thing.CATEGORY_NPFOOD || item.CategoryId == Thing.CATEGORY_PFOOD) && item.DistanceToCreature <= 61));
+			IEnumerable<Thing> foods = listOfThings.Where(item => ((item.CategoryId == Thing.CATEGORY_FOOD || item.CategoryId == Thing.CATEGORY_NPFOOD || item.CategoryId == Thing.CATEGORY_PFOOD) && item.DistanceToCreature <= CLOSE_DISTANCE));
 			Boolean foodAhead = foods.Any();
 			if (foodAhead)
 				foodName = foods.First().Name;
 
 			// save the closest food just in case the creature needs it
-			IEnumerable<Thing> distantFoods = listOfThings.Where(item => ((item.CategoryId == Thing.CATEGORY_NPFOOD || item.CategoryId == Thing.CATEGORY_PFOOD) && item.DistanceToCreature > 61));
+			IEnumerable<Thing> distantFoods = listOfThings.Where(item => ((item.CategoryId == Thing.CATEGORY_NPFOOD || item.CategoryId == Thing.CATEGORY_PFOOD) && item.DistanceToCreature > CLOSE_DISTANCE));
 			if (distantFoods.Count() > 0) {
 				closestFood = distantFoods.OrderBy(item => item.DistanceToCreature).First();
 			}
 
 			// Detect if we have a wall ahead
-			Boolean wallAhead = listOfThings.Where(item => (item.CategoryId == Thing.CATEGORY_BRICK && item.DistanceToCreature <= 61)).Any();
+			Boolean wallAhead = listOfThings.Where(item => (item.CategoryId == Thing.CATEGORY_BRICK && item.DistanceToCreature <= CLOSE_DISTANCE)).Any();
 
 			closestJewel = null;
 
@@ -465,7 +476,7 @@ namespace ClarionApp
 					}
 				} else {
 					// lookup the closest jewel that we need to fill a leaflet
-					IEnumerable<Thing> distantJewels = listOfThings.Where(item => (item.CategoryId == Thing.CATEGORY_JEWEL && item.DistanceToCreature > 61 && leafletNeedsJewel(l, item)));
+					IEnumerable<Thing> distantJewels = listOfThings.Where(item => (item.CategoryId == Thing.CATEGORY_JEWEL && item.DistanceToCreature > CLOSE_DISTANCE && leafletNeedsJewel(l, item)));
 					if (distantJewels.Count() > 0) {
 						closestJewel = distantJewels.OrderBy(item => item.DistanceToCreature).First();
 					}

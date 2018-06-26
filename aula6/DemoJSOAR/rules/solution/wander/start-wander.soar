@@ -1,18 +1,18 @@
 sp {propose*no-change*start-wander
    (state <s>
-             ^top-state <ts>
              ^superstate <ss>
              ^impasse no-change)
   -(<ss> ^impasse tie)
-   (<ts> -^state wander
+   (<ss> -^state wander
           ^actions <actions>
          -^distance-to-waypoint-0
+         -^delivered
          -^initial-wander-timestamp
          -^wandered)
   -(<actions> ^<any>)
 -->
    (write (crlf) | Propose start-wander |)
-   (<ts> ^operator <o> + <)
+   (<ss> ^operator <o> + <)
    (<o> ^name start-wander)
 }
 

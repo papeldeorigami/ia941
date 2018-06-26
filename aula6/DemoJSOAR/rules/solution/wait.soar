@@ -1,6 +1,6 @@
 # Avoid possible infinite loops of no-change
 # copied from the TankSoar tutorial
-sp {top-state*propose*wait
+sp {propose*wait
    (state <s> ^attribute state
               ^choices none
              -^operator.name wait)

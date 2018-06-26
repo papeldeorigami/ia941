@@ -38,6 +38,7 @@ sp {apply*initialize-solution
          ^White <White3>)
 -->
    (<s> ^name solution        
+        ^delivered-count 0                 # count of leaflets delivered
         ^initialized true                  # flag to control whether these attributes have been initialized
         ^desired <desired>                 # jewels required grouped by color
         ^actions <actions>)                # holds the actions to be output        

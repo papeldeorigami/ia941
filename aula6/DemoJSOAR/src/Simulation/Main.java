@@ -45,7 +45,7 @@ public class Main
             //mv.startDebugState();
 
             // Run Simulation until some criteria was reached
-            Thread.sleep(3000);
+            //Thread.sleep(3000);
 
             while(true)
             {

@@ -1,0 +1,20 @@
+sp {propose*deliver
+   (state <s> ^io.input-link <il>
+              ^all-leaflets-complete
+             -^delivered)
+-->
+   (<s> ^operator <o> +)     
+   (<o> ^name deliver)
+   (<o> ^parameter <distance>)
+   (write (crlf) | Propose deliver |)
+}
+     
+sp {apply*deliver
+   (state <s> ^operator.name deliver
+              ^actions <actions>)
+-->
+   (<s> ^delivered true)
+   (<actions> ^DELIVER <deliver>)
+   (<deliver> ^ID <id>)
+   (write (crlf) | apply deliver |)
+}

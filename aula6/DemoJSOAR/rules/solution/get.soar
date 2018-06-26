@@ -2,6 +2,7 @@ sp {propose*get
    (state <s> ^actions <actions>
               ^desired <desired>
               ^thing-ahead <entity>
+             -^delivered
               ^io.input-link.CREATURE <creature>)
    (<creature> ^MEMORY <memory>
                ^KNAPSACK <knapsack>)

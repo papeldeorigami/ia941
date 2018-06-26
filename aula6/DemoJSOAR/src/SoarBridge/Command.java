@@ -19,7 +19,7 @@ public class Command
         HIDE,
         MEMORIZE,
         PLAN,
-        SUCCESS
+        DELIVER
     }
 
     private CommandType commandType;

@@ -2,6 +2,7 @@ sp {propose*eat
    (state <s> ^actions <actions>
               ^desired <desired>
               ^thing-ahead <entity>
+             -^delivered
               ^io.input-link.CREATURE <creature>)
    (<creature> ^MEMORY <memory>)
    (<entity> ^NAME <entityName>

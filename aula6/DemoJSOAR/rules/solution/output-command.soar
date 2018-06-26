@@ -1,13 +1,12 @@
 sp {propose*no-change*output-command
-   (state <s> ^top-state <ts>
-              ^superstate <ss>
+   (state <s> ^superstate <ss>
               ^impasse no-change)
   -(<ss> ^impasse tie)
-   (<ts> -^sent-command
+   (<ss> -^sent-command
           ^actions <actions>)
    (<actions> ^<type> <action>)
 -->
-   (<ts> ^operator <o> + =)
+   (<ss> ^operator <o> + =)
    (<o> ^name output-command
         ^parameters <p>)
    (<p> ^<type> <action>)

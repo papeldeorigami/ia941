@@ -2,6 +2,7 @@ sp {propose*plan*any-state
    (state <s> -^all-leaflets-complete
               -^something-new
                ^wandered
+              -^delivered
                ^actions <actions>)
    (<actions> -^<any>)
 -->

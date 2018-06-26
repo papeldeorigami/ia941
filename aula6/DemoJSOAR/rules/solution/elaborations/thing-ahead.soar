@@ -2,7 +2,7 @@ sp {elaborations*thing-ahead
    (state <s> ^io.input-link <input>)
    (<input> ^CREATURE <creature>)
    (<creature> ^MEMORY.ENTITY <entity>)
-   (<entity> ^DISTANCE <distance> <= 30)
+   (<entity> ^DISTANCE <distance> <= 40)
 -->
    (<s> ^thing-ahead <entity>)
 }  

@@ -5,4 +5,3 @@ source distance-to-waypoint-0.soar
 source elapsed-wander-time.soar
 source something-new.soar
 source thing-ahead.soar
-source top-state.soar
