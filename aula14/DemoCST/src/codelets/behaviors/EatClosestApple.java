@@ -26,6 +26,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import br.unicamp.cst.core.entities.Codelet;
+import br.unicamp.cst.core.entities.MemoryContainer;
 import br.unicamp.cst.core.entities.MemoryObject;
 import memory.CreatureInnerSense;
 import java.util.List;
@@ -38,7 +39,8 @@ public class EatClosestApple extends Codelet {
 	private MemoryObject innerSenseMO;
         private MemoryObject knownMO;
 	private int reachDistance;
-	private MemoryObject handsMO;
+        private int handsMOIndex = -1;
+	private MemoryContainer handsMO;
         Thing closestApple;
         CreatureInnerSense cis;
         List<Thing> known;
@@ -52,7 +54,7 @@ public class EatClosestApple extends Codelet {
 	public void accessMemoryObjects() {
 		closestAppleMO=(MemoryObject)this.getInput("CLOSEST_APPLE");
 		innerSenseMO=(MemoryObject)this.getInput("INNER");
-		handsMO=(MemoryObject)this.getOutput("HANDS");
+		handsMO=(MemoryContainer)this.getOutput("HANDS");
                 knownMO = (MemoryObject)this.getOutput("KNOWN_APPLES");
 	}
 
@@ -65,6 +67,7 @@ public class EatClosestApple extends Codelet {
 		//Find distance between closest apple and self
 		//If closer than reachDistance, eat the apple
 		
+                String info = "";
 		if(closestApple != null)
 		{
 			double appleX=0;
@@ -95,10 +98,8 @@ public class EatClosestApple extends Codelet {
 				if(distance<reachDistance){ //eat it						
 					message.put("OBJECT", appleName);
 					message.put("ACTION", "EATIT");
-					handsMO.updateI(message.toString());
+                                        info = message.toString();
                                         DestroyClosestApple();
-				}else{
-					handsMO.updateI("");	//nothing
 				}
 				
 //				System.out.println(message);
@@ -106,9 +107,12 @@ public class EatClosestApple extends Codelet {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		}else{
-			handsMO.updateI("");	//nothing
 		}
+                if (handsMOIndex < 0) {
+                    handsMOIndex = handsMO.setI(info, EvaluationConstants.HANDS_EAT_APPLE_EVALUATION);
+                } else {                                    
+                    handsMO.setI(info, EvaluationConstants.HANDS_EAT_APPLE_EVALUATION, handsMOIndex);
+                }
         //System.out.println("Before: "+known.size()+ " "+known);
         
         //System.out.println("After: "+known.size()+ " "+known);

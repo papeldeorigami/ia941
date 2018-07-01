@@ -23,6 +23,7 @@ package codelets.motor;
 import org.json.JSONObject;
 
 import br.unicamp.cst.core.entities.Codelet;
+import br.unicamp.cst.core.entities.Memory;
 import br.unicamp.cst.core.entities.MemoryObject;
 import java.util.Random;
 import java.util.logging.Logger;
@@ -38,7 +39,7 @@ import ws3dproxy.model.Creature;
 
 public class LegsActionCodelet extends Codelet{
 
-	private MemoryObject legsActionMO;
+	private Memory legsActionMO;
 	private double previousTargetx=0;
 	private double previousTargety=0;
 	private String previousLegsAction="";
@@ -53,7 +54,7 @@ public class LegsActionCodelet extends Codelet{
 	
 	@Override
 	public void accessMemoryObjects() {
-		legsActionMO=(MemoryObject)this.getInput("LEGS");
+		legsActionMO=(Memory)this.getInput("LEGS");
 	}
 	
 	@Override
@@ -63,7 +64,7 @@ public class LegsActionCodelet extends Codelet{
                 if (comm == null) comm = "";
                 Random r = new Random();
 		
-		if(!comm.equals("") ){
+		if(comm != null && !comm.equals("") ){
 			
 			try {
 				JSONObject command=new JSONObject(comm);

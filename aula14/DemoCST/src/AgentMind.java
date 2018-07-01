@@ -18,6 +18,7 @@
  *****************************************************************************/
 
 import br.unicamp.cst.core.entities.Codelet;
+import br.unicamp.cst.core.entities.MemoryContainer;
 import br.unicamp.cst.core.entities.MemoryObject;
 import br.unicamp.cst.core.entities.Mind;
 import codelets.behaviors.EatClosestApple;
@@ -46,15 +47,15 @@ import ws3dproxy.model.Thing;
  */
 public class AgentMind extends Mind {
     
-    private static int creatureBasicSpeed=3;
+    private static int creatureBasicSpeed=1;
     private static int reachDistance=50;
     
     public AgentMind(Environment env) {
                 super();
                 
                 // Declare Memory Objects
-	        MemoryObject legsMO;
-	        MemoryObject handsMO;
+	        MemoryContainer legsMO;
+	        MemoryContainer handsMO;
                 MemoryObject visionMO;
                 MemoryObject innerSenseMO;
                 MemoryObject closestAppleMO;
@@ -63,8 +64,8 @@ public class AgentMind extends Mind {
                 MemoryObject knownJewelsMO;
                 
                 //Initialize Memory Objects
-                legsMO=createMemoryObject("LEGS", "");
-		handsMO=createMemoryObject("HANDS", "");
+                legsMO=createMemoryContainer("LEGS");
+		handsMO=createMemoryContainer("HANDS");
                 List<Thing> vision_list = Collections.synchronizedList(new ArrayList<Thing>());
 		visionMO=createMemoryObject("VISION",vision_list);
                 CreatureInnerSense cis = new CreatureInnerSense();

@@ -59,11 +59,11 @@ public class ClosestLeafletJewelDetector extends Codelet {
                 CreatureInnerSense cis = (CreatureInnerSense) innerSenseMO.getI();
                 synchronized(known) {
 		   if(known.size() != 0){
-			//Iterate over objects in vision, looking for the closest apple
+			//Iterate over objects in vision, looking for the closest leaflet jewel
                         CopyOnWriteArrayList<Thing> myknown = new CopyOnWriteArrayList<>(known);
                         for (Thing t : myknown) {
 				String objectName=t.getName();
-				if(objectName.contains("JEWEL") && jewelIsNecessaryForSomeLeaflet((Thing) t, cis)) { //Then, it is a jewel and the creature needs it to fill some leaflet
+				if(objectName.contains("Jewel") && jewelIsNecessaryForSomeLeaflet((Thing) t, cis)) { //Then, it is a jewel and the creature needs it to fill some leaflet
                                         if(closest_jewel == null){    
                                                 closest_jewel = t;
 					}

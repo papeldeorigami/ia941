@@ -25,6 +25,7 @@ import java.awt.geom.Point2D;
 import org.json.JSONException;
 import org.json.JSONObject;
 import br.unicamp.cst.core.entities.Codelet;
+import br.unicamp.cst.core.entities.MemoryContainer;
 import br.unicamp.cst.core.entities.MemoryObject;
 import memory.CreatureInnerSense;
 import ws3dproxy.model.Thing;
@@ -33,7 +34,8 @@ public class GoToClosestLeafletJewel extends Codelet {
 
 	private MemoryObject closestLeafletJewelMO;
 	private MemoryObject selfInfoMO;
-	private MemoryObject legsMO;
+        private int legsMOIndex = -1;
+	private MemoryContainer legsMO;
 	private int creatureBasicSpeed;
 	private double reachDistance;
 
@@ -46,7 +48,7 @@ public class GoToClosestLeafletJewel extends Codelet {
 	public void accessMemoryObjects() {
 		closestLeafletJewelMO=(MemoryObject)this.getInput("CLOSEST_LEAFLET_JEWEL");
 		selfInfoMO=(MemoryObject)this.getInput("INNER");
-		legsMO=(MemoryObject)this.getOutput("LEGS");
+		legsMO=(MemoryContainer)this.getOutput("LEGS");
 	}
 
 	@Override
@@ -94,7 +96,11 @@ public class GoToClosestLeafletJewel extends Codelet {
 					message.put("Y", (int)jewelY);
                                         message.put("SPEED", 0.0);	
 				}
-				legsMO.updateI(message.toString());
+                                if (legsMOIndex < 0) {
+                                    legsMOIndex = legsMO.setI(message.toString(), EvaluationConstants.LEGS_GO_TO_JEWEL_EVALUATION);
+                                } else {                                    
+                                    legsMO.setI(message.toString(), EvaluationConstants.LEGS_GO_TO_JEWEL_EVALUATION, legsMOIndex);
+                                }
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}	

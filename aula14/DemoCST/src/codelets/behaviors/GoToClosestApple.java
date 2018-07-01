@@ -25,6 +25,7 @@ import java.awt.geom.Point2D;
 import org.json.JSONException;
 import org.json.JSONObject;
 import br.unicamp.cst.core.entities.Codelet;
+import br.unicamp.cst.core.entities.MemoryContainer;
 import br.unicamp.cst.core.entities.MemoryObject;
 import memory.CreatureInnerSense;
 import ws3dproxy.model.Thing;
@@ -33,7 +34,8 @@ public class GoToClosestApple extends Codelet {
 
 	private MemoryObject closestAppleMO;
 	private MemoryObject selfInfoMO;
-	private MemoryObject legsMO;
+	private MemoryContainer legsMO;
+        private int legsMOIndex = -1;
 	private int creatureBasicSpeed;
 	private double reachDistance;
 
@@ -46,7 +48,7 @@ public class GoToClosestApple extends Codelet {
 	public void accessMemoryObjects() {
 		closestAppleMO=(MemoryObject)this.getInput("CLOSEST_APPLE");
 		selfInfoMO=(MemoryObject)this.getInput("INNER");
-		legsMO=(MemoryObject)this.getOutput("LEGS");
+		legsMO=(MemoryContainer)this.getOutput("LEGS");
 	}
 
 	@Override
@@ -58,6 +60,11 @@ public class GoToClosestApple extends Codelet {
                 Thing closestApple = (Thing) closestAppleMO.getI();
                 CreatureInnerSense cis = (CreatureInnerSense) selfInfoMO.getI();
 
+                // if fuel is above 400, do not go to apple
+                if (cis.fuel > 400) {
+                    return;
+                }                    
+                
 		if(closestApple != null)
 		{
 			double appleX=0;
@@ -94,7 +101,11 @@ public class GoToClosestApple extends Codelet {
 					message.put("Y", (int)appleY);
                                         message.put("SPEED", 0.0);	
 				}
-				legsMO.updateI(message.toString());
+                                if (legsMOIndex < 0) {
+                                    legsMOIndex = legsMO.setI(message.toString(), EvaluationConstants.LEGS_GO_TO_APPLE_EVALUATION);
+                                } else {                                    
+                                    legsMO.setI(message.toString(), EvaluationConstants.LEGS_GO_TO_APPLE_EVALUATION, legsMOIndex);
+                                }
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}	

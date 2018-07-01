@@ -26,6 +26,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import br.unicamp.cst.core.entities.Codelet;
+import br.unicamp.cst.core.entities.MemoryContainer;
 import br.unicamp.cst.core.entities.MemoryObject;
 import memory.CreatureInnerSense;
 import java.util.List;
@@ -38,7 +39,8 @@ public class GetClosestLeafletJewel extends Codelet {
 	private MemoryObject innerSenseMO;
         private MemoryObject knownMO;
 	private int reachDistance;
-	private MemoryObject handsMO;
+        private int handsMOIndex = -1;
+	private MemoryContainer handsMO;
         Thing closestLeafletJewel;
         CreatureInnerSense cis;
         List<Thing> known;
@@ -52,7 +54,7 @@ public class GetClosestLeafletJewel extends Codelet {
 	public void accessMemoryObjects() {
 		closestLeafletJewelMO=(MemoryObject)this.getInput("CLOSEST_LEAFLET_JEWEL");
 		innerSenseMO=(MemoryObject)this.getInput("INNER");
-		handsMO=(MemoryObject)this.getOutput("HANDS");
+		handsMO=(MemoryContainer)this.getOutput("HANDS");
                 knownMO = (MemoryObject)this.getOutput("KNOWN_JEWELS");
 	}
 
@@ -65,6 +67,7 @@ public class GetClosestLeafletJewel extends Codelet {
 		//Find distance between closest jewel and self
 		//If closer than reachDistance, get the jewel
 		
+                String info = "";
 		if(closestLeafletJewel != null)
 		{
 			double jewelX=0;
@@ -95,10 +98,8 @@ public class GetClosestLeafletJewel extends Codelet {
 				if(distance<reachDistance){ //pick it up
 					message.put("OBJECT", jewelName);
 					message.put("ACTION", "PICKUP");
-					handsMO.updateI(message.toString());
+                                        info = message.toString();
                                         DestroyClosestJewel();
-				}else{
-					handsMO.updateI("");	//nothing
 				}
 				
 //				System.out.println(message);
@@ -106,9 +107,12 @@ public class GetClosestLeafletJewel extends Codelet {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		}else{
-			handsMO.updateI("");	//nothing
 		}
+                if (handsMOIndex < 0) {
+                    handsMOIndex = handsMO.setI(info, EvaluationConstants.HANDS_GET_JEWEL_EVALUATION);
+                } else {                                    
+                    handsMO.setI(info, EvaluationConstants.HANDS_GET_JEWEL_EVALUATION, handsMOIndex);
+                }
         //System.out.println("Before: "+known.size()+ " "+known);
         
         //System.out.println("After: "+known.size()+ " "+known);

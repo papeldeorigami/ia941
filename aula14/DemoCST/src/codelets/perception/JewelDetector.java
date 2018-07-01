@@ -62,6 +62,8 @@ public class JewelDetector extends Codelet {
                synchronized(vision) {
                  for (Thing t : vision) {
                     boolean found = false;
+                    if (!t.getName().contains("Jewel"))
+                        continue;
                     synchronized(known) {
                        CopyOnWriteArrayList<Thing> myknown = new CopyOnWriteArrayList<>(known);
                        for (Thing e : myknown)
@@ -69,7 +71,7 @@ public class JewelDetector extends Codelet {
                             found = true;
                             break;
                           }
-                       if (found == false && t.getName().contains("JEWEL")) known.add(t);
+                       if (found == false) known.add(t);
                     }
                
                  }

@@ -20,6 +20,7 @@
 package codelets.behaviors;
 
 import br.unicamp.cst.core.entities.Codelet;
+import br.unicamp.cst.core.entities.MemoryContainer;
 import br.unicamp.cst.core.entities.MemoryObject;
 import java.util.List;
 import org.json.JSONException;
@@ -37,7 +38,8 @@ public class Forage extends Codelet {
     
         private MemoryObject knownMO;
         private List<Thing> known;
-        private MemoryObject legsMO;
+        private int legsMOIndex = -1;
+        private MemoryContainer legsMO;
 
 
 	/**
@@ -53,8 +55,11 @@ public class Forage extends Codelet {
 		JSONObject message=new JSONObject();
 			try {
 				message.put("ACTION", "FORAGE");
-				legsMO.updateI(message.toString());
-			
+                                if (legsMOIndex < 0) {
+                                    legsMOIndex = legsMO.setI(message.toString(), EvaluationConstants.LEGS_FORAGE_EVALUATION);
+                                } else {                                    
+                                    legsMO.setI(message.toString(), EvaluationConstants.LEGS_FORAGE_EVALUATION, legsMOIndex);
+                                }		
 			} catch (JSONException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -66,7 +71,7 @@ public class Forage extends Codelet {
 	@Override
 	public void accessMemoryObjects() {
             knownMO = (MemoryObject)this.getInput("KNOWN_APPLES");
-            legsMO=(MemoryObject)this.getOutput("LEGS");
+            legsMO=(MemoryContainer)this.getOutput("LEGS");
 
 		// TODO Auto-generated method stub
 		

@@ -19,6 +19,7 @@
 
 package support;
 
+import br.unicamp.cst.core.entities.Memory;
 import br.unicamp.cst.core.entities.MemoryObject;
 import java.util.ArrayList;
 import java.util.List;
@@ -53,7 +54,7 @@ class MVTimerTask extends TimerTask {
 public class MindView extends javax.swing.JFrame {
 
     Timer t;
-    List<MemoryObject> mol = new ArrayList<>();
+    List<Memory> mol = new ArrayList<>();
     int j=0;
     Random r = new Random();
     /**
@@ -64,7 +65,7 @@ public class MindView extends javax.swing.JFrame {
         setTitle(name);
     }
     
-    public void addMO(MemoryObject moi) {
+    public void addMO(Memory moi) {
         mol.add(moi);
     }
     
@@ -77,7 +78,7 @@ public class MindView extends javax.swing.JFrame {
     public void tick() {
         String alltext = "";
         if (mol.size() != 0) 
-            for (MemoryObject mo : mol) {
+            for (Memory mo : mol) {
                 if (mo.getI() != null) {
                     //Class cl = mo.getT();
                     //Object k = cl.cast(mo.getI());
