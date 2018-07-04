@@ -17,6 +17,7 @@
  *    Klaus Raizer, Andre Paraense, Ricardo Ribeiro Gudwin
  *****************************************************************************/
 
+import support.PathPlan;
 import ws3dproxy.CommandExecException;
 import ws3dproxy.CommandUtility;
 import ws3dproxy.WS3DProxy;
@@ -29,19 +30,21 @@ import ws3dproxy.model.World;
  */
 public class Environment {
     
-    public static final int INITIAL_DESTINATION_X = 650;
-    public static final int INITIAL_DESTINATION_Y = 450;
-    
     public String host="localhost";
     public int port = 4011;
     public String robotID="r0";
     public Creature c = null;
+    public int environmentWidth;
+    public int environmentHeight;
+    public WS3DProxy proxy;
     
     public Environment(int scenario) {
-          WS3DProxy proxy = new WS3DProxy();
+          proxy = new WS3DProxy();
           try {   
              World w = World.getInstance();
              w.reset();
+             this.environmentWidth = w.getEnvironmentWidth();
+             this.environmentHeight = w.getEnvironmentHeight();
 //             World.createFood(0, 350, 75);
 //             World.createFood(0, 100, 220);
 //             World.createFood(0, 250, 210);
@@ -146,6 +149,6 @@ public class Environment {
         World.createBrick(4, 3 * HALL_WIDTH + 3 * BLOCK_WIDTH, 400, 3 * HALL_WIDTH + 4 * BLOCK_WIDTH, 600);
         World.createBrick(4, 4 * HALL_WIDTH + 4 * BLOCK_WIDTH, 300, 4 * HALL_WIDTH + 5 * BLOCK_WIDTH, 340);
         World.createBrick(4, 5 * HALL_WIDTH + 5 * BLOCK_WIDTH, 200, 5 * HALL_WIDTH + 6 * BLOCK_WIDTH, 400);
-        World.createFood(0, INITIAL_DESTINATION_X, INITIAL_DESTINATION_Y);
+        World.createFood(0, PathPlan.INITIAL_DESTINATION_X, PathPlan.INITIAL_DESTINATION_Y);
     }
 }

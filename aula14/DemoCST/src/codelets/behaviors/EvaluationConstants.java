@@ -26,9 +26,11 @@ public class EvaluationConstants {
     public static final double LEGS_FORAGE_EVALUATION = 0.1;
     public static final double LEGS_GO_TO_APPLE_EVALUATION = 0.2;
     public static final double LEGS_GO_TO_JEWEL_EVALUATION = 0.3;
-    public static final double LEGS_STOP_EVALUATION = 0.4;
+    public static final double LEGS_GO_TO_DESTINATION_EVALUATION = 0.4;
+    public static final double LEGS_AVOID_BRICK_EVALUATION = 0.5;
+    public static final double LEGS_STOP_EVALUATION = 0.9;
     public static final double HANDS_EAT_APPLE_EVALUATION = 0.1;
     public static final double HANDS_GET_JEWEL_EVALUATION = 0.2;
     public static final double HANDS_BURY_JEWEL_EVALUATION = 0.3;
-    public static final double HANDS_DELIVER_EVALUATION = 0.4;
+    public static final double HANDS_DELIVER_EVALUATION = 0.9;
 }

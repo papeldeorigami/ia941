@@ -69,6 +69,7 @@ public class Deliver extends Codelet {
 			try {
                                 message.put("OBJECT", "ALL");
                                 message.put("ACTION", "DELIVER");
+                                message.put("BEHAVIOR", this.getClass().getSimpleName());
                                 info = message.toString();
 			} catch (JSONException e) {
 				e.printStackTrace();
@@ -81,6 +82,7 @@ public class Deliver extends Codelet {
                         message = new JSONObject();
 			try {
                                 message.put("ACTION", "STOP");
+                                message.put("BEHAVIOR", this.getClass().getSimpleName());
                                 info = message.toString();
 			} catch (JSONException e) {
 				e.printStackTrace();

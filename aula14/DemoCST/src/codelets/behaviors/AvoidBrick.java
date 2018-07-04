@@ -28,85 +28,65 @@ import br.unicamp.cst.core.entities.Codelet;
 import br.unicamp.cst.core.entities.MemoryContainer;
 import br.unicamp.cst.core.entities.MemoryObject;
 import memory.CreatureInnerSense;
+import support.Util;
 import ws3dproxy.model.Thing;
+import ws3dproxy.model.WorldPoint;
 
-public class GoToClosestApple extends Codelet {
+public class AvoidBrick extends Codelet {
 
-	private MemoryObject closestAppleMO;
+	private MemoryObject closestBrickMO;
 	private MemoryObject selfInfoMO;
 	private MemoryContainer legsMO;
         private int legsMOIndex = -1;
 	private int creatureBasicSpeed;
 	private double reachDistance;
 
-	public GoToClosestApple(int creatureBasicSpeed, int reachDistance) {
+	public AvoidBrick(int creatureBasicSpeed, int reachDistance) {
 		this.creatureBasicSpeed=creatureBasicSpeed;
 		this.reachDistance=reachDistance;
 	}
 
 	@Override
 	public void accessMemoryObjects() {
-		closestAppleMO=(MemoryObject)this.getInput("CLOSEST_APPLE");
+		closestBrickMO=(MemoryObject)this.getInput("CLOSEST_BRICK");
 		selfInfoMO=(MemoryObject)this.getInput("INNER");
 		legsMO=(MemoryContainer)this.getOutput("LEGS");
 	}
 
 	@Override
 	public void proc() {
-		// Find distance between creature and closest apple
+		// Find distance between creature and closest brick
 		//If far, go towards it
 		//If close, stops
 
-                Thing closestApple = (Thing) closestAppleMO.getI();
+                Thing closestBrick = (Thing) closestBrickMO.getI();
                 CreatureInnerSense cis = (CreatureInnerSense) selfInfoMO.getI();
-
-                // if fuel is above 400, do not go to apple
-                if (cis.fuel > 400) {
-                    return;
-                }                    
                 
-		if(closestApple != null)
+                WorldPoint position;
+                synchronized(cis) {
+                    position = cis.position;
+                }                    
+
+		if(closestBrick != null)
 		{
-			double appleX=0;
-			double appleY=0;
-			try {
-                                appleX = closestApple.getX1();
-                                appleY = closestApple.getY1();
-
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-
-			double selfX=cis.position.getX();
-			double selfY=cis.position.getY();
-
-			Point2D pApple = new Point();
-			pApple.setLocation(appleX, appleY);
-
-			Point2D pSelf = new Point();
-			pSelf.setLocation(selfX, selfY);
-
-			double distance = pSelf.distance(pApple);
 			JSONObject message=new JSONObject();
 			try {
-				if(distance>reachDistance){ //Go to it
-                                        message.put("ACTION", "GOTO");
-					message.put("X", (int)appleX);
-					message.put("Y", (int)appleY);
+				if (Util.distanceToThingLessThan(closestBrick, position, reachDistance)) {
+                                        double angle = -1;
+                                        angle = Util.oppositeDirectionTo(cis.position, cis.pitch, closestBrick);
+                                        //creature.rotate(angle);
+                                        //CommandUtility.sendSetAngle(creature.getIndex(), angle, -angle, angle);
+                                    
+                                        message.put("ACTION", "ROTATE");
                                         message.put("SPEED", creatureBasicSpeed);	
+                                        message.put("ANGLE", angle);	
                                         message.put("BEHAVIOR", this.getClass().getSimpleName());
                                         if (legsMOIndex < 0) {
-                                            legsMOIndex = legsMO.setI(message.toString(), EvaluationConstants.LEGS_GO_TO_APPLE_EVALUATION);
+                                            legsMOIndex = legsMO.setI(message.toString(), EvaluationConstants.LEGS_AVOID_BRICK_EVALUATION);
                                         } else {                                    
-                                            legsMO.setI(message.toString(), EvaluationConstants.LEGS_GO_TO_APPLE_EVALUATION, legsMOIndex);
+                                            legsMO.setI(message.toString(), EvaluationConstants.LEGS_AVOID_BRICK_EVALUATION, legsMOIndex);
                                         }
                                         return;
-
-//				}else{//Stop
-//					message.put("ACTION", "GOTO");
-//					message.put("X", (int)appleX);
-//					message.put("Y", (int)appleY);
-//                                        message.put("SPEED", 0.0);	
 				}
 			} catch (JSONException e) {
 				e.printStackTrace();

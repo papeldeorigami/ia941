@@ -55,6 +55,7 @@ public class Forage extends Codelet {
 		JSONObject message=new JSONObject();
 			try {
 				message.put("ACTION", "FORAGE");
+                                message.put("BEHAVIOR", this.getClass().getSimpleName());
                                 if (legsMOIndex < 0) {
                                     legsMOIndex = legsMO.setI(message.toString(), EvaluationConstants.LEGS_FORAGE_EVALUATION);
                                 } else {                                    

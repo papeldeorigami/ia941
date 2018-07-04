@@ -27,6 +27,7 @@ import br.unicamp.cst.core.entities.Memory;
 import java.util.Random;
 import java.util.logging.Logger;
 import org.json.JSONException;
+import ws3dproxy.CommandUtility;
 import ws3dproxy.model.Creature;
 
 /**
@@ -80,6 +81,17 @@ public class LegsActionCodelet extends Codelet{
                                                     e.printStackTrace();
                                                 }
 					}
+                                    else if(action.equals("ROTATE")){
+                                        if (!comm.equals(previousLegsAction)) {
+                                                try {  
+                                                    double speed=command.getDouble("SPEED");
+                                                    double angle=command.getDouble("ANGLE");
+                                                    CommandUtility.sendSetAngle(c.getIndex(), angle, -angle, angle);
+                                                } catch (Exception e) {
+                                                    e.printStackTrace();
+                                                }
+					}
+                                    }
                                     else if(action.equals("GOTO")){
                                         if (!comm.equals(previousLegsAction)) {
                                             double speed=command.getDouble("SPEED");
@@ -88,6 +100,7 @@ public class LegsActionCodelet extends Codelet{
 					    if (!comm.equals(previousLegsAction))
                                                 log.info("Sending move command to agent: ["+targetx+","+targety+"]");
                                             try {
+                                                c.start();
                                                  c.moveto(speed, targetx, targety);
                                             } catch(Exception e) {
                                                 e.printStackTrace();

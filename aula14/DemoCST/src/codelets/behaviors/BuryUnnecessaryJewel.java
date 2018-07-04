@@ -97,6 +97,7 @@ public class BuryUnnecessaryJewel extends Codelet {
 				if(distance<reachDistance){ //pick it up
 					message.put("OBJECT", jewelName);
 					message.put("ACTION", "BURY");
+                                        message.put("BEHAVIOR", this.getClass().getSimpleName());
                                         info = message.toString();
                                         DestroyClosestJewel();
                                         if (handsMOIndex < 0) {

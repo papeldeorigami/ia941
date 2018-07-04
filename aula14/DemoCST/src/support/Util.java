@@ -20,8 +20,10 @@ package support;
 
 import java.util.List;
 import memory.CreatureInnerSense;
+import org.xguzm.pathfinding.grid.GridCell;
 import ws3dproxy.model.Leaflet;
 import ws3dproxy.model.Thing;
+import ws3dproxy.model.WorldPoint;
 
 /**
  *
@@ -43,4 +45,44 @@ public class Util {
         return false;
     }
 
+    static public double oppositeDirectionTo(WorldPoint creaturePosition, double creaturePitch, Thing thing) {
+        WorldPoint thingPosition = thing.getCenterPosition();
+        if (creaturePitch >= 0) {
+            if (creaturePosition.getX() <= thingPosition.getX()) {
+                return 1.0;
+            } else {
+                return -1.0;
+            }
+        } else {
+            if (creaturePosition.getX() <= thingPosition.getX()) {
+                return -1.0;
+            } else {
+                return 1.0;
+            }            
+        }
+    }    
+
+    public static boolean distanceToThingLessThan(Thing t, WorldPoint position, double distance) {
+        int x = (int) position.getX();
+        int y = (int) position.getY();
+        int thingLeft = (int) (Math.min(t.getX1(), t.getX2()) - distance);
+        int thingRight = (int) (Math.max(t.getX1(), t.getX2()) + distance) - 1;
+        int thingTop = (int) (Math.min(t.getY1(), t.getY2()) - distance);
+        int thingBottom = (int) (Math.max(t.getY1(), t.getY2()) + distance) - 1;
+        return (x >= thingLeft && x <= thingRight && y >= thingTop && y <= thingBottom);
+    }
+
+    static String worldPointToString(WorldPoint p) {
+        if (p == null) {
+            return "";            
+        }
+        return String.valueOf(Math.round(p.getX())) + ", " + String.valueOf(Math.round(p.getY()));
+    }
+
+    static String gridCellToString(GridCell c) {
+        if (c == null) {
+            return "";            
+        }
+        return String.valueOf(String.valueOf(c.getX()) + ", " + String.valueOf(c.getY()));
+    }
 }

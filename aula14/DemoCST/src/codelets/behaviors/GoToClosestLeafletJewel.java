@@ -89,6 +89,7 @@ public class GoToClosestLeafletJewel extends Codelet {
 					message.put("X", (int)jewelX);
 					message.put("Y", (int)jewelY);
                                         message.put("SPEED", creatureBasicSpeed);	
+                                        message.put("BEHAVIOR", this.getClass().getSimpleName());
                                         if (legsMOIndex < 0) {
                                             legsMOIndex = legsMO.setI(message.toString(), EvaluationConstants.LEGS_GO_TO_JEWEL_EVALUATION);
                                         } else {                                    
