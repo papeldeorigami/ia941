@@ -29,12 +29,15 @@ import ws3dproxy.model.World;
  */
 public class Environment {
     
+    public static final int INITIAL_DESTINATION_X = 650;
+    public static final int INITIAL_DESTINATION_Y = 450;
+    
     public String host="localhost";
     public int port = 4011;
     public String robotID="r0";
     public Creature c = null;
     
-    public Environment() {
+    public Environment(int scenario) {
           WS3DProxy proxy = new WS3DProxy();
           try {   
              World w = World.getInstance();
@@ -42,7 +45,7 @@ public class Environment {
 //             World.createFood(0, 350, 75);
 //             World.createFood(0, 100, 220);
 //             World.createFood(0, 250, 210);
-             prepareScenario();
+             prepareScenario(scenario);
              c = proxy.createCreature(100,450,0);
              c.start();
              
@@ -59,7 +62,15 @@ public class Environment {
 
 	}
 
-    private void prepareScenario() throws CommandExecException {
+    private void prepareScenario(int scenario) throws CommandExecException {
+        if (scenario == 0) {
+            collectJewelsScenario();
+        } else {
+            mazeScenario();            
+        }
+    }
+
+    private void collectJewelsScenario() throws CommandExecException {
         CommandUtility.sendNewBrick(4,747.0,2.0,800.0,567.0);
         CommandUtility.sendNewBrick(4,50.0,-4.0,747.0,47.0);
         CommandUtility.sendNewBrick(4,49.0,562.0,796.0,599.0);
@@ -124,5 +135,17 @@ public class Environment {
         World.createFood(0, 350, 75);
         World.createFood(0, 100, 220);
         World.createFood(0, 250, 210);
+    }
+
+    private void mazeScenario() throws CommandExecException {
+        int HALL_WIDTH = 100;
+        int BLOCK_WIDTH = 40;
+        World.createBrick(2, HALL_WIDTH, 0, HALL_WIDTH + BLOCK_WIDTH, 400);
+        World.createBrick(3, 2 * HALL_WIDTH + 2 * BLOCK_WIDTH, 200, 2 * HALL_WIDTH + 3 * BLOCK_WIDTH, 600);
+        World.createBrick(4, 3 * HALL_WIDTH + 3 * BLOCK_WIDTH, 0, 3 * HALL_WIDTH + 4 * BLOCK_WIDTH, 280);
+        World.createBrick(4, 3 * HALL_WIDTH + 3 * BLOCK_WIDTH, 400, 3 * HALL_WIDTH + 4 * BLOCK_WIDTH, 600);
+        World.createBrick(4, 4 * HALL_WIDTH + 4 * BLOCK_WIDTH, 300, 4 * HALL_WIDTH + 5 * BLOCK_WIDTH, 340);
+        World.createBrick(4, 5 * HALL_WIDTH + 5 * BLOCK_WIDTH, 200, 5 * HALL_WIDTH + 6 * BLOCK_WIDTH, 400);
+        World.createFood(0, INITIAL_DESTINATION_X, INITIAL_DESTINATION_Y);
     }
 }

@@ -27,6 +27,7 @@ import java.util.Collections;
 import memory.CreatureInnerSense;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
+import support.Util;
 import ws3dproxy.model.Thing;
 
 /**
@@ -67,8 +68,8 @@ public class ClosestAppleDetector extends Codelet {
                                                 closest_apple = t;
 					}
                                         else {
-						double Dnew = calculateDistance(t.getX1(), t.getY1(), cis.position.getX(), cis.position.getY());
-                                                double Dclosest= calculateDistance(closest_apple.getX1(), closest_apple.getY1(), cis.position.getX(), cis.position.getY());
+						double Dnew = Util.calculateDistance(t.getX1(), t.getY1(), cis.position.getX(), cis.position.getY());
+                                                double Dclosest= Util.calculateDistance(closest_apple.getX1(), closest_apple.getY1(), cis.position.getX(), cis.position.getY());
 						if(Dnew<Dclosest){
                                                         closest_apple = t;
 						}
@@ -97,10 +98,5 @@ public class ClosestAppleDetector extends Codelet {
 @Override
         public void calculateActivation() {
         
-        }
-        
-        private double calculateDistance(double x1, double y1, double x2, double y2) {
-            return(Math.sqrt(Math.pow(x1-x2, 2)+Math.pow(y1-y2, 2)));
-        }
-
+        }        
 }

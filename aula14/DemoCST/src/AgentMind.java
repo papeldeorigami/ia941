@@ -21,6 +21,8 @@ import br.unicamp.cst.core.entities.Codelet;
 import br.unicamp.cst.core.entities.MemoryContainer;
 import br.unicamp.cst.core.entities.MemoryObject;
 import br.unicamp.cst.core.entities.Mind;
+import codelets.behaviors.BuryUnnecessaryJewel;
+import codelets.behaviors.Deliver;
 import codelets.behaviors.EatClosestApple;
 import codelets.behaviors.Forage;
 import codelets.behaviors.GetClosestLeafletJewel;
@@ -30,6 +32,7 @@ import codelets.motor.HandsActionCodelet;
 import codelets.motor.LegsActionCodelet;
 import codelets.perception.AppleDetector;
 import codelets.perception.ClosestAppleDetector;
+import codelets.perception.ClosestJewelToBuryDetector;
 import codelets.perception.ClosestLeafletJewelDetector;
 import codelets.perception.JewelDetector;
 import codelets.sensors.InnerSense;
@@ -47,8 +50,8 @@ import ws3dproxy.model.Thing;
  */
 public class AgentMind extends Mind {
     
-    private static int creatureBasicSpeed=1;
-    private static int reachDistance=50;
+    private static int creatureBasicSpeed=3;
+    private static int reachDistance=40;
     
     public AgentMind(Environment env) {
                 super();
@@ -61,6 +64,7 @@ public class AgentMind extends Mind {
                 MemoryObject closestAppleMO;
                 MemoryObject knownApplesMO;
                 MemoryObject closestLeafletJewelMO;
+                MemoryObject closestJewelToBuryMO;
                 MemoryObject knownJewelsMO;
                 
                 //Initialize Memory Objects
@@ -77,6 +81,9 @@ public class AgentMind extends Mind {
 
                 Thing closestLeafletJewel = null;
                 closestLeafletJewelMO=createMemoryObject("CLOSEST_LEAFLET_JEWEL", closestLeafletJewel);
+                Thing closestJewelToBury = null;
+                closestJewelToBuryMO=createMemoryObject("CLOSEST_JEWEL_TO_BURY", closestJewelToBury);
+
                 List<Thing> knownJewels = Collections.synchronizedList(new ArrayList<Thing>());
                 knownJewelsMO=createMemoryObject("KNOWN_JEWELS", knownJewels);
                 
@@ -85,6 +92,7 @@ public class AgentMind extends Mind {
 
                 mv.addMO(knownJewelsMO);
                 mv.addMO(closestLeafletJewelMO);
+                mv.addMO(closestJewelToBuryMO);
 
                 mv.addMO(knownApplesMO);
                 mv.addMO(visionMO);
@@ -136,7 +144,13 @@ public class AgentMind extends Mind {
 		closestLeafletJewelDetector.addOutput(closestLeafletJewelMO);
                 insertCodelet(closestLeafletJewelDetector);
                 
-		// Create Behavior Codelets
+		Codelet closestJewelToBuryDetector = new ClosestJewelToBuryDetector();
+		closestJewelToBuryDetector.addInput(knownJewelsMO);
+		closestJewelToBuryDetector.addInput(innerSenseMO);
+		closestJewelToBuryDetector.addOutput(closestJewelToBuryMO);
+                insertCodelet(closestJewelToBuryDetector);
+
+                // Create Behavior Codelets
 		Codelet goToClosestApple = new GoToClosestApple(creatureBasicSpeed,reachDistance);
 		goToClosestApple.addInput(closestAppleMO);
 		goToClosestApple.addInput(innerSenseMO);
@@ -163,10 +177,23 @@ public class AgentMind extends Mind {
                 getClosestLeafletJewel.addOutput(knownJewelsMO);
                 insertCodelet(getClosestLeafletJewel);
 
+                Codelet bury=new BuryUnnecessaryJewel(reachDistance);
+		bury.addInput(closestJewelToBuryMO);
+		bury.addInput(innerSenseMO);
+		bury.addOutput(handsMO);
+                bury.addOutput(knownJewelsMO);
+                insertCodelet(bury);
+
                 Codelet forage=new Forage();
 		forage.addInput(knownApplesMO);
                 forage.addOutput(legsMO);
                 insertCodelet(forage);
+                
+                Codelet deliver=new Deliver();
+		deliver.addInput(innerSenseMO);
+                deliver.addOutput(handsMO);
+                deliver.addOutput(legsMO);
+                insertCodelet(deliver);
                 
                 // sets a time step for running the codelets to avoid heating too much your machine
                 for (Codelet c : this.getCodeRack().getAllCodelets())

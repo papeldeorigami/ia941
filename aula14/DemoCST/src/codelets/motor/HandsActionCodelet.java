@@ -24,11 +24,13 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import br.unicamp.cst.core.entities.Codelet;
-import br.unicamp.cst.core.entities.Memory;
-import br.unicamp.cst.core.entities.MemoryObject;
+import br.unicamp.cst.core.entities.MemoryContainer;
 import java.util.Random;
+import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import ws3dproxy.model.Creature;
+import ws3dproxy.model.Leaflet;
 
 /**
  *  Hands Action Codelet monitors working storage for instructions and acts on the World accordingly.
@@ -40,19 +42,21 @@ import ws3dproxy.model.Creature;
 
 public class HandsActionCodelet extends Codelet{
 
-	private Memory handsMO;
+	private MemoryContainer handsMO;
 	private String previousHandsAction="";
         private Creature c;
+        private int handsMOIndex;
         private Random r = new Random();
         static Logger log = Logger.getLogger(HandsActionCodelet.class.getCanonicalName());
 
 	public HandsActionCodelet(Creature nc) {
                 c = nc;
+                log.setLevel(Level.INFO);
 	}
 	
         @Override
 	public void accessMemoryObjects() {
-		handsMO=(Memory)this.getInput("HANDS");
+		handsMO=(MemoryContainer)this.getInput("HANDS");
 	}
 	public void proc() {
             
@@ -87,11 +91,29 @@ public class HandsActionCodelet extends Codelet{
 					if(action.equals("BURY")){
                                                 try {
                                                  c.hideIt(objectName);
+                                                 //CommandUtility.sendHideIt(c.getIndex(), objectName);
+						log.info("Sending Bury command to agent: " + objectName);
+                                                } catch (Exception e) {
+                                                    log.severe("Error on hideIt command: "+e.getMessage());
+                                                }
+					}
+					if(action.equals("DELIVER")){
+                                                try {
+                                                    for (Leaflet leaflet: c.getLeaflets()) {
+                                                        final String leafletID = String.valueOf(leaflet.getID());
+                                                        c.deliverLeaflet(leafletID);
+        						log.info("Sending DELIVER command to agent:****** "+leafletID+"**********");
+                                                    }
+                                                    JOptionPane.showMessageDialog(null, "Creature: " + c.getName() + " - All leaflets complete!");
                                                 } catch (Exception e) {
                                                     
                                                 }
-						log.info("Sending Bury command to agent:****** "+objectName+"**********");							
 					}
+//                                        if (handsMOIndex < 0) {
+//                                            handsMOIndex = handsMO.setI("", 0.1);
+//                                        } else {                                    
+//                                            handsMO.setI("", 0.1, handsMOIndex);
+//                                        }
 				}
 //                                else if (jsonAction.has("ACTION")) {
 //                                    int x=0,y=0;
@@ -113,7 +135,7 @@ public class HandsActionCodelet extends Codelet{
 
 		}
 //		System.out.println("OK_hands");
-		previousHandsAction = (String) handsMO.getI();
+		previousHandsAction = command;
 	}//end proc
 
     @Override

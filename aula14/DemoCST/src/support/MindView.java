@@ -55,7 +55,7 @@ public class MindView extends javax.swing.JFrame {
 
     Timer t;
     List<Memory> mol = new ArrayList<>();
-    int j=0;
+//    int j=0;
     Random r = new Random();
     /**
      * Creates new form NewJFrame
@@ -109,15 +109,15 @@ public class MindView extends javax.swing.JFrame {
                     alltext += mo.getName()+":\n";
             }   
         text.setText(alltext);
-        j++;
-        if (j == 7) {
-            try {
-              World.createFood(0,r.nextInt(800) , r.nextInt(600));
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            j = 0;
-        }
+//        j++;
+//        if (j == 7) {
+//            try {
+//              World.createFood(0,r.nextInt(800) , r.nextInt(600));
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//            j = 0;
+//        }
         //System.out.println("i");
     }
 
@@ -147,7 +147,9 @@ public class MindView extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 236, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
 
         pack();

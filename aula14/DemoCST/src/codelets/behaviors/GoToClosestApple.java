@@ -94,22 +94,26 @@ public class GoToClosestApple extends Codelet {
 					message.put("X", (int)appleX);
 					message.put("Y", (int)appleY);
                                         message.put("SPEED", creatureBasicSpeed);	
+                                        if (legsMOIndex < 0) {
+                                            legsMOIndex = legsMO.setI(message.toString(), EvaluationConstants.LEGS_GO_TO_APPLE_EVALUATION);
+                                        } else {                                    
+                                            legsMO.setI(message.toString(), EvaluationConstants.LEGS_GO_TO_APPLE_EVALUATION, legsMOIndex);
+                                        }
+                                        return;
 
-				}else{//Stop
-					message.put("ACTION", "GOTO");
-					message.put("X", (int)appleX);
-					message.put("Y", (int)appleY);
-                                        message.put("SPEED", 0.0);	
+//				}else{//Stop
+//					message.put("ACTION", "GOTO");
+//					message.put("X", (int)appleX);
+//					message.put("Y", (int)appleY);
+//                                        message.put("SPEED", 0.0);	
 				}
-                                if (legsMOIndex < 0) {
-                                    legsMOIndex = legsMO.setI(message.toString(), EvaluationConstants.LEGS_GO_TO_APPLE_EVALUATION);
-                                } else {                                    
-                                    legsMO.setI(message.toString(), EvaluationConstants.LEGS_GO_TO_APPLE_EVALUATION, legsMOIndex);
-                                }
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}	
 		}
+                if (legsMOIndex >= 0) {
+                    legsMO.setI("", 0.0, legsMOIndex);
+                }
 	}//end proc
         
         @Override

@@ -1,3 +1,5 @@
+*.so
+
 # VisualSoar tmp files
 *.*~
 
@@ -25,14 +27,10 @@
 hs_err_pid*
 /aula1/nbproject/private/
 /aula1/build/
-/aula1/ws3d-dist/*.so
-/aula1/*.so
 # /aula1/dist/
 
 /aula6/DemoJSOAR/nbproject/private/
 /aula6/DemoJSOAR/build/
-/aula6/ws3d-dist/*.so
-/aula6/*.so
 # /aula6/dist/
 /aula13/DemoLIDA/build/
 /aula13/DemoLIDA/dist/

@@ -50,8 +50,8 @@ public class Forage extends Codelet {
 
 	@Override
 	public void proc() {
-            known = (List<Thing>) knownMO.getI();
-            if (known.size() == 0) {
+//            known = (List<Thing>) knownMO.getI();
+//            if (known.size() == 0) {
 		JSONObject message=new JSONObject();
 			try {
 				message.put("ACTION", "FORAGE");
@@ -64,7 +64,7 @@ public class Forage extends Codelet {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-            }            
+//            }            
 		
 	}
 

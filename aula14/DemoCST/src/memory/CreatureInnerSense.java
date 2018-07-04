@@ -34,11 +34,12 @@ public class CreatureInnerSense {
     public double fuel;
     public Polygon FOV;
     public List<Leaflet> leaflets;
+    public boolean started;
 
     public String leafletsToString() {
         String result = "";
         for (Leaflet leaflet: leaflets) {
-            result = leaflet.toString() + ",";
+            result += "  - " + leaflet.toString() + "\n";
         }
         return result;
     }
@@ -46,9 +47,11 @@ public class CreatureInnerSense {
     public String toString() {
         String result = "Pitch: " + (int) pitch + " Fuel: " + fuel;
         if (position != null)
-            result = "Position: (" + (int)position.getX() + "," + result;
+            result = "Position: (" + (int)position.getX() + "," + (int)position.getY() + ") " + result;
         else 
             result = "Position: (null,null)" + result;
+        if (leaflets != null && !leaflets.isEmpty())
+            result += "\nLEAFLETS:\n" + leafletsToString();
         return result;
     }
 }

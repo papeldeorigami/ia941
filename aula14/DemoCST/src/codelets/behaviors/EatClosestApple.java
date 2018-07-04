@@ -30,7 +30,6 @@ import br.unicamp.cst.core.entities.MemoryContainer;
 import br.unicamp.cst.core.entities.MemoryObject;
 import memory.CreatureInnerSense;
 import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
 import ws3dproxy.model.Thing;
 
 public class EatClosestApple extends Codelet {
@@ -100,6 +99,12 @@ public class EatClosestApple extends Codelet {
 					message.put("ACTION", "EATIT");
                                         info = message.toString();
                                         DestroyClosestApple();
+                                        if (handsMOIndex < 0) {
+                                            handsMOIndex = handsMO.setI(info, EvaluationConstants.HANDS_EAT_APPLE_EVALUATION);
+                                        } else {                                    
+                                            handsMO.setI(info, EvaluationConstants.HANDS_EAT_APPLE_EVALUATION, handsMOIndex);
+                                        }
+                                        return;
 				}
 				
 //				System.out.println(message);
@@ -108,15 +113,13 @@ public class EatClosestApple extends Codelet {
 				e.printStackTrace();
 			}
 		}
-                if (handsMOIndex < 0) {
-                    handsMOIndex = handsMO.setI(info, EvaluationConstants.HANDS_EAT_APPLE_EVALUATION);
-                } else {                                    
-                    handsMO.setI(info, EvaluationConstants.HANDS_EAT_APPLE_EVALUATION, handsMOIndex);
-                }
         //System.out.println("Before: "+known.size()+ " "+known);
         
         //System.out.println("After: "+known.size()+ " "+known);
 	//System.out.println("EatClosestApple: "+ handsMO.getInfo());	
+            if (handsMOIndex >= 0) {
+                handsMO.setI("", 0.0, handsMOIndex);
+            }
 
 	}
         
@@ -129,7 +132,6 @@ public class EatClosestApple extends Codelet {
            int r = -1;
            int i = 0;
            synchronized(known) {
-             CopyOnWriteArrayList<Thing> myknown = new CopyOnWriteArrayList<>(known);  
              for (Thing t : known) {
               if (closestApple != null) 
                  if (t.getName().equals(closestApple.getName())) r = i;

@@ -16,19 +16,31 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301  USA
  */
-package codelets.behaviors;
+package support;
+
+import java.util.List;
+import memory.CreatureInnerSense;
+import ws3dproxy.model.Leaflet;
+import ws3dproxy.model.Thing;
 
 /**
  *
  * @author Ricardo Andrade <papeldeorigami@googlemail.com>
  */
-public class EvaluationConstants {
-    public static final double LEGS_FORAGE_EVALUATION = 0.1;
-    public static final double LEGS_GO_TO_APPLE_EVALUATION = 0.2;
-    public static final double LEGS_GO_TO_JEWEL_EVALUATION = 0.3;
-    public static final double LEGS_STOP_EVALUATION = 0.4;
-    public static final double HANDS_EAT_APPLE_EVALUATION = 0.1;
-    public static final double HANDS_GET_JEWEL_EVALUATION = 0.2;
-    public static final double HANDS_BURY_JEWEL_EVALUATION = 0.3;
-    public static final double HANDS_DELIVER_EVALUATION = 0.4;
+public class Util {
+
+    static public double calculateDistance(double x1, double y1, double x2, double y2) {
+        return (Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2)));
+    }
+
+    static public boolean jewelIsNecessaryForSomeLeaflet(Thing t, CreatureInnerSense cis) {
+        List<Leaflet> leaflets = cis.leaflets;
+        for (Leaflet leaflet : leaflets) {
+            if (leaflet.getMissingNumberOfType(t.getAttributes().getColor()) > 0) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 }

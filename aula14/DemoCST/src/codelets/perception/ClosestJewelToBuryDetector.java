@@ -31,22 +31,22 @@ import ws3dproxy.model.Thing;
  * @author klaus
  *
  */
-public class ClosestLeafletJewelDetector extends Codelet {
+public class ClosestJewelToBuryDetector extends Codelet {
 
     private MemoryObject knownMO;
-    private MemoryObject closestLeafletJewelMO;
+    private MemoryObject closestJewelToBuryMO;
     private MemoryObject innerSenseMO;
 
     private List<Thing> known;
 
-    public ClosestLeafletJewelDetector() {
+    public ClosestJewelToBuryDetector() {
     }
 
     @Override
     public void accessMemoryObjects() {
         this.knownMO = (MemoryObject) this.getInput("KNOWN_JEWELS");
         this.innerSenseMO = (MemoryObject) this.getInput("INNER");
-        this.closestLeafletJewelMO = (MemoryObject) this.getOutput("CLOSEST_LEAFLET_JEWEL");
+        this.closestJewelToBuryMO = (MemoryObject) this.getOutput("CLOSEST_JEWEL_TO_BURY");
     }
 
     @Override
@@ -60,7 +60,7 @@ public class ClosestLeafletJewelDetector extends Codelet {
                 CopyOnWriteArrayList<Thing> myknown = new CopyOnWriteArrayList<>(known);
                 for (Thing t : myknown) {
                     String objectName = t.getName();
-                    if (objectName.contains("Jewel") && Util.jewelIsNecessaryForSomeLeaflet((Thing) t, cis)) { //Then, it is a jewel and the creature needs it to fill some leaflet
+                    if (objectName.contains("Jewel") && !Util.jewelIsNecessaryForSomeLeaflet((Thing) t, cis)) { //Then, it is a jewel and the creature needs it to fill some leaflet
                         if (closest_jewel == null) {
                             closest_jewel = t;
                         } else {
@@ -74,18 +74,18 @@ public class ClosestLeafletJewelDetector extends Codelet {
                 }
 
                 if (closest_jewel != null) {
-                    if (closestLeafletJewelMO.getI() == null || !closestLeafletJewelMO.getI().equals(closest_jewel)) {
-                        closestLeafletJewelMO.setI(closest_jewel);
+                    if (closestJewelToBuryMO.getI() == null || !closestJewelToBuryMO.getI().equals(closest_jewel)) {
+                        closestJewelToBuryMO.setI(closest_jewel);
                     }
 
                 } else {
                     //couldn't find any nearby jewels
                     closest_jewel = null;
-                    closestLeafletJewelMO.setI(closest_jewel);
+                    closestJewelToBuryMO.setI(closest_jewel);
                 }
             } else { // if there are no known jewels closest_jewel must be null
                 closest_jewel = null;
-                closestLeafletJewelMO.setI(closest_jewel);
+                closestJewelToBuryMO.setI(closest_jewel);
             }
         }
     }//end proc

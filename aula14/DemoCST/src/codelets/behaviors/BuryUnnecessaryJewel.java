@@ -32,26 +32,26 @@ import memory.CreatureInnerSense;
 import java.util.List;
 import ws3dproxy.model.Thing;
 
-public class GetClosestLeafletJewel extends Codelet {
+public class BuryUnnecessaryJewel extends Codelet {
 
-	private MemoryObject closestLeafletJewelMO;
+	private MemoryObject closestJewelToBuryMO;
 	private MemoryObject innerSenseMO;
         private MemoryObject knownMO;
 	private int reachDistance;
         private int handsMOIndex = -1;
 	private MemoryContainer handsMO;
-        Thing closestLeafletJewel;
+        Thing closestJewelToBury;
         CreatureInnerSense cis;
         List<Thing> known;
 
-	public GetClosestLeafletJewel(int reachDistance) {
+	public BuryUnnecessaryJewel(int reachDistance) {
                 setTimeStep(50);
 		this.reachDistance=reachDistance;
 	}
 
 	@Override
 	public void accessMemoryObjects() {
-		closestLeafletJewelMO=(MemoryObject)this.getInput("CLOSEST_LEAFLET_JEWEL");
+		closestJewelToBuryMO=(MemoryObject)this.getInput("CLOSEST_JEWEL_TO_BURY");
 		innerSenseMO=(MemoryObject)this.getInput("INNER");
 		handsMO=(MemoryContainer)this.getOutput("HANDS");
                 knownMO = (MemoryObject)this.getOutput("KNOWN_JEWELS");
@@ -60,21 +60,21 @@ public class GetClosestLeafletJewel extends Codelet {
 	@Override
 	public void proc() {
                 String jewelName="";
-                closestLeafletJewel = (Thing) closestLeafletJewelMO.getI();
+                closestJewelToBury = (Thing) closestJewelToBuryMO.getI();
                 cis = (CreatureInnerSense) innerSenseMO.getI();
                 known = (List<Thing>) knownMO.getI();
 		//Find distance between closest jewel and self
 		//If closer than reachDistance, get the jewel
 		
                 String info = "";
-		if(closestLeafletJewel != null)
+		if(closestJewelToBury != null)
 		{
 			double jewelX=0;
 			double jewelY=0;
 			try {
-				jewelX=closestLeafletJewel.getX1();
-				jewelY=closestLeafletJewel.getY1();
-                                jewelName = closestLeafletJewel.getName();
+				jewelX=closestJewelToBury.getX1();
+				jewelY=closestJewelToBury.getY1();
+                                jewelName = closestJewelToBury.getName();
                                 
 
 			} catch (Exception e) {
@@ -96,13 +96,13 @@ public class GetClosestLeafletJewel extends Codelet {
 			try {
 				if(distance<reachDistance){ //pick it up
 					message.put("OBJECT", jewelName);
-					message.put("ACTION", "PICKUP");
+					message.put("ACTION", "BURY");
                                         info = message.toString();
                                         DestroyClosestJewel();
                                         if (handsMOIndex < 0) {
-                                            handsMOIndex = handsMO.setI(info, EvaluationConstants.HANDS_GET_JEWEL_EVALUATION);
+                                            handsMOIndex = handsMO.setI(info, EvaluationConstants.HANDS_BURY_JEWEL_EVALUATION);
                                         } else {                                    
-                                            handsMO.setI(info, EvaluationConstants.HANDS_GET_JEWEL_EVALUATION, handsMOIndex);
+                                            handsMO.setI(info, EvaluationConstants.HANDS_BURY_JEWEL_EVALUATION, handsMOIndex);
                                         }
                                         return;
 				}
@@ -117,11 +117,9 @@ public class GetClosestLeafletJewel extends Codelet {
         
         //System.out.println("After: "+known.size()+ " "+known);
 	//System.out.println("GetClosestJewel: "+ handsMO.getInfo());	
-        
             if (handsMOIndex >= 0) {
                 handsMO.setI("", 0.0, handsMOIndex);
             }
-
 	}
         
         @Override
@@ -134,12 +132,12 @@ public class GetClosestLeafletJewel extends Codelet {
            int i = 0;
            synchronized(known) {
              for (Thing t : known) {
-              if (closestLeafletJewel != null) 
-                 if (t.getName().equals(closestLeafletJewel.getName())) r = i;
+              if (closestJewelToBury != null) 
+                 if (t.getName().equals(closestJewelToBury.getName())) r = i;
               i++;
              }   
              if (r != -1) known.remove(r);
-             closestLeafletJewel = null;
+             closestJewelToBury = null;
            }
         }
 

@@ -24,7 +24,6 @@ import org.json.JSONObject;
 
 import br.unicamp.cst.core.entities.Codelet;
 import br.unicamp.cst.core.entities.Memory;
-import br.unicamp.cst.core.entities.MemoryObject;
 import java.util.Random;
 import java.util.logging.Logger;
 import org.json.JSONException;
@@ -96,9 +95,16 @@ public class LegsActionCodelet extends Codelet{
 					    previousTargetx=targetx;
 					    previousTargety=targety;
                                         }
+				    } else if (action.equals("STOP")) {
+					log.info("Sending stop command to agent");
+                                        try {
+                                             c.stop();
+                                        } catch(Exception e) {
+                                            e.printStackTrace();
+                                        }  
                                         
 				    } else {
-					log.info("Sending stop command to agent");
+					log.info("Sending stop (move to 0) command to agent");
                                         try {
                                              c.moveto(0,0,0);
                                         } catch(Exception e) {
